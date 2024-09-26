@@ -1,0 +1,8 @@
+[package]
+name = "hubbit"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anstream = "0.6.15"
+clap = "4.5.18"
