@@ -1,2 +1,2 @@
 # hubbit
-git checkout/clone manager
+git checkout/clone manager and binary downloader
