@@ -1,0 +1,43 @@
+name: check
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: 0 0 * * *
+
+permissions:
+  contents: read
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Ensure rustfmt is installed and setup problem matcher
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt
+      - name: rustfmt
+        uses: actions-rust-lang/rustfmt@v1
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: clippy
+        run: cargo clippy --all-targets --all-features
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/audit@v1
+        name: audit
+        # with:
+        # Comma separated list of issues to ignore
+        # ignore: RUSTSEC-2020-0036
