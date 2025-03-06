@@ -3,7 +3,6 @@ name: check
 on:
   push:
   pull_request:
-  merge_group:
   schedule:
     - cron: 0 0 * * *
 
