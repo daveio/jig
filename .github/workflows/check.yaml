@@ -6,14 +6,8 @@ on:
   schedule:
     - cron: 0 0 * * *
 
-concurrency:
-  group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 permissions:
-  # Require writing security events to upload SARIF file to security tab
   security-events: write
-  # Read commit contents
   contents: read
 
 env:
@@ -97,21 +91,3 @@ jobs:
         # with:
         # Comma separated list of issues to ignore
         # ignore: RUSTSEC-2020-0036
-  # osv-push:
-  #   if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
-  #   uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@764c91816374ff2d8fc2095dab36eecd42d61638 # v1.9.2
-  #   with:
-  #     # Example of specifying custom arguments
-  #     scan-args: |-
-  #       -r
-  #       --skip-git
-  #       ./
-  # osv-pr:
-  #   if: ${{ github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
-  #   uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@764c91816374ff2d8fc2095dab36eecd42d61638 # v1.9.2
-  #   with:
-  #     # Example of specifying custom arguments
-  #     scan-args: |-
-  #       -r
-  #       --skip-git
-  #       ./
