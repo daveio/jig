@@ -1,5 +1,7 @@
 # hubbit
 
+[![build](https://github.com/daveio/hubbit/actions/workflows/build.yml/badge.svg)](https://github.com/daveio/hubbit/actions/workflows/build.yml) [![check](https://github.com/daveio/hubbit/actions/workflows/check.yaml/badge.svg)](https://github.com/daveio/hubbit/actions/workflows/check.yaml) [![CodeQL](https://github.com/daveio/hubbit/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/daveio/hubbit/actions/workflows/github-code-scanning/codeql)
+
 git checkout/clone manager and binary downloader
 
 ## Config
