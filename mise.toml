@@ -1,0 +1,8 @@
+[env]
+HUBBIT_MISE_ACTIVE = "true"
+
+[settings]
+env_file = '.env'
+
+[tools]
+rust = '1.85.0'
