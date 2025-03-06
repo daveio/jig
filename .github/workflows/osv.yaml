@@ -1,6 +1,7 @@
 name: osv
 
 permissions:
+  actions: read
   security-events: write
   contents: read
 
