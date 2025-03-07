@@ -6,18 +6,18 @@ git checkout/clone manager and binary downloader
 
 ## Config
 
-Default config path: `~/.config/ghc/config.toml`
+Default config path: `~/.config/ghc/config.yaml`
 
 ### Example configuration file
 
-```toml
-[main]
-libgit = false # Use libgit2 instead of the git CLI - true not yet implemented
+```yaml
+main:
+    libgit: false # Use libgit2 instead of the git CLI
 
-[github]
-user = myusername # Your GitHub username
-token = xxx # Your GitHub token - try `gh auth token`
-use_ssh = true # Use ssh to clone GitHub repositories that you own
+github:
+    user: myusername # your GitHub username
+    token: mytoken # your GitHub token - try `gh auth token`
+    protocol: ssh # or https - how to clone repositories that you own
 ```
 
 ## Invocations
