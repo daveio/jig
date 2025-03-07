@@ -26,8 +26,7 @@ github:
 
 Clone `github.com/YOURUSERNAME/repo`.
 
-Uses SSH if `github.use_ssh` is `true` in the configuration file, HTTPS
-otherwise.
+Uses SSH if `github.use_ssh` is `true` in the configuration file, HTTPS otherwise.
 
 Your username must be set in the configuration file.
 
@@ -80,4 +79,4 @@ Since we're only dealing with GitHub repos, the possible inputs are
 - `REPONAME`
 - `USERNAME/REPONAME`
 
-All we need to do to distinguish the two is to search for a `/` which cannot be present in usernames or repository names asdf asf asf
+All we need to do to distinguish the two is to search for a `/` which cannot be present in usernames or repository names.
