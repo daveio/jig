@@ -13,10 +13,7 @@ max_line_length = 120
 tab_width = 2
 trim_trailing_whitespace = true
 
-[*.md]
-max_line_length = 40
-
-[*.{md,rs}]
+[*.{rs}]
 tab_width = 4
 indent_size = 4
 ij_continuation_indent_size = 4

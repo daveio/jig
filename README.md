@@ -12,12 +12,12 @@ Default config path: `~/.config/ghc/config.yaml`
 
 ```yaml
 main:
-    libgit: false # Use libgit2 instead of the git CLI
+  libgit: false # Use libgit2 instead of the git CLI
 
 github:
-    user: myusername # your GitHub username
-    token: mytoken # your GitHub token - try `gh auth token`
-    protocol: ssh # or https - how to clone repositories that you own
+  user: myusername # your GitHub username
+  token: mytoken # your GitHub token - try `gh auth token`
+  protocol: ssh # or https - how to clone repositories that you own
 ```
 
 ## Invocations
