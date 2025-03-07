@@ -15,8 +15,8 @@ Default config path: `~/.config/ghc/config.toml`
 libgit = false # Use libgit2 instead of the git CLI - true not yet implemented
 
 [github]
-username = # Your GitHub username
-token = # Your GitHub token - try `gh auth token`
+user = myusername # Your GitHub username
+token = xxx # Your GitHub token - try `gh auth token`
 use_ssh = true # Use ssh to clone GitHub repositories that you own
 ```
 
