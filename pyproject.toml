@@ -1,0 +1,47 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=2.0.1"]
+
+[project]
+authors = [{ email = "dave@dave.io", name = "Dave Williams" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Programming Language :: Python",
+]
+dependencies = [
+  "betterconf >= 4.5.0",
+  "chevron >= 0.14.0",
+  "click >= 8.1.8",
+  "colorama >= 0.4.6",
+  "cryptography >= 44.0.2",
+  "dnspython >= 2.7.0",
+  "mutagen >= 1.47.0",
+  "poetry >= 2.1.1",
+  "poetry-plugin-shell >= 1.0.1",
+  "putio-py >= 8.8.0",
+  "pytz >= 2025.1",
+  "pyxdg >= 0.28",
+  "pyyaml >= 6.0.2",
+  "requests >= 2.32.3",
+  "showcert >= 0.3.3",
+  "types-chevron >= 0.14.2.20250103",
+  "wireguard-tools >= 0.5.0",
+  "bpython >= 0.25",
+  "ipython >= 9.0.1",
+  "base58 >= 2.1.1",
+]
+description = "CLI toolbelt"
+keywords = []
+license = "MIT"
+name = "belt-cli"
+packages = [{ from = "src", include = "*.py" }]
+readme = "README.md"
+repository = "https://github.com/daveio/belt"
+requires-python = ">=3.11, <4.0"
+version = "0.1.8"
+
+[project.scripts]
+belt = 'belt_cli:cli'

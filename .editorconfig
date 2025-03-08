@@ -1,0 +1,4 @@
+# syntax: https://editorconfig.org
+
+[*.py]
+indent_size = 4
