@@ -1,4 +1,4 @@
-name: Build
+name: build
 
 permissions:
   contents: read
@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
       - name: Build
         run: cargo build --verbose
       - name: Run tests
