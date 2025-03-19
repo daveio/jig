@@ -12,6 +12,7 @@ runtimes:
     - python@3.10.8
 lint:
   disabled:
+    - cspell
     - renovate
   enabled:
     - hadolint@2.12.1-beta
