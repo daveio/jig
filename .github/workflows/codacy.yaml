@@ -34,6 +34,6 @@ jobs:
           gh-code-scanning-compat: true
           max-allowed-issues: 2147483647
       - name: upload
-        uses: github/codeql-action/upload-sarif@df9f80e0f0fcc8711b6e26ef4cf69e553f271e88
+        uses: github/codeql-action/upload-sarif@f15aac3db1ec04fd9a69b2b3904f28e913b50c78
         with:
           sarif_file: results.sarif
