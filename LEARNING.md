@@ -10,7 +10,7 @@ So, we're diving into the absolutely fantabulous world of `jig` templates! These
 
 Templates in `jig` live in the `templates/` directory, neatly organized by language:
 
-```
+```plaintext
 templates/
 ├── rust/
 ├── python/
@@ -56,7 +56,7 @@ When `jig` processes this file, it will replace `{{ project_name }}` with the ac
 
 Tera also supports filters, which let us transform variables in useful ways:
 
-```
+```tera
 {{ project_name|lower|replace(from=" ", to="_") }}
 ```
 
@@ -64,7 +64,7 @@ This takes the project name, converts it to lowercase, and replaces spaces with 
 
 Similarly, for creating package names in different formats:
 
-```
+```tera
 // For kebab-case (used in package.json, etc.)
 {{ project_name|lower|replace(from=" ", to="-") }}
 
