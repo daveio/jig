@@ -151,11 +151,7 @@ fn find_workspace_members(repo_path: &Path, cargo_toml_path: &Path) -> Result<Ve
                     if member_str.contains('*') {
                         let glob_pattern =
                             format!("{}/{}/Cargo.toml", repo_path.display(), member_str);
-                        for entry in glob::glob(&glob_pattern)? {
-                            if let Ok(path) = entry {
-                                member_paths.push(path);
-                            }
-                        }
+                        member_paths.extend(glob::glob(&glob_pattern)?.flatten());
                     } else {
                         let member_cargo_path = repo_path.join(member_str).join("Cargo.toml");
                         if member_cargo_path.exists() {

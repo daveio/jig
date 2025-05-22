@@ -236,7 +236,7 @@ fn migrate_to_uv(repo_path: &Path, result: &mut PackageManagerResult) -> Result<
 }
 
 /// Migrate from setup.py to pyproject.toml
-fn migrate_to_pyproject_toml(repo_path: &Path, setup_py_path: &Path) -> Result<bool> {
+fn migrate_to_pyproject_toml(repo_path: &Path, _setup_py_path: &Path) -> Result<bool> {
     debug!("Attempting to migrate from setup.py to pyproject.toml");
 
     // Simple migration - create a basic pyproject.toml if it doesn't exist

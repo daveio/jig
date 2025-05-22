@@ -41,7 +41,6 @@ pub struct AiConfig {
 
 impl Default for Config {
     fn default() -> Self {
-        let home_dir = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
         let baseline_path = PathBuf::from("/Users/dave/src/github.com/daveio/_baseline");
 
         Config {

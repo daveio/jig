@@ -13,7 +13,7 @@ pub enum AiTool {
 
 impl AiTool {
     /// Convert a string to an AiTool
-    pub fn from_str(s: &str) -> Option<Self> {
+    pub fn parse_str(s: &str) -> Option<Self> {
         match s.to_lowercase().as_str() {
             "claude" | "claudedesktop" | "claude-desktop" => Some(AiTool::ClaudeDesktop),
             "cursor" => Some(AiTool::Cursor),
@@ -50,7 +50,7 @@ impl AiTool {
 
 /// Configure AI support for a specific tool
 pub fn configure_tool(tool_name: &str) -> Result<()> {
-    let tool = AiTool::from_str(tool_name)
+    let tool = AiTool::parse_str(tool_name)
         .ok_or_else(|| anyhow::anyhow!("Unsupported AI tool: {}", tool_name))?;
 
     info!("Configuring AI support for {}", tool.name());
