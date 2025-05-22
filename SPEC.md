@@ -12,6 +12,71 @@ It auto-detects languages, package managers, and configurations to tweak.
 
 **Git support:** Use a `git` library instead of shelling out. Ask the `context7` MCP tool for one.
 
+## Template System
+
+_[imagine a fox juggling template files, with shared components glowing in the center]_
+
+### Directory Structure
+
+We've organized templates with a shared component system to reduce duplication:
+
+```
+templates/
+├── shared/             # Shared components
+│   ├── gitignore/      # Common gitignore patterns
+│   │   ├── common.gitignore     # Patterns common to all projects
+│   │   ├── python.gitignore     # Python-specific patterns
+│   │   └── rust.gitignore       # Rust-specific patterns
+│   └── github/         # Shared GitHub workflows
+│       └── workflows/  # GitHub Actions workflows
+│           ├── base.yml.tera           # Base workflow template
+│           ├── rust_jobs.yml.tera      # Rust-specific jobs
+│           └── python_jobs.yml.tera    # Python-specific jobs
+├── rust/               # Rust-specific templates
+├── python/             # Python-specific templates
+└── ... more languages
+```
+
+### Placeholder Files
+
+Each language directory uses placeholder files to reference shared components:
+
+1. **Gitignore placeholders**:
+
+   - A file named `gitignore` contains lines listing which gitignore files to include
+   - Example: `common\npython` includes both common and python patterns
+
+2. **Workflow placeholders**:
+   - A file named `workflows` contains YAML defining workflow parameters
+   - Example:
+     ```yaml
+     base:
+       workflow_name: Python
+       jobs_template: python_jobs
+     ```
+
+### Implementation
+
+The template system is implemented with:
+
+1. A component module (`src/template/component.rs`) that:
+
+   - Detects placeholder files
+   - Processes different component types
+   - Handles component-specific logic
+
+2. Updates to the template module (`src/template/mod.rs`) to:
+
+   - Detect and process placeholder files
+   - Handle shared components correctly
+   - Generate the final files
+
+3. Tests (`src/template/tests.rs`) that verify:
+   - Placeholder file detection
+   - Component processing for gitignore and workflows
+
+This system maintains backward compatibility while making templates more maintainable.
+
 ## Subcommands
 
 ### `jig new [language]`
@@ -51,6 +116,14 @@ It auto-detects languages, package managers, and configurations to tweak.
   - Use `PEP-518` keys in `pyproject.toml` . See [https://peps.python.org/pep-0518](https://peps.python.org/pep-0518/)
 - `jig bump` without `[repository]` updates the current repository.
 - Include GitHub Actions. Fetch the latest commit for the repository on `main` (and `master` if `main` doesn't exist) and update them to use it, even if they're configured for a tag.
+
+## Future Enhancements
+
+Potential future improvements to the template system:
+
+1. Additional component types beyond gitignore and workflows
+2. More granular control over component inclusion
+3. Version-specific components for different language versions
 
 ## Instructions
 
