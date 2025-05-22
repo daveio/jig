@@ -1,0 +1,26 @@
+[env]
+JIG_MISE_ACTIVE = "true"
+
+[settings]
+env_file = ".env"
+
+[tools]
+rust = "1.87.0"
+
+[tasks.build]
+run = "cargo build"
+
+[tasks.ci]
+run = "mise fmt &&mise lint && mise test"
+
+[tasks.fmt]
+run = "trunk fmt -a"
+
+[tasks.lint]
+run = "trunk check -a --show-existing"
+
+[tasks.start]
+run = "cargo run"
+
+[tasks.test]
+run = "cargo test"
