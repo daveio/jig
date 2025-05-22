@@ -302,7 +302,7 @@ _[imagine a medical diagram of a crate, with labels pointing to its main.rs hear
 
 Let's look at how this repository is structured:
 
-```
+```plaintext
 src/
   ai/
   cli/
@@ -463,7 +463,7 @@ _[imagine a cargo ship steered by a tiny crab, loaded with crates of different s
 
 Cargo is Rust's build system and package manager, and it's AMAZING.
 
-```
+```sh
 cargo build        # Compile your project
 cargo run          # Build and run your project
 cargo test         # Run tests
@@ -489,4 +489,4 @@ So go forth! Write some Rust! Create something wonderful! And remember, in the i
 
 Happy coding, and may your compilations be swift and your runtime errors non-existent!
 
-_-- Your friendly neighborhood guide to the Rustacean territory_
+> -- Your friendly neighborhood guide to the Rustacean territory\_

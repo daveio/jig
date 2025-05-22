@@ -32,7 +32,7 @@ The codebase is organized into the following modules:
 
 Templates are stored in the `templates` directory, organized by language:
 
-```
+```plaintext
 templates/
   rust/
   python/
