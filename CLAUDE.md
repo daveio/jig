@@ -38,6 +38,9 @@ templates/
   python/
   javascript/
   typescript/
+  go/
+  java/
+  ruby/
   ...
 ```
 

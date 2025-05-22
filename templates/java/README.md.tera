@@ -1,0 +1,33 @@
+# {{ project_name }}
+
+A Java project.
+
+## Prerequisites
+
+- Java JDK 17 or higher
+- Maven 3.6 or higher
+
+## Building the Project
+
+```bash
+mvn clean package
+```
+
+## Running the Application
+
+```bash
+java -jar target/{{ project_name|lower|replace(from=" ", to="-") }}-0.1.0.jar
+```
+
+## Development
+
+```bash
+# Run tests
+mvn test
+
+# Compile
+mvn compile
+
+# Create JAR
+mvn package
+```

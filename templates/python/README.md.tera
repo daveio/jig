@@ -1,0 +1,36 @@
+# {{ project_name }}
+
+A Python project.
+
+## Installation
+
+```bash
+# Install with Poetry
+poetry install
+```
+
+## Usage
+
+```python
+from {{ project_name|lower|replace(from=" ", to="_") }} import main
+
+main.main()
+```
+
+## Development
+
+```bash
+# Install dev dependencies
+poetry install
+
+# Run tests
+poetry run pytest
+
+# Format code
+poetry run black .
+poetry run isort .
+
+# Lint
+poetry run ruff check .
+poetry run mypy .
+```

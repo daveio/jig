@@ -1,0 +1,10 @@
+require_relative "{{ project_name|lower|replace(from=" ", to="_") }}/version"
+
+module {{ project_name|capitalize|replace(from=" ", to="") }}
+  class Error < StandardError; end
+
+  # Your code goes here
+  def self.hello
+    "Hello from {{ project_name }}!"
+  end
+end

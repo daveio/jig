@@ -1,0 +1,16 @@
+/**
+ * Main entry point for {{ project_name }}
+ */
+
+/**
+ * Main function that runs the application
+ * @returns void
+ */
+export function main(): void {
+  console.log('Hello from {{ project_name }}!');
+}
+
+// Run the main function if this file is executed directly
+if (require.main === module) {
+  main();
+}

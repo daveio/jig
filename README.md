@@ -55,11 +55,11 @@ Supported languages:
 - Go
 - Java
 - Ruby
-- PHP
-- C#
-- C++
-- C
-- Shell
+- PHP (coming soon)
+- C# (coming soon)
+- C++ (coming soon)
+- C (coming soon)
+- Shell (coming soon)
 
 ### Updating a Repository
 

@@ -1,0 +1,21 @@
+/**
+ * Tests for the main module
+ */
+
+const { main } = require('../src/index');
+
+describe('main', () => {
+  test('should execute without errors', () => {
+    // Capture console.log output
+    const consoleSpy = jest.spyOn(console, 'log');
+
+    // Call the function
+    main();
+
+    // Verify it logged the expected message
+    expect(consoleSpy).toHaveBeenCalledWith('Hello from {{ project_name }}!');
+
+    // Restore the original console.log
+    consoleSpy.mockRestore();
+  });
+});

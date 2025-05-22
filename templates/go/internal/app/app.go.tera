@@ -1,0 +1,9 @@
+package app
+
+// Version represents the current version of the application
+const Version = "0.1.0"
+
+// Run starts the application
+func Run() error {
+	return nil
+}

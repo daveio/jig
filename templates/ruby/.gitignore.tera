@@ -1,0 +1,21 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+/vendor/
+
+# rspec failure tracking
+.rspec_status
+
+# For gem builds
+*.gem
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+.DS_Store

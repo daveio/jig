@@ -1,0 +1,16 @@
+package example
+
+import (
+	"testing"
+)
+
+func TestExample(t *testing.T) {
+	example := NewExample("World")
+
+	got := example.Greet()
+	want := "Hello, World!"
+
+	if got != want {
+		t.Errorf("Greet() = %q, want %q", got, want)
+	}
+}

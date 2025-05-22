@@ -1,0 +1,11 @@
+require "spec_helper"
+
+RSpec.describe {{ project_name|capitalize|replace(from=" ", to="") }} do
+  it "has a version number" do
+    expect({{ project_name|capitalize|replace(from=" ", to="") }}::VERSION).not_to be nil
+  end
+
+  it "says hello" do
+    expect({{ project_name|capitalize|replace(from=" ", to="") }}.hello).to eq("Hello from {{ project_name }}!")
+  end
+end

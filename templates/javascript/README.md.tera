@@ -1,0 +1,33 @@
+# {{ project_name }}
+
+A JavaScript project.
+
+## Installation
+
+```bash
+# Install dependencies
+npm install
+```
+
+## Usage
+
+```javascript
+const { main } = require('{{ project_name|lower|replace(from=" ", to="-") }}');
+main();
+```
+
+Or run directly:
+
+```bash
+npm start
+```
+
+## Development
+
+```bash
+# Run tests
+npm test
+
+# Run linter
+npm run lint
+```

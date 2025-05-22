@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+ruby '~> 3.2'
+
+# Specify your gem's dependencies in your_gem_name.gemspec
+gemspec
+
+group :development, :test do
+  gem 'rake', '~> 13.0'
+  gem 'rspec', '~> 3.12'
+  gem 'rubocop', '~> 1.57'
+end

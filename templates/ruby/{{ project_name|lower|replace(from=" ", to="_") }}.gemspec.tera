@@ -1,0 +1,24 @@
+require_relative 'lib/{{ project_name|lower|replace(from=" ", to="_") }}/version'
+
+Gem::Specification.new do |spec|
+  spec.name = '{{ project_name|lower|replace(from=" ", to="_") }}'
+  spec.version = {{ project_name|capitalize|replace(from=" ", to="") }}::VERSION
+  spec.authors = ['Dave Williams']
+  spec.email = ['your.email@example.com']
+
+  spec.summary = 'A Ruby project'
+  spec.description = 'A longer description of your Ruby project'
+  spec.homepage = 'https://github.com/yourusername/{{ project_name|lower|replace(from=" ", to="_") }}'
+  spec.license = 'MIT'
+  spec.required_ruby_version = '>= 3.2.0'
+
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = spec.homepage
+  spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
+
+  # Specify which files should be added to the gem when it is released.
+  spec.files = Dir.glob('{lib}/**/*') + ['README.md', 'LICENSE.txt', 'CHANGELOG.md']
+  spec.bindir = 'exe'
+  spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
+end

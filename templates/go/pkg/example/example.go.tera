@@ -1,0 +1,18 @@
+package example
+
+// Example is a sample struct
+type Example struct {
+	Name string
+}
+
+// NewExample creates a new Example
+func NewExample(name string) *Example {
+	return &Example{
+		Name: name,
+	}
+}
+
+// Greet returns a greeting
+func (e *Example) Greet() string {
+	return "Hello, " + e.Name + "!"
+}

@@ -1,0 +1,7 @@
+module {{ project_name|lower|replace(from=" ", to="-") }}
+
+go 1.21
+
+require (
+	// Add your dependencies here
+)
