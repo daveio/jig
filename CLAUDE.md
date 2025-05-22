@@ -120,3 +120,9 @@ Build the tool with:
 ```bash
 cargo build --release
 ```
+
+### YAML Handling
+
+The tool uses `yaml-rust2` for YAML parsing instead of the deprecated `serde_yaml`. This is a maintained fork of the original `yaml-rust` that is fully compliant with the YAML 1.2 specification.
+
+For serialization and deserialization with Serde, you would need to use direct mapping between `yaml-rust2::Yaml` and your Serde structures when needed.
