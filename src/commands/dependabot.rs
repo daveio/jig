@@ -45,7 +45,7 @@ pub fn execute(args: &DependabotArgs, options: &CommonOptions) -> Result<()> {
             ai_content.push_str(&format!("Status: {}\n", config_status));
 
             if !detected_ecosystems.is_empty() {
-                ai_content.push_str(&format!("Detected ecosystems:\n"));
+                ai_content.push_str("Detected ecosystems:\n");
                 for ecosystem in &detected_ecosystems {
                     ai_content.push_str(&format!("- {}\n", ecosystem));
                 }
@@ -82,22 +82,20 @@ pub fn execute(args: &DependabotArgs, options: &CommonOptions) -> Result<()> {
             println!("✅ Dependabot configuration is already up to date!");
         }
         println!("🤖 No new ecosystems to add to Dependabot configuration");
-    } else {
-        if options.verbose {
-            println!(
-                "✅ Added {} ecosystems to Dependabot configuration",
-                added_ecosystems.len()
-            );
-            for ecosystem in &added_ecosystems {
-                println!("  📦 {}", ecosystem);
-            }
-        } else {
-            println!(
-                "🤖 Added {} ecosystems to Dependabot: {}",
-                added_ecosystems.len(),
-                added_ecosystems.join(", ")
-            );
+    } else if options.verbose {
+        println!(
+            "✅ Added {} ecosystems to Dependabot configuration",
+            added_ecosystems.len()
+        );
+        for ecosystem in &added_ecosystems {
+            println!("  📦 {}", ecosystem);
         }
+    } else {
+        println!(
+            "🤖 Added {} ecosystems to Dependabot: {}",
+            added_ecosystems.len(),
+            added_ecosystems.join(", ")
+        );
     }
 
     Ok(())

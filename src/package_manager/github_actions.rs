@@ -335,12 +335,12 @@ fn get_latest_commit_for_action(action: &str) -> Result<String> {
 
     // Try to get the latest commit using Octocrab
     match get_latest_commit_octocrab(&owner, &repo) {
-        Ok(commit) => return Ok(commit),
+        Ok(commit) => Ok(commit),
         Err(e) => {
             warn!("Failed to get commit using Octocrab: {}", e);
             // Fall back to the GitHub CLI if available
             match get_latest_commit_gh_cli(&owner, &repo) {
-                Ok(commit) => return Ok(commit),
+                Ok(commit) => Ok(commit),
                 Err(e) => {
                     warn!("Failed to get commit using GitHub CLI: {}", e);
                     // Fall back to direct API call

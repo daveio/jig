@@ -10,6 +10,7 @@ This document is intended for AI assistants (like Claude) to understand how to u
 2. Updating repositories from templates
 3. Configuring AI tools with best practices
 4. Bumping dependencies to the latest versions
+5. Managing Dependabot configuration for automated dependency updates
 
 ## Architecture
 
@@ -21,12 +22,65 @@ The codebase is organized into the following modules:
   - `update`: Updating repositories from templates
   - `ai`: Configuring AI tools
   - `bump`: Bumping dependency versions
+  - `dependabot`: Managing Dependabot configuration
 - `template`: Template handling and language detection
 - `git`: Git operations
 - `package_manager`: Package manager operations
 - `ai`: AI tool configuration
 - `config`: Configuration handling
+- `dependabot`: Dependabot configuration detection and management
 - `utils`: Utility functions
+
+## CLI Options
+
+### Global Options
+
+All commands support these global options:
+
+- `--dry-run, -d`: Run in dry-run mode (only explain what would be changed)
+- `--info, -i`: Show information about changes without making them
+- `--verbose, -v`: Show detailed information during execution
+- `--ai, -a`: Format output for AI consumption (requires --info)
+- `--output, -o <PATH>`: Redirect output to a file
+
+### Commands
+
+#### `jig new <language>`
+
+Create a new repository with the specified language template.
+
+#### `jig update [repository]`
+
+Update repository from templates. Uses current directory if repository not specified.
+
+#### `jig ai [tool]`
+
+Configure AI tools. If no tool specified, configures all supported tools:
+
+- claude-desktop
+- cursor
+- zed
+- goose
+
+#### `jig bump [repository] [--ecosystem <ecosystem>]`
+
+Bump dependency versions. Supports ecosystem-specific updates:
+
+- `node`: Update Node.js/npm packages
+- `python`: Update Python packages
+- `rust`: Update Rust packages
+- `ruby`: Update Ruby packages
+- `java`: Update Java packages
+- `go`: Update Go packages
+- `actions`: Update GitHub Actions workflows only
+
+Additional options:
+
+- `--cached`: Use cached versions only (don't check for updates online)
+
+#### `jig dependabot [repository]`
+
+Manage Dependabot configuration. Detects package ecosystems and creates/updates `.github/dependabot.yml`.
 
 ## Template System
 
@@ -137,6 +191,27 @@ The tool auto-detects package managers in repositories:
 - JavaScript/TypeScript: package.json
 - Rust: Cargo.toml
 
+### Dependabot Configuration
+
+The `dependabot` module (`src/dependabot/mod.rs`) provides:
+
+- `detect_ecosystems()`: Scans a repository to detect all package ecosystems
+- `find_dependabot_config()`: Locates existing dependabot configuration
+- `update_dependabot_config()`: Creates or updates dependabot configuration
+
+Supported ecosystems:
+
+- npm (Node.js)
+- pip (Python)
+- cargo (Rust)
+- bundler (Ruby)
+- gomod (Go)
+- maven/gradle/sbt (Java/Scala)
+- composer (PHP)
+- docker
+- github-actions
+- And more...
+
 ### AI Tool Configuration
 
 AI tools are configured by copying configuration files from a baseline repository:
@@ -145,6 +220,34 @@ AI tools are configured by copying configuration files from a baseline repositor
 - Cursor: \_cursor directory and mcp-cursor.json
 - Zed: .zed directory and mcp-zed.json
 - Goose: mcp-goose.yaml
+
+## Project Infrastructure
+
+### Development Tools
+
+The project uses several tools for development and quality assurance:
+
+1. **mise**: Tool version management and task runner
+
+   - Configured in `mise.toml`
+   - Manages Rust toolchain version
+   - Provides standardized tasks (build, test, fmt, lint, ci)
+
+2. **trunk**: Multi-language linter and formatter
+
+   - Configuration in `.trunk/trunk.yaml`
+   - Handles code formatting and linting
+
+3. **GitHub Actions**: CI/CD pipelines
+
+   - `ci.yaml`: Main CI workflow (build, test)
+   - `codacy.yaml`: Code quality analysis
+   - `devskim.yaml`: Security scanning
+   - `trunk.yaml`: Linting checks
+
+4. **Dependabot**: Automated dependency updates
+   - Configuration in `.github/dependabot.yml`
+   - Monitors Rust dependencies
 
 ## Extending the Tool
 
@@ -182,6 +285,17 @@ To add support for a new AI tool:
 2. Implement the `from_str`, `name`, and `config_path` functions
 3. Add the tool to the `configure_tool` function
 
+### Adding Dependabot Support
+
+The dependabot command automatically detects package ecosystems by looking for specific files:
+
+- `package.json` → npm
+- `Cargo.toml` → cargo
+- `pyproject.toml` or `requirements.txt` → pip
+- And many more...
+
+The detection logic is in `src/dependabot/mod.rs::detect_ecosystems()`.
+
 ## Common Tasks
 
 ### Debugging
@@ -198,6 +312,8 @@ Run tests with:
 
 ```bash
 cargo test
+# or using mise
+mise test
 ```
 
 ### Building
@@ -206,7 +322,19 @@ Build the tool with:
 
 ```bash
 cargo build --release
+# or using mise
+mise build
 ```
+
+### Running CI Locally
+
+To run the full CI suite locally:
+
+```bash
+mise ci
+```
+
+This runs formatting, linting, and tests in sequence.
 
 ### YAML Handling
 

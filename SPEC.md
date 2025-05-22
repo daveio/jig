@@ -12,6 +12,43 @@ It auto-detects languages, package managers, and configurations to tweak.
 
 **Git support:** Use a `git` library instead of shelling out. Ask the `context7` MCP tool for one.
 
+## Core Concepts
+
+### Auto-Detection
+
+The tool employs pattern recognition to identify:
+
+- Programming languages through file markers (package.json, Cargo.toml, etc.)
+- Package managers through lockfiles and manifests
+- Configuration formats through file extensions
+- Version control through repository markers
+
+### Template Composition
+
+Templates are composed from shared and language-specific components:
+
+- Shared components contain cross-language patterns
+- Language templates reference shared components via placeholder files
+- The system resolves and combines components at runtime
+
+### Ecosystem Management
+
+Each programming ecosystem has its own conventions:
+
+- Package managers (npm, cargo, pip, bundler, etc.)
+- Dependency files (package.json, Cargo.toml, requirements.txt, etc.)
+- Build tools and scripts
+- Testing frameworks
+
+### Configuration Synchronization
+
+The tool maintains consistency across:
+
+- Development tool configurations
+- CI/CD pipeline definitions
+- Dependency management policies
+- Code quality standards
+
 ## Template System
 
 _[imagine a fox juggling template files, with shared components glowing in the center]_
@@ -118,7 +155,7 @@ This system maintains backward compatibility while making templates more maintai
   - Goose
 - Supports `--dry-run` to only explain what would be changed.
 
-### `jig bump [repository]`
+### `jig bump [repository] [--ecosystem <ecosystem>]`
 
 - Bumps versions to latest, in various package managers and configuration files.
 - Explore all the repositories in `/Users/dave/src` to find package managers and configuration files to set up.
@@ -126,6 +163,64 @@ This system maintains backward compatibility while making templates more maintai
   - Use `PEP-518` keys in `pyproject.toml` . See [https://peps.python.org/pep-0518](https://peps.python.org/pep-0518/)
 - `jig bump` without `[repository]` updates the current repository.
 - Include GitHub Actions. Fetch the latest commit for the repository on `main` (and `master` if `main` doesn't exist) and update them to use it, even if they're configured for a tag.
+- Ecosystem-specific updates allow targeted dependency management:
+  - `--ecosystem node`: Update only Node.js/npm packages
+  - `--ecosystem python`: Update only Python packages
+  - `--ecosystem rust`: Update only Rust packages
+  - `--ecosystem ruby`: Update only Ruby packages
+  - `--ecosystem java`: Update only Java packages
+  - `--ecosystem go`: Update only Go packages
+  - `--ecosystem actions`: Update only GitHub Actions workflows
+- Supports `--cached` flag to use offline cache when available
+
+### `jig dependabot [repository]`
+
+- Manages automated dependency update configuration
+- Scans repository to detect all package ecosystems in use
+- Creates or updates `.github/dependabot.yml` configuration file
+- Configures daily update schedules for each detected ecosystem
+- Detects ecosystems by presence of:
+  - Package manifests (package.json, Cargo.toml, etc.)
+  - Lock files (package-lock.json, Cargo.lock, etc.)
+  - Language-specific configuration files
+  - GitHub Actions workflows
+- `jig dependabot` without `[repository]` configures current repository
+- Supports `--dry-run` to preview changes
+
+## Architecture Principles
+
+### Modularity
+
+Each command operates independently with clear boundaries:
+
+- Commands handle user interaction and orchestration
+- Modules provide reusable functionality
+- Utilities offer cross-cutting concerns
+
+### Extensibility
+
+New capabilities can be added through:
+
+- Additional language templates
+- New package manager support
+- Extended tool integrations
+- Custom ecosystem handlers
+
+### Idempotency
+
+All operations should be safely repeatable:
+
+- Check existing state before making changes
+- Report when no changes are needed
+- Preserve user customizations where possible
+
+### Transparency
+
+Users should understand what the tool does:
+
+- Dry-run mode shows planned changes
+- Verbose output explains decisions
+- Clear commit messages document changes
 
 ## Future Enhancements
 

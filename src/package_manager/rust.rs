@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 use toml::{Table, Value};
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct CratesIoResponse {
     #[serde(rename = "crate")]
     crate_info: CrateInfo,
@@ -17,6 +18,7 @@ struct CratesIoResponse {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct CrateInfo {
     name: String,
 }
@@ -363,8 +365,7 @@ fn get_latest_version(crate_name: &str) -> Result<String> {
     let latest_version = crate_data
         .versions
         .iter()
-        .filter(|v| !v.yanked)
-        .next()
+        .find(|v| !v.yanked)
         .ok_or_else(|| anyhow!("No non-yanked versions found"))?;
 
     debug!("Latest version of {} is {}", crate_name, latest_version.num);

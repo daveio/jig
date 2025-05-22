@@ -1,172 +1,437 @@
-# Learning About Jig
+# Learning Rust with Jig: A Somewhat Sardonic Journey
 
-_This document is written in the style of \_why the lucky stiff, the enigmatic Ruby programmer known for his whimsical and insightful writing in "Why's (Poignant) Guide to Ruby." \_why's style combines imaginative storytelling, quirky illustrations, and technical instruction in a way that makes learning both fun and memorable. If you enjoy this style, check out the original at `~/.poignant-guide`._
+_[imagine a drawing of a fox wearing professor glasses and a mortarboard, holding a pointer at a blackboard covered in Rust symbols]_
 
-_[imagine a drawing of a fox wearing welding goggles, using a jig to perfectly align the pieces of a project]_
+## Chapter 0: Why Are We Here?
 
-## CHAPTER 1: TEMPLATES AND TERA AWESOMENESS
+So you want to learn Rust, do you? Well, you've stumbled upon `jig`, a delightful little tool that manages development environments while simultaneously being a showcase of how to build a real CLI application in Rust. Consider this your guided tour through the labyrinth of lifetimes, the maze of macros, and the... uh... forest of fearless concurrency? (Look, alliteration is hard.)
 
-So, we're diving into the absolutely fantabulous world of `jig` templates! These little snippets of code-joy are what make the `jig` tool dance and sing when creating new projects.
+## Chapter 1: The Architecture of a Rust CLI App
 
-### The Template Directory Structure
+Let's start with how `jig` is structured, because understanding the architecture helps you understand the patterns:
 
-Templates in `jig` live in the `templates/` directory, now with an ingenious shared component system:
+```mermaid
+graph TD
+    A[main.rs] --> B[CLI Module]
+    B --> C[Commands]
+    C --> D[New]
+    C --> E[Update]
+    C --> F[AI]
+    C --> G[Bump]
+    C --> H[Dependabot]
+
+    D --> I[Template Engine]
+    D --> J[Git Operations]
+    E --> I
+    F --> K[File Operations]
+    G --> L[Package Managers]
+    H --> M[Ecosystem Detection]
+
+    I --> N[Tera Templates]
+    J --> O[git2 Library]
+    L --> P[HTTP Requests]
+```
+
+### The Entry Point: main.rs
+
+Every Rust program starts with `main()`, and ours is refreshingly simple:
+
+```rust
+use anyhow::Result;
+use clap::Parser;
+use jig::{cli::Cli, commands};
+
+fn main() -> Result<()> {
+    env_logger::init();
+    let cli = Cli::parse();
+
+    // Match on commands and execute
+    match &cli.command {
+        // ... command handling
+    }
+}
+```
+
+See that `Result<()>`? That's Rust's way of saying "this function might fail, and that's okay!" The `anyhow` crate gives us delightful error handling without the boilerplate. It's like having a safety net made of... well, safety.
+
+## Chapter 2: Clap - Making CLIs Not Suck
+
+The `clap` crate is what makes our command-line interface actually pleasant to use. It's declarative, which is a fancy way of saying "you describe what you want, not how to parse it."
+
+```rust
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+pub struct Cli {
+    #[arg(long, short = 'd', global = true)]
+    pub dry_run: bool,
+
+    #[command(subcommand)]
+    pub command: Commands,
+}
+```
+
+Those `#[derive]` and `#[command]` things? They're called derive macros, and they're basically code that writes code. Meta, right? Clap looks at your struct and generates all the argument parsing logic at compile time. It's like having a very dedicated intern who never needs coffee.
+
+### Subcommands: The Art of Nesting
+
+```rust
+#[derive(Subcommand, Debug)]
+pub enum Commands {
+    New(NewArgs),
+    Update(UpdateArgs),
+    Bump(BumpArgs),
+    // ... more commands
+}
+```
+
+Enums in Rust are not your grandmother's enums. They can hold data! Each variant can have different associated data, making them perfect for representing different commands with different arguments.
+
+## Chapter 3: Error Handling - Embracing Failure
+
+Rust doesn't have exceptions. Instead, it has `Result<T, E>`, which is either `Ok(T)` (success!) or `Err(E)` (oops!). The `anyhow` crate makes this ergonomic:
+
+```rust
+use anyhow::{Context, Result};
+
+fn do_something_risky() -> Result<String> {
+    std::fs::read_to_string("important.txt")
+        .context("Failed to read the very important file")?
+}
+```
+
+That `?` operator is chef's kiss. It says "if this is an error, return it; otherwise, unwrap the value." It's error propagation without the ceremony.
+
+### The Context Trait
+
+`.context()` adds human-readable context to errors. When something goes wrong deep in your code, you get a nice error chain:
 
 ```plaintext
-templates/
-├── shared/             # Shared components live here!
-│   ├── gitignore/      # Common gitignore patterns
-│   └── github/         # Shared GitHub workflows
-├── rust/               # Rust-specific templates
-├── python/             # Python-specific templates
-├── javascript/         # JavaScript-specific templates
-├── typescript/         # TypeScript-specific templates
-├── go/                 # Go-specific templates
-├── java/               # Java-specific templates
-├── ruby/               # Ruby-specific templates
-└── ... more languages coming soon!
+Error: Failed to create new project
+Caused by:
+    0: Failed to read template
+    1: No such file or directory (os error 2)
 ```
 
-Each language directory contains a complete project template with all the bells and whistles needed to kickstart development. But now, instead of duplicating common patterns, we have placeholder files that reference the shared components!
+It's like breadcrumbs, but for debugging!
 
-It's like having a bunch of foxes that all need the same tail. Instead of knitting a tail for each fox, we just make one perfect tail pattern and let each fox point to it. Magnificently efficient!
+## Chapter 4: Templates with Tera
 
-### Shared Components - The Code Reuse Revolution
+Tera is our template engine, and it's delightfully straightforward:
 
-In the `shared/` directory, we keep common components used by multiple language templates:
+```rust
+let mut tera = Tera::new("templates/**/*")?;
+let mut context = Context::new();
+context.insert("project_name", &project_name);
 
-- **gitignore patterns**: Common patterns like `.DS_Store` and editor files live in `shared/gitignore/common.gitignore`
-- **Language-specific gitignore patterns**: Patterns specific to each language live in `shared/gitignore/[language].gitignore`
-- **GitHub workflow templates**: Base workflow structures live in `shared/github/workflows/`
-
-Then, in each language directory, we have placeholder files that tell `jig` which shared components to use. For example, a `gitignore` file might simply contain:
-
-```plaintext
-common
-python
+let rendered = tera.render("rust/Cargo.toml.tera", &context)?;
 ```
 
-This tells `jig` to include both the common gitignore patterns and the Python-specific ones. It's like a recipe that says "add 2 cups of common patterns and 1 cup of Python patterns" - and poof! You get a perfectly baked `.gitignore` file!
+Templates look like this:
 
-### Tera Templates - Where The Magic Happens
-
-`jig` uses the Tera template engine (because it's TOTALLY AWESOME) to process files that need customization. Any file with a `.tera` extension will be processed by Tera during project creation.
-
-Within these template files, variables are accessed using the `{{ variable_name }}` syntax. Here are the core variables available:
-
-- `project_name`: The name of the project (as provided by the user)
-- `language`: The programming language being used
-
-For example, in a Python `__init__.py.tera` file:
-
-```python
-"""{{ project_name }} package."""
-
-__version__ = "0.1.0"
+```toml
+[package]
+name = "{{ project_name|lower|replace(from=' ', to='_') }}"
+version = "0.1.0"
 ```
 
-When `jig` processes this file, it will replace `{{ project_name }}` with the actual project name, creating a nicely personalized module docstring.
+Those pipes (`|`) are filters. They transform values in useful ways. It's like Unix pipes, but for strings!
 
-### Fancy Transformations
+### The Power of Filters
 
-Tera also supports filters, which let us transform variables in useful ways:
-
-```tera
-{{ project_name|lower|replace(from=" ", to="_") }}
+```mermaid
+graph LR
+    A["My Cool Project"] --> B[lower]
+    B --> C["my cool project"]
+    C --> D[replace]
+    D --> E["my_cool_project"]
 ```
 
-This takes the project name, converts it to lowercase, and replaces spaces with underscores - perfect for creating valid Python module names!
+Tera comes with tons of built-in filters, and you can even add your own. It's extensibility without the pain!
 
-Similarly, for creating package names in different formats:
+## Chapter 5: Git Operations with git2
 
-```tera
-// For kebab-case (used in package.json, etc.)
-{{ project_name|lower|replace(from=" ", to="-") }}
+The `git2` crate gives us libgit2 bindings, which means we can do Git operations without shelling out:
 
-// For PascalCase (used in Java/Ruby class names)
-{{ project_name|capitalize|replace(from=" ", to="") }}
+```rust
+use git2::Repository;
+
+let repo = Repository::init(path)?;
+let mut index = repo.index()?;
+index.add_all(["*"].iter(), git2::IndexAddOption::DEFAULT, None)?;
 ```
 
-## CHAPTER 2: LANGUAGE-SPECIFIC AWESOMENESS
+No more `std::process::Command` shenanigans! It's Git operations with type safety and proper error handling.
 
-Each language template is crafted with love and consideration for that language's ecosystem and best practices.
+### Why Not Shell Out?
 
-### Python
+You might ask, "Why not just run `git` commands?" Well:
 
-Python templates use Poetry for dependency management, with a modern src-layout package structure. Testing is set up with pytest, and code quality is maintained with black, isort, mypy, and ruff.
+1. **Portability**: Not everyone has `git` in their PATH
+2. **Performance**: No process spawning overhead
+3. **Type Safety**: The compiler catches your mistakes
+4. **Error Handling**: Structured errors instead of parsing stderr
 
-### JavaScript/TypeScript
+## Chapter 6: Async Rust with Tokio
 
-These templates include:
+For the GitHub API operations, we use `octocrab` with `tokio`:
 
-- Jest for testing
-- ESLint for linting
-- Prettier for formatting (TypeScript)
-- TypeScript configuration (for TS projects)
-- Modern Node.js practices
+```rust
+#[tokio::main]
+async fn main() -> Result<()> {
+    let octocrab = octocrab::instance();
+    let repos = octocrab
+        .current()
+        .list_repos_for_authenticated_user()
+        .send()
+        .await?;
+}
+```
 
-### Go
+That `async`/`await` syntax? It's Rust's approach to asynchronous programming. The `#[tokio::main]` macro sets up the async runtime. It's like having a personal assistant who juggles all your concurrent tasks.
 
-Go templates follow the standard Go project layout with:
+### The Async Ecosystem
 
-- cmd/ directory for applications
-- internal/ for private code
-- pkg/ for public libraries
-- Go modules configuration
+```mermaid
+graph TD
+    A[Your Async Code] --> B[Tokio Runtime]
+    B --> C[Thread Pool]
+    B --> D[Event Loop]
+    B --> E[Timer Management]
 
-### Java
+    C --> F[OS Threads]
+    D --> G[epoll/kqueue/IOCP]
+```
 
-Java templates use Maven for build management and include:
+Tokio handles all the gnarly details of async I/O, letting you write code that looks synchronous but runs concurrently. It's magic, but the kind backed by computer science!
 
-- JUnit 5 for testing
-- Modern Java practices
-- Maven plugins for building, testing, and packaging
+## Chapter 7: File System Operations
 
-### Ruby
+Rust's standard library has great file operations, but we enhance them with crates like `walkdir`:
 
-Ruby templates are set up as gems with:
+```rust
+use walkdir::WalkDir;
 
-- RSpec for testing
-- RuboCop for linting
-- Modern Ruby practices
-- Bundler for dependency management
+for entry in WalkDir::new(directory)
+    .into_iter()
+    .filter_entry(|e| !is_hidden(e))
+{
+    let entry = entry?;
+    // Process each file/directory
+}
+```
 
-## CHAPTER 3: WHEN TEMPLATES MEET THE REAL WORLD
+`WalkDir` recursively walks directories, handling all the edge cases. It's like having a very thorough tour guide for your filesystem.
 
-When `jig` creates a new project, it takes these templates and works its magic:
+### Path Handling
 
-1. Detects the requested language
-2. Finds the appropriate template directory
-3. Processes placeholder files to include shared components
-4. Processes all `.tera` files, replacing variables with their values
-5. Creates a new directory structure with all the files
-6. Initializes a Git repository
-7. Makes the first commit
+Rust's `Path` and `PathBuf` types are cross-platform:
 
-The result? A shiny new project ready for development, with everything set up just right!
+```rust
+use std::path::{Path, PathBuf};
 
-## CHAPTER 4: EXTENDING THE TEMPLATES
+let config_dir = dirs::config_dir()
+    .ok_or_else(|| anyhow!("No config directory"))?;
+let our_config = config_dir.join("jig").join("config.toml");
+```
 
-Want to add support for a new language or update an existing template? Here's how:
+No more `/` vs `\` nonsense. Rust handles it for you!
 
-1. Check if there are shared components you can use in `templates/shared/`
-2. Create a new directory under `templates/` for your language
-3. Add placeholder files that reference shared components
-4. Add language-specific files with `.tera` extensions where templating is needed
-5. Add static files (no `.tera` extension) for files that don't need processing
-6. Test your template with `jig new [your-language]`
-7. Iterate until it's perfect!
+## Chapter 8: Serialization with Serde
 
-Remember: a good template sets up not just the bare minimum, but includes:
+Serde is Rust's serialization framework, and it's magnificent:
 
-- Testing frameworks
-- Linting tools
-- Build system configuration
-- Documentation templates
-- CI/CD configuration
+```rust
+#[derive(Serialize, Deserialize)]
+struct Config {
+    version: u32,
+    updates: Vec<UpdateConfig>,
+}
 
-If you find yourself creating patterns that might be useful for other languages, consider adding them to the `shared/` directory instead of duplicating them. Your future self (and other foxes) will thank you!
+let config: Config = serde_yaml::from_str(&yaml_content)?;
+let json = serde_json::to_string_pretty(&config)?;
+```
 
-Happy templating, you marvelous code wizard! May your jigs always align perfectly and your projects compile on the first try!
+One struct, multiple formats. It's like having a universal translator for data!
 
-_[imagine a drawing of the fox taking a bow, with perfectly aligned project pieces behind it]_
+### The Derive Magic
+
+```mermaid
+graph LR
+    A[Rust Struct] --> B[Serde Derive Macro]
+    B --> C[Generated Serialization Code]
+    C --> D[JSON]
+    C --> E[YAML]
+    C --> F[TOML]
+    C --> G[MessagePack]
+    C --> H[... and more!]
+```
+
+The derive macros generate all the boring serialization code at compile time. You just annotate your structs and Serde does the rest.
+
+## Chapter 9: Pattern Matching - Rust's Secret Weapon
+
+Pattern matching in Rust is like switch statements on steroids:
+
+```rust
+match &cli.command {
+    Commands::New(args) => commands::new::run(args, &common_options),
+    Commands::Update(args) => commands::update::run(args, &common_options),
+    Commands::Bump(args) => match &args.ecosystem {
+        Some(BumpEcosystem::Node) => handle_node(),
+        Some(BumpEcosystem::Python) => handle_python(),
+        None => handle_all(),
+    },
+}
+```
+
+It's exhaustive (the compiler ensures you handle all cases) and can destructure data. It's like having X-ray vision for your data structures!
+
+## Chapter 10: Lifetimes - The Final Boss
+
+Ah, lifetimes. The thing that makes grown developers cry. But they're not that bad, really!
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+```
+
+That `'a` is a lifetime parameter. It says "the returned reference lives as long as both input references." It's Rust's way of preventing dangling pointers without a garbage collector.
+
+### The Borrow Checker
+
+```mermaid
+graph TD
+    A[Value Created] --> B[Borrowed]
+    B --> C{Borrow Rules}
+    C -->|One Mutable| D[&mut T]
+    C -->|Many Immutable| E[&T]
+    D --> F[Exclusive Access]
+    E --> G[Shared Access]
+
+    F --> H[Value Dropped]
+    G --> H
+```
+
+The borrow checker ensures:
+
+1. You can have many immutable references OR one mutable reference
+2. References can't outlive their data
+3. No data races
+
+It's like having a very strict librarian who ensures nobody tears pages out of the books.
+
+## Chapter 11: Testing in Rust
+
+Rust has built-in testing support:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_something() {
+        assert_eq!(2 + 2, 4);
+    }
+
+    #[test]
+    #[should_panic(expected = "divide by zero")]
+    fn test_panic() {
+        let _ = 1 / 0;
+    }
+}
+```
+
+Tests live right next to your code. Run them with `cargo test`. It's testing without the setup hassle!
+
+## Chapter 12: Modules and Visibility
+
+Rust's module system is... unique:
+
+```rust
+// In lib.rs
+pub mod commands {
+    pub mod new;
+    pub mod update;
+
+    // Private helper
+    fn shared_logic() {}
+}
+```
+
+`pub` makes things public. No `pub`? It's private. Simple! Well, until you learn about `pub(crate)`, `pub(super)`, and... okay, it's not that simple, but it's powerful!
+
+## Chapter 13: The Magic of Macros
+
+We use macros to reduce boilerplate:
+
+```rust
+macro_rules! handle_command {
+    ($cmd:expr, $handler:expr) => {
+        if $cli.dry_run {
+            println!("Would execute: {}", $cmd);
+        } else {
+            $handler?;
+        }
+    };
+}
+```
+
+Macros are code that generates code. They're like templates for your templates. Meta-meta-programming!
+
+## Chapter 14: Dependencies and Cargo
+
+Our `Cargo.toml` is a testament to Rust's ecosystem:
+
+```toml
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+```
+
+Cargo handles:
+
+- Dependency resolution
+- Building
+- Testing
+- Documentation
+- Publishing
+
+It's like having a Swiss Army knife for Rust development!
+
+## Chapter 15: Performance Considerations
+
+Rust gives you control over performance:
+
+1. **Zero-cost abstractions**: You don't pay for what you don't use
+2. **No garbage collector**: Predictable performance
+3. **Inline everything**: The compiler is aggressive about optimization
+4. **SIMD when possible**: Modern CPU features, automatically
+
+```rust
+// This compiles to the same assembly as hand-written C
+let sum: i32 = numbers.iter().sum();
+```
+
+## Conclusion: What Have We Learned?
+
+Through `jig`, we've explored:
+
+- CLI parsing with Clap
+- Error handling with anyhow
+- Template engines with Tera
+- Git operations with git2
+- Async programming with Tokio
+- File operations with walkdir
+- Serialization with Serde
+- And so much more!
+
+Rust is a language that respects you enough to give you power, but also cares enough to keep you safe. It's like having a very competent butler who also happens to be a ninja.
+
+Remember: the compiler is your friend. When it complains, it's not being mean - it's saving you from future debugging sessions at 3 AM.
+
+Happy coding, you magnificent rustacean!
+
+_[imagine a drawing of the fox professor taking a bow, with a graduation cap being thrown in the air]_

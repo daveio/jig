@@ -2,7 +2,6 @@ use crate::cli::CommonOptions;
 use anyhow::Result;
 use std::fs::File;
 use std::io::{self, Write};
-use std::path::Path;
 
 /// Write content to stdout or a file
 pub fn write_output(content: &str, options: &CommonOptions) -> Result<()> {

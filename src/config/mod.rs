@@ -1,4 +1,3 @@
-use crate::utils::paths;
 use anyhow::{anyhow, Context, Result};
 use config::{Config, Environment, File};
 use log::{debug, info};

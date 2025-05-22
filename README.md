@@ -12,6 +12,7 @@ _[imagine a drawing of a small fox using a jig to perfectly align pieces of code
 - Configure AI tools with best practices
 - Bump dependencies to latest versions
 - Update GitHub Actions workflows
+- Manage Dependabot configuration
 
 ## Installation
 
@@ -108,6 +109,37 @@ This command will:
 4. Update GitHub Actions workflows to the latest versions
 5. Commit the changes
 
+You can also target specific ecosystems:
+
+```bash
+jig bump --ecosystem node   # Update Node.js/npm packages
+jig bump --ecosystem python # Update Python packages
+jig bump --ecosystem rust   # Update Rust packages
+jig bump --ecosystem ruby   # Update Ruby packages
+jig bump --ecosystem java   # Update Java packages
+jig bump --ecosystem go     # Update Go packages
+jig bump --ecosystem actions # Update GitHub Actions only
+```
+
+### Managing Dependabot Configuration
+
+```bash
+jig dependabot
+```
+
+This command will:
+
+1. Detect all package ecosystems in your repository
+2. Create or update `.github/dependabot.yml` configuration
+3. Add configurations for any missing ecosystems
+4. Set up daily update schedules for dependencies
+
+You can specify a different repository:
+
+```bash
+jig dependabot /path/to/repo
+```
+
 ## Templates and Sharing
 
 `jig` uses a clever template system with shared components to avoid duplication. Templates are organized like this:
@@ -147,13 +179,72 @@ These changes make templates more maintainable and reduce duplication. The code 
 
 _[imagine a drawing of foxes celebrating around a shared component tree, each holding a different language flag]_
 
-## Dry Run Mode
+## Global Options
 
-All commands support the `--dry-run` flag to show what would be changed without actually making changes:
+All commands support these global options:
 
 ```bash
-jig bump --dry-run
+--dry-run, -d    # Run in dry-run mode (only explain what would be changed)
+--info, -i       # Show information about changes without making them
+--verbose, -v    # Show detailed information during execution
+--ai, -a         # Format output for AI consumption (requires --info)
+--output, -o     # Redirect output to a file
 ```
+
+## Development
+
+### Project Infrastructure
+
+```mermaid
+graph TD
+    A[jig Development] --> B[mise]
+    A --> C[trunk]
+    A --> D[GitHub Actions]
+
+    B --> B1[Tool Management]
+    B --> B2[Task Runner]
+
+    C --> C1[Formatting]
+    C --> C2[Linting]
+
+    D --> D1[CI/CD]
+    D --> D2[Code Quality]
+    D --> D3[Security Scanning]
+    D --> D4[Dependency Updates]
+
+    D1 --> E[cargo build/test]
+    D2 --> F[Codacy Analysis]
+    D3 --> G[DevSkim]
+    D4 --> H[Dependabot]
+```
+
+### Development Environment
+
+The project uses `mise` for tool management and task running. Available tasks:
+
+```bash
+mise build   # Build the project
+mise test    # Run tests
+mise fmt     # Format code using trunk
+mise lint    # Lint code using trunk
+mise ci      # Run fmt, lint, and test
+mise start   # Run the project
+```
+
+### Code Quality Tools
+
+- **Trunk**: Multi-language linter aggregator and formatter
+- **Codacy**: Automated code review and quality analysis
+- **DevSkim**: Security-focused static analysis
+- **Dependabot**: Automated dependency updates
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run `mise ci` to ensure code quality
+5. Submit a pull request
 
 ## License
 
