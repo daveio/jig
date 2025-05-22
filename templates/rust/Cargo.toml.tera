@@ -1,0 +1,13 @@
+[package]
+name = "{{ project_name }}"
+version = "0.1.0"
+edition = "2024"
+authors = ["Dave Williams"]
+description = "A Rust project"
+license = "MIT"
+
+[dependencies]
+# Add your dependencies here
+
+[dev-dependencies]
+# Add your development dependencies here
