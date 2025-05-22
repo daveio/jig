@@ -18,19 +18,21 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
 
     // Load configuration manager to access and update versions
     let mut config_manager = ConfigManager::new()?;
-    let versions_config = config_manager.versions_config_mut();
+
+    // Create a clone of the versions config for read operations
+    let versions_config_clone = config_manager.versions_config().clone();
 
     if args.cached {
         info!("Using cached versions from: {}", repo_path.display());
 
-        if versions_config.last_checked.is_none() {
+        if versions_config_clone.last_checked.is_none() {
             info!("No cached versions available. Run without --cached first.");
             return Ok(());
         }
 
         info!(
             "Last checked: {}",
-            versions_config.last_checked.as_ref().unwrap()
+            versions_config_clone.last_checked.as_ref().unwrap()
         );
     } else {
         info!("Bumping versions in repository at: {}", repo_path.display());
@@ -48,26 +50,56 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
     // Get the repository
     let repo = git::open_repository(&repo_path).context("Failed to open git repository")?;
 
-    // Detect and update package managers - either using cached versions or checking for updates
-    let result = if args.cached {
+    // Process based on whether we're using cached versions or not
+    if args.cached {
+        // ---- CACHED MODE ----
         // Use cached versions instead of checking online
-        package_manager::bump_all_versions_from_cache(&repo_path, versions_config)?
+        let result =
+            package_manager::bump_all_versions_from_cache(&repo_path, &versions_config_clone)?;
+
+        if result.is_empty() {
+            info!("No package managers found or no updates needed.");
+            return Ok(());
+        }
+
+        debug!("Updated {} package managers", result.len());
+
+        for pm in &result {
+            info!("Updated {} dependencies", pm.name);
+        }
+
+        // Update GitHub Actions if present
+        let github_actions_result = package_manager::update_github_actions_from_cache(
+            &repo_path,
+            &repo,
+            &versions_config_clone,
+        )?;
+
+        if github_actions_result.updated {
+            info!(
+                "Updated {} GitHub Actions workflows",
+                github_actions_result.workflows.len()
+            );
+        }
     } else {
+        // ---- ONLINE MODE ----
         // Check for updates online and update the cache
         let result = package_manager::bump_all_versions(&repo_path)?;
 
         // Update the versions cache if we found any updates
         if !result.is_empty() {
+            let _versions_config = config_manager.versions_config_mut();
+
             // Record the timestamp
-            versions_config.last_checked = Some(Utc::now().to_rfc3339());
+            _versions_config.last_checked = Some(Utc::now().to_rfc3339());
 
             // Update package manager versions
             for pm in &result {
                 let pm_name = pm.name.clone();
 
                 // Create entry if it doesn't exist
-                if !versions_config.package_managers.contains_key(&pm_name) {
-                    versions_config.package_managers.insert(
+                if !_versions_config.package_managers.contains_key(&pm_name) {
+                    _versions_config.package_managers.insert(
                         pm_name.clone(),
                         PackageManagerVersions {
                             packages: HashMap::new(),
@@ -82,44 +114,35 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
 
             // Save the updated versions cache
             config_manager.save_versions()?;
+
+            debug!("Updated {} package managers", result.len());
+
+            for pm in &result {
+                info!("Updated {} dependencies", pm.name);
+            }
+        } else {
+            info!("No package managers found or no updates needed.");
+            return Ok(());
         }
 
-        result
-    };
-
-    if result.is_empty() {
-        info!("No package managers found or no updates needed.");
-        return Ok(());
-    }
-
-    debug!("Updated {} package managers", result.len());
-
-    for pm in &result {
-        info!("Updated {} dependencies", pm.name);
-    }
-
-    // Update GitHub Actions if present
-    let github_actions_result = if args.cached {
-        // Use cached GitHub Actions versions
-        package_manager::update_github_actions_from_cache(&repo_path, &repo, versions_config)?
-    } else {
         // Check for updates online
-        let result = package_manager::update_github_actions(&repo_path, &repo)?;
+        let github_actions_result = package_manager::update_github_actions(&repo_path, &repo)?;
 
         // Update the cache if we found any updates
-        if result.updated {
+        if github_actions_result.updated {
+            let _versions_config = config_manager.versions_config_mut();
+
             // TODO: Extract and store actual GitHub Actions versions
             // This would depend on having access to the specific version information
+
+            // Save the updated versions cache again
+            config_manager.save_versions()?;
+
+            info!(
+                "Updated {} GitHub Actions workflows",
+                github_actions_result.workflows.len()
+            );
         }
-
-        result
-    };
-
-    if github_actions_result.updated {
-        info!(
-            "Updated {} GitHub Actions workflows",
-            github_actions_result.workflows.len()
-        );
     }
 
     // Commit the changes

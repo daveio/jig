@@ -1,5 +1,6 @@
+use crate::utils::paths;
 use anyhow::{anyhow, Context, Result};
-use config::{Config, ConfigBuilder, Environment, File};
+use config::{Config, Environment, File};
 use log::{debug, info};
 use serde::{Deserialize, Serialize};
 use serde_json;
