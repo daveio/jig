@@ -9,10 +9,8 @@ jobs:
         with:
           install: true # `mise install`
           cache: true # Use GitHub cache
-      - name: build
-        run: cargo build
-      - name: test
-        run: cargo test --test-threads=1
+      - name: ci
+        run: mise ci
 name: ci
 on:
   - push

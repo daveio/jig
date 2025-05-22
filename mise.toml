@@ -11,7 +11,7 @@ rust = { version = '1.87.0', profile = 'default', components = 'rustc,cargo,rust
 run = "cargo build"
 
 [tasks.ci]
-run = "mise fmt &&mise lint && mise test"
+run = "mise fmt && mise lint && mise test && mise build"
 
 [tasks.fmt]
 run = "trunk fmt -a"
@@ -23,4 +23,4 @@ run = "trunk check -a --show-existing"
 run = "cargo run"
 
 [tasks.test]
-run = "cargo test --test-threads=1"
+run = "cargo test -- --test-threads=1"
