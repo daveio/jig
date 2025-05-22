@@ -19,7 +19,6 @@ lint:
   enabled:
     - gitleaks@8.26.0
     - semgrep@1.116.0
-    - trivy@0.62.1
     - actionlint@1.7.7
     - checkov@3.2.427
     - clippy@1.87.0
