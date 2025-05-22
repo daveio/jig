@@ -1,0 +1,5 @@
+base:
+  workflow_name: Rust
+  env: |
+    CARGO_TERM_COLOR: always
+  jobs_template: rust_jobs

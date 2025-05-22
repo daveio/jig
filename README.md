@@ -2,6 +2,8 @@
 
 A tool to manage various aspects of a development environment.
 
+_[imagine a drawing of a small fox using a jig to perfectly align pieces of code]_
+
 ## Features
 
 - Auto-detect languages, package managers, and configurations
@@ -105,6 +107,22 @@ This command will:
 3. Migrate to modern package managers if needed (e.g., Python projects to `uv`)
 4. Update GitHub Actions workflows to the latest versions
 5. Commit the changes
+
+## Templates and Sharing
+
+`jig` uses a clever template system with shared components to avoid duplication. Templates are organized like this:
+
+```
+templates/
+├── shared/             # Shared template components
+│   ├── gitignore/      # Common gitignore patterns
+│   └── github/         # Shared GitHub workflows
+├── rust/               # Rust-specific templates
+├── python/             # Python-specific templates
+└── ... more languages
+```
+
+Each language folder contains placeholder files that reference shared components. This means when you update a shared component, all languages get updated! It's like having one fox teach all the other foxes at once!
 
 ## Dry Run Mode
 

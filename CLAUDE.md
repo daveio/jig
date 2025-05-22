@@ -30,28 +30,83 @@ The codebase is organized into the following modules:
 
 ## Template System
 
-Templates are stored in the `templates` directory, organized by language:
+Templates are stored in the `templates` directory, with a new structure that promotes reuse:
 
 ```plaintext
 templates/
-  rust/
-  python/
-  javascript/
-  typescript/
-  go/
-  java/
-  ruby/
-  ...
+├── shared/             # Shared components
+│   ├── gitignore/      # Common gitignore patterns
+│   │   ├── common.gitignore     # Patterns common to all projects
+│   │   ├── python.gitignore     # Python-specific patterns
+│   │   └── rust.gitignore       # Rust-specific patterns
+│   └── github/         # Shared GitHub workflows
+│       └── workflows/  # GitHub Actions workflows
+│           ├── base.yml.tera           # Base workflow template
+│           ├── rust_jobs.yml.tera      # Rust-specific jobs
+│           └── python_jobs.yml.tera    # Python-specific jobs
+├── rust/               # Rust-specific templates
+├── python/             # Python-specific templates
+└── ... other languages
 ```
 
-Each template directory contains files for that language, with `.tera` extensions for files that should be processed with the Tera template engine.
+### Shared Components
 
-Template variables:
+The `shared/` directory contains components that are used by multiple language templates:
+
+1. **Gitignore patterns**:
+
+   - `common.gitignore`: Patterns common to all projects (IDE files, logs, env vars)
+   - `[language].gitignore`: Language-specific patterns
+
+2. **GitHub workflows**:
+   - `base.yml.tera`: Common workflow structure
+   - `[language]_jobs.yml.tera`: Language-specific jobs
+
+### Placeholder Files
+
+In each language directory, placeholder files specify which shared components to use:
+
+1. **Gitignore placeholders**:
+
+   - A file named `gitignore` contains lines listing which gitignore files to include
+   - Example: `common\npython` includes both common and python patterns
+
+2. **Workflow placeholders**:
+   - A file named `workflows` contains YAML defining workflow parameters
+   - Example:
+     ```yaml
+     base:
+       workflow_name: Python
+       jobs_template: python_jobs
+     ```
+
+### Template Variables
+
+The template system uses the following variables:
 
 - `project_name`: The name of the project
 - `language`: The programming language
+- Workflow-specific variables:
+  - `workflow_name`: Name of the workflow
+  - `env`: Environment variables (optional)
+  - `jobs_template`: Which jobs template to use
 
 ## Implementation Details
+
+### Template Processing
+
+When processing templates, `jig` now:
+
+1. Reads placeholder files to determine which shared components to include
+2. Combines shared components as specified
+3. Processes the combined templates with Tera
+
+For example, when processing a `gitignore` placeholder:
+
+- Read the placeholder file to get a list of components
+- Read each component from `shared/gitignore/`
+- Concatenate the components in order
+- Save the result as `.gitignore` in the output directory
 
 ### Git Operations
 
@@ -85,9 +140,19 @@ AI tools are configured by copying configuration files from a baseline repositor
 
 To add support for a new language:
 
-1. Create a new directory in `templates/` for the language
-2. Add template files with `.tera` extension for customizable files
-3. Update the language detection in `template/language.rs`
+1. Create language-specific shared components in `shared/`
+2. Create a new directory in `templates/` for the language
+3. Add placeholder files referencing the shared components
+4. Add language-specific template files
+5. Update the language detection in `template/language.rs`
+
+### Adding Shared Components
+
+To add a new shared component:
+
+1. Identify the component type (gitignore, workflow, etc.)
+2. Add it to the appropriate directory in `shared/`
+3. Update placeholder files in language directories to reference it
 
 ### Adding a New Package Manager
 

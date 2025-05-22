@@ -1,0 +1,15 @@
+name: {{ workflow_name }}
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+{% if env %}
+env:
+{{ env | indent(width=2) }}
+{% endif %}
+
+jobs:
+{{ jobs | indent(width=2) }}

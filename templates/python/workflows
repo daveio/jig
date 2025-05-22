@@ -1,0 +1,3 @@
+base:
+  workflow_name: Python
+  jobs_template: python_jobs
