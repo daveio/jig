@@ -1,14 +1,16 @@
+use super::PackageManagerResult;
 use anyhow::{Context, Result};
 use log::{debug, info};
+use serde_json::{json, Value};
 use std::fs;
-use std::path::{Path, PathBuf};
-use walkdir::WalkDir;
-use serde_json::{Value, json};
-use super::PackageManagerResult;
+use std::path::Path;
 
 /// Bump JavaScript/TypeScript package versions
 pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
-    debug!("Checking for JavaScript/TypeScript package managers in: {}", repo_path.display());
+    debug!(
+        "Checking for JavaScript/TypeScript package managers in: {}",
+        repo_path.display()
+    );
 
     let mut result = PackageManagerResult {
         name: "JavaScript/TypeScript".to_string(),
@@ -26,9 +28,11 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
                 if updated {
                     result.updated_files.push(package_json_path);
                 }
-            },
+            }
             Err(e) => {
-                result.errors.push(format!("Failed to update package.json: {}", e));
+                result
+                    .errors
+                    .push(format!("Failed to update package.json: {}", e));
             }
         }
     }
@@ -41,8 +45,7 @@ fn update_package_json(path: &Path) -> Result<bool> {
     debug!("Updating package.json at: {}", path.display());
 
     let content = fs::read_to_string(path)?;
-    let mut doc: Value = serde_json::from_str(&content)
-        .context("Failed to parse package.json")?;
+    let mut doc: Value = serde_json::from_str(&content).context("Failed to parse package.json")?;
 
     let mut updated = false;
 
@@ -60,7 +63,10 @@ fn update_package_json(path: &Path) -> Result<bool> {
     }
 
     // Update devDependencies
-    if let Some(deps) = doc.get_mut("devDependencies").and_then(|d| d.as_object_mut()) {
+    if let Some(deps) = doc
+        .get_mut("devDependencies")
+        .and_then(|d| d.as_object_mut())
+    {
         for (_, version) in deps.iter_mut() {
             if let Value::String(v) = version {
                 if v.starts_with('^') || v.starts_with('~') || v.starts_with('=') {
@@ -73,7 +79,10 @@ fn update_package_json(path: &Path) -> Result<bool> {
     }
 
     // Update peerDependencies
-    if let Some(deps) = doc.get_mut("peerDependencies").and_then(|d| d.as_object_mut()) {
+    if let Some(deps) = doc
+        .get_mut("peerDependencies")
+        .and_then(|d| d.as_object_mut())
+    {
         for (_, version) in deps.iter_mut() {
             if let Value::String(v) = version {
                 if v.starts_with('^') || v.starts_with('~') || v.starts_with('=') {

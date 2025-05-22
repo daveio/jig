@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use git2::{Repository, Signature, Commit};
+use git2::{Commit, Repository, Signature};
 use log::{debug, info};
 use std::path::Path;
 
@@ -7,8 +7,7 @@ use std::path::Path;
 pub fn init_repository(path: &Path) -> Result<Repository> {
     debug!("Initializing Git repository at: {}", path.display());
 
-    let repo = Repository::init(path)
-        .context("Failed to initialize Git repository")?;
+    let repo = Repository::init(path).context("Failed to initialize Git repository")?;
 
     debug!("Git repository initialized successfully");
 
@@ -19,8 +18,7 @@ pub fn init_repository(path: &Path) -> Result<Repository> {
 pub fn open_repository(path: &Path) -> Result<Repository> {
     debug!("Opening Git repository at: {}", path.display());
 
-    let repo = Repository::open(path)
-        .context("Failed to open Git repository")?;
+    let repo = Repository::open(path).context("Failed to open Git repository")?;
 
     debug!("Git repository opened successfully");
 
@@ -32,21 +30,18 @@ pub fn commit_all(repo: &Repository, message: &str) -> Result<()> {
     debug!("Committing all changes with message: {}", message);
 
     // Get the index
-    let mut index = repo.index()
-        .context("Failed to get repository index")?;
+    let mut index = repo.index().context("Failed to get repository index")?;
 
     // Add all changes
-    index.add_all(["."].iter(), git2::IndexAddOption::DEFAULT, None)
+    index
+        .add_all(["."].iter(), git2::IndexAddOption::DEFAULT, None)
         .context("Failed to add all changes to index")?;
 
-    index.write()
-        .context("Failed to write index")?;
+    index.write().context("Failed to write index")?;
 
-    let oid = index.write_tree()
-        .context("Failed to write tree")?;
+    let oid = index.write_tree().context("Failed to write tree")?;
 
-    let tree = repo.find_tree(oid)
-        .context("Failed to find tree")?;
+    let tree = repo.find_tree(oid).context("Failed to find tree")?;
 
     // Get the author/committer information
     let signature = get_signature(repo)?;
@@ -60,7 +55,7 @@ pub fn commit_all(repo: &Repository, message: &str) -> Result<()> {
             } else {
                 vec![]
             }
-        },
+        }
         Err(_) => vec![],
     };
 
@@ -110,8 +105,7 @@ fn get_signature(repo: &Repository) -> Result<Signature<'static>> {
         }
     };
 
-    let signature = Signature::now(&name, &email)
-        .context("Failed to create signature")?;
+    let signature = Signature::now(&name, &email).context("Failed to create signature")?;
 
     Ok(signature)
 }
@@ -122,11 +116,14 @@ pub fn get_default_branch(repo: &Repository) -> Result<String> {
 
     // Try to get the init.defaultBranch config
     match config.get_string("init.defaultBranch") {
-        Ok(name) => return Ok(name),
+        Ok(name) => Ok(name),
         Err(_) => {
             // Check if main or master exists
             for branch_name in &["main", "master"] {
-                if repo.find_branch(branch_name, git2::BranchType::Local).is_ok() {
+                if repo
+                    .find_branch(branch_name, git2::BranchType::Local)
+                    .is_ok()
+                {
                     return Ok(branch_name.to_string());
                 }
             }

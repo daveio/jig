@@ -44,6 +44,7 @@ templates/
 Each template directory contains files for that language, with `.tera` extensions for files that should be processed with the Tera template engine.
 
 Template variables:
+
 - `project_name`: The name of the project
 - `language`: The programming language
 
@@ -52,6 +53,7 @@ Template variables:
 ### Git Operations
 
 Git operations use the `git2` crate instead of shelling out to git. Key operations include:
+
 - Initializing repositories
 - Opening existing repositories
 - Committing changes
@@ -60,6 +62,7 @@ Git operations use the `git2` crate instead of shelling out to git. Key operatio
 ### Package Manager Detection
 
 The tool auto-detects package managers in repositories:
+
 - Python: pyproject.toml, requirements.txt, setup.py, poetry.lock
 - JavaScript/TypeScript: package.json
 - Rust: Cargo.toml
@@ -67,8 +70,9 @@ The tool auto-detects package managers in repositories:
 ### AI Tool Configuration
 
 AI tools are configured by copying configuration files from a baseline repository:
+
 - Claude Desktop: mcp-claude-desktop.json
-- Cursor: _cursor directory and mcp-cursor.json
+- Cursor: \_cursor directory and mcp-cursor.json
 - Zed: .zed directory and mcp-zed.json
 - Goose: mcp-goose.yaml
 
@@ -77,6 +81,7 @@ AI tools are configured by copying configuration files from a baseline repositor
 ### Adding a New Language
 
 To add support for a new language:
+
 1. Create a new directory in `templates/` for the language
 2. Add template files with `.tera` extension for customizable files
 3. Update the language detection in `template/language.rs`
@@ -84,6 +89,7 @@ To add support for a new language:
 ### Adding a New Package Manager
 
 To add support for a new package manager:
+
 1. Create a new module in `package_manager/`
 2. Implement the `bump_versions` function
 3. Add the package manager to the `bump_all_versions` function in `package_manager/mod.rs`
@@ -91,6 +97,7 @@ To add support for a new package manager:
 ### Adding a New AI Tool
 
 To add support for a new AI tool:
+
 1. Add the tool to the `AiTool` enum in `ai/mod.rs`
 2. Implement the `from_str`, `name`, and `config_path` functions
 3. Add the tool to the `configure_tool` function
@@ -125,4 +132,20 @@ cargo build --release
 
 The tool uses `yaml-rust2` for YAML parsing instead of the deprecated `serde_yaml`. This is a maintained fork of the original `yaml-rust` that is fully compliant with the YAML 1.2 specification.
 
-For serialization and deserialization with Serde, you would need to use direct mapping between `yaml-rust2::Yaml` and your Serde structures when needed.
+For working with YAML files, use the utility functions in `utils/yaml.rs`:
+
+```rust
+// Parse a YAML file
+let yaml = utils::yaml::parse_file(&path)?;
+
+// Parse a YAML string
+let yaml = utils::yaml::parse_string(&content)?;
+
+// Convert a Yaml value to a string
+let yaml_str = utils::yaml::to_string(&yaml)?;
+
+// Write a Yaml value to a file
+utils::yaml::write_file(&yaml, &path)?;
+```
+
+Note that `yaml-rust2` uses its own `Yaml` type for representing YAML data, which is different from Serde's approach. When you need to convert between `yaml-rust2::Yaml` and your Serde structures, you'll need to implement custom conversion logic.

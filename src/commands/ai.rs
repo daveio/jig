@@ -1,7 +1,7 @@
-use crate::cli::AiArgs;
 use crate::ai;
+use crate::cli::AiArgs;
 use anyhow::{Context, Result};
-use log::{info};
+use log::info;
 
 /// Execute the 'ai' command
 pub fn execute(args: &AiArgs, dry_run: bool) -> Result<()> {
@@ -19,7 +19,7 @@ pub fn execute(args: &AiArgs, dry_run: bool) -> Result<()> {
                 .context(format!("Failed to configure AI support for {}", tool))?;
 
             info!("AI support configured successfully for {}", tool);
-        },
+        }
         None => {
             info!("Setting up AI support for all tools");
 
@@ -29,8 +29,7 @@ pub fn execute(args: &AiArgs, dry_run: bool) -> Result<()> {
                 return Ok(());
             }
 
-            ai::configure_all_tools()
-                .context("Failed to configure AI support for all tools")?;
+            ai::configure_all_tools().context("Failed to configure AI support for all tools")?;
 
             info!("AI support configured successfully for all tools");
         }

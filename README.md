@@ -21,6 +21,16 @@ cd jig
 cargo install --path .
 ```
 
+## Dependency Information
+
+`jig` uses the following key dependencies:
+
+- `clap`: 4.5.38 - Command line argument parsing
+- `tera`: 1.20.0 - Template rendering
+- `git2`: 0.20.2 - Git operations
+- `yaml-rust2`: 0.10.2 - YAML parsing
+- `anyhow` and `thiserror`: 1.0.98/2.0.12 - Error handling
+
 ## Usage
 
 ### Creating a New Repository
@@ -30,12 +40,14 @@ jig new rust
 ```
 
 This command will:
+
 1. Initialize a Git repository
 2. Create a basic project structure for the specified language
 3. Set up CI/CD with GitHub Actions
 4. Commit the changes
 
 Supported languages:
+
 - Rust
 - Python
 - JavaScript
@@ -74,6 +86,7 @@ jig ai cursor
 ```
 
 Supported AI tools:
+
 - Claude Desktop
 - Cursor
 - Zed
@@ -86,6 +99,7 @@ jig bump
 ```
 
 This command will:
+
 1. Detect package managers in the repository
 2. Update dependencies to the latest versions
 3. Migrate to modern package managers if needed (e.g., Python projects to `uv`)

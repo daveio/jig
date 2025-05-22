@@ -3,7 +3,7 @@ use crate::git;
 use crate::package_manager;
 use crate::utils::paths;
 use anyhow::{Context, Result};
-use log::{info, debug};
+use log::{debug, info};
 
 /// Execute the 'bump' command
 pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
@@ -17,13 +17,15 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
 
     if dry_run {
         info!("Dry run mode: No changes will be made");
-        info!("Would bump versions in repository at {}", repo_path.display());
+        info!(
+            "Would bump versions in repository at {}",
+            repo_path.display()
+        );
         return Ok(());
     }
 
     // Get the repository
-    let repo = git::open_repository(&repo_path)
-        .context("Failed to open git repository")?;
+    let repo = git::open_repository(&repo_path).context("Failed to open git repository")?;
 
     // Detect and update package managers
     let result = package_manager::bump_all_versions(&repo_path)?;
@@ -43,7 +45,10 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
     let github_actions_result = package_manager::update_github_actions(&repo_path, &repo)?;
 
     if github_actions_result.updated {
-        info!("Updated {} GitHub Actions workflows", github_actions_result.workflows.len());
+        info!(
+            "Updated {} GitHub Actions workflows",
+            github_actions_result.workflows.len()
+        );
     }
 
     // Commit the changes

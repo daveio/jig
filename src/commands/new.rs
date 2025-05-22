@@ -2,7 +2,7 @@ use crate::cli::NewArgs;
 use crate::git;
 use crate::template;
 use anyhow::{Context, Result};
-use log::{info, debug};
+use log::{debug, info};
 use std::path::Path;
 
 /// Execute the 'new' command
@@ -11,14 +11,16 @@ pub fn execute(args: &NewArgs, dry_run: bool) -> Result<()> {
 
     if dry_run {
         info!("Dry run mode: No changes will be made");
-        info!("Would create a new repository with {} language", args.language);
+        info!(
+            "Would create a new repository with {} language",
+            args.language
+        );
         return Ok(());
     }
 
     // Initialize git repository
     let repo_path = Path::new(".");
-    let repo = git::init_repository(repo_path)
-        .context("Failed to initialize git repository")?;
+    let repo = git::init_repository(repo_path).context("Failed to initialize git repository")?;
 
     debug!("Git repository initialized successfully");
 
@@ -30,7 +32,10 @@ pub fn execute(args: &NewArgs, dry_run: bool) -> Result<()> {
     git::commit_all(&repo, "Initial commit with template setup")
         .context("Failed to commit template files")?;
 
-    info!("Repository created successfully with {} language", args.language);
+    info!(
+        "Repository created successfully with {} language",
+        args.language
+    );
 
     Ok(())
 }

@@ -1,6 +1,6 @@
 # THE ASTOUNDING WORLD OF RUST: A FIELD GUIDE TO THE JIG REPOSITORY
 
-*[imagine here a cartoon fox wearing goggles, typing frantically on a keyboard that's plugged into a giant, steaming engine labeled "RUST"]*
+_[imagine here a cartoon fox wearing goggles, typing frantically on a keyboard that's plugged into a giant, steaming engine labeled "RUST"]_
 
 ## HELLO, DEAR PROGRAMMER-CREATURE
 
@@ -10,7 +10,7 @@ I'm your guide through this land of memory-safe wonders, and we'll use this repo
 
 ## CHAPTER 1: THE CARGO.TOML BESTIARY
 
-*[imagine a drawing of a tiny crab wearing a shipping hat, surrounded by boxes of different shapes and sizes]*
+_[imagine a drawing of a tiny crab wearing a shipping hat, surrounded by boxes of different shapes and sizes]_
 
 Every Rust project begins with a sacred incantation called `Cargo.toml`. It's like the gene sequence of our organism, the recipe for our cake, the blueprint for our rocket ship to Mars.
 
@@ -47,7 +47,7 @@ Wait, you're wondering why we need so many crates? Oh my sweet summer binary! Im
 
 ## CHAPTER 2: STRUCT-URAL INTEGRITY
 
-*[imagine a drawing of a building made of tiny nested boxes, with a sign that reads "TYPES WELCOME HERE"]*
+_[imagine a drawing of a building made of tiny nested boxes, with a sign that reads "TYPES WELCOME HERE"]_
 
 Rust loves structures. It ADORES them. The entire language is practically genuflecting at the altar of well-defined types.
 
@@ -69,6 +69,7 @@ pub struct Config {
 ```
 
 WAIT! Did you see that? Those magical `#[derive(...)]` attributes? That's not just decoration—that's POWER. With a single line, we've granted this struct the ability to:
+
 - Turn itself into a string representation for debugging (`Debug`)
 - Transform into JSON, TOML, or other formats (`Serialize`)
 - Materialize from those same formats (`Deserialize`)
@@ -77,7 +78,7 @@ If you're coming from other languages, you might be thinking: "So what? My langu
 
 ## CHAPTER 3: ENUMS - THE SHAPE-SHIFTERS
 
-*[imagine a drawing of a creature that's half fox, half rabbit, half submarine, with mathematical notation showing this is possible in Rust's type system]*
+_[imagine a drawing of a creature that's half fox, half rabbit, half submarine, with mathematical notation showing this is possible in Rust's type system]_
 
 Enums in Rust are NOTHING like enums in other languages. They're more like... alternate universes that can contain entirely different realities.
 
@@ -106,7 +107,7 @@ And the parsing of command-line arguments just... works! Because `clap` and `der
 
 ## CHAPTER 4: RESULT AND OPTION - THE DYNAMIC DUO
 
-*[imagine a cartoon of two superheroes: one wearing a question mark costume, the other with "OK/ERR" emblazoned on their chest]*
+_[imagine a cartoon of two superheroes: one wearing a question mark costume, the other with "OK/ERR" emblazoned on their chest]_
 
 In the land of Rust, there are no exceptions. No sirree! Instead, we have `Result` and `Option` - the safety nets that make sure we never fall into the abyss of null pointer dereferences or uncaught exceptions.
 
@@ -143,7 +144,7 @@ But in Rust, the possibility of failure is encoded in the type system itself! `O
 
 ## CHAPTER 5: TRAITS - THE PERSONALITY PLUGINS
 
-*[imagine a diagram showing various objects (a teapot, a rabbit, a computer) all implementing a "Bounceable" trait, bouncing in unison]*
+_[imagine a diagram showing various objects (a teapot, a rabbit, a computer) all implementing a "Bounceable" trait, bouncing in unison]_
 
 Traits in Rust are like personalities you can plug into your types. They're interfaces, but with SUPERPOWERS.
 
@@ -181,7 +182,7 @@ Traits can be implemented for ANY type, even ones you didn't create. Want a `ToU
 
 ## CHAPTER 6: THE BORROWCHECKER - YOUR FRENEMY
 
-*[imagine a strict-looking librarian with glasses, meticulously tracking who has borrowed which book, with a sign that says "NO DANGLING REFERENCES"]*
+_[imagine a strict-looking librarian with glasses, meticulously tracking who has borrowed which book, with a sign that says "NO DANGLING REFERENCES"]_
 
 The borrow checker is the heart of Rust's memory safety guarantees. It's also the source of many programmer tears and keyboard-smashing incidents.
 
@@ -217,7 +218,7 @@ The borrowchecker ensures these references don't outlive the values they point t
 
 ## CHAPTER 7: CLOSURES AND ITERATORS - FUNCTIONAL FANTASIA
 
-*[imagine a conveyor belt with little foxes operating various transformation stations, each applying a different function to items passing by]*
+_[imagine a conveyor belt with little foxes operating various transformation stations, each applying a different function to items passing by]_
 
 Rust has embraced the functional programming paradigm with open arms, offering closures and iterators that would make even a Haskell programmer nod in approval.
 
@@ -250,7 +251,7 @@ Same code, different result type! The compiler figures out what version of `coll
 
 ## CHAPTER 8: ERROR HANDLING - A TALE OF TWO CRATES
 
-*[imagine a drawing of two crates labeled "anyhow" and "thiserror" playing chess with error types as the pieces]*
+_[imagine a drawing of two crates labeled "anyhow" and "thiserror" playing chess with error types as the pieces]_
 
 This repository uses two complementary error-handling crates: `anyhow` and `thiserror`. They're like the yin and yang of Rust error handling.
 
@@ -283,7 +284,7 @@ Together, these crates make error handling in Rust a joy rather than a chore. We
 
 ## CHAPTER 9: THE DARK ARTS OF UNSAFE
 
-*[imagine a spooky castle door labeled "unsafe" with warning signs and a tiny fox with a lockpick]*
+_[imagine a spooky castle door labeled "unsafe" with warning signs and a tiny fox with a lockpick]_
 
 You won't find much `unsafe` code in this repository, and that's A GOOD THING. Unsafe Rust is like keeping a pet tiger - impressive, powerful, but you probably don't need it and it might eat you.
 
@@ -297,7 +298,7 @@ That's the Rust way - use unsafe code when necessary, but encapsulate it behind 
 
 ## CHAPTER 10: CRATE ANATOMY - UNDERSTANDING THE STRUCTURE
 
-*[imagine a medical diagram of a crate, with labels pointing to its main.rs heart, mod.rs nervous system, and cargo.toml brain]*
+_[imagine a medical diagram of a crate, with labels pointing to its main.rs heart, mod.rs nervous system, and cargo.toml brain]_
 
 Let's look at how this repository is structured:
 
@@ -345,7 +346,7 @@ Rust's module system can be confusing at first, but it's actually quite elegant 
 
 ## CHAPTER 11: CLAP - THE COMMAND-LINE MAESTRO
 
-*[imagine a tiny conductor with a baton, directing an orchestra of command-line arguments]*
+_[imagine a tiny conductor with a baton, directing an orchestra of command-line arguments]_
 
 This project uses the `clap` crate for parsing command-line arguments, and it's MAGICAL.
 
@@ -376,7 +377,7 @@ It's like if you could describe what your command-line interface should look lik
 
 ## CHAPTER 12: PATTERN MATCHING - THE SWISS ARMY KNIFE
 
-*[imagine a multi-tool with different patterns instead of tools - one labeled "Some(_)", another "Ok(_)", etc.]*
+_[imagine a multi-tool with different patterns instead of tools - one labeled "Some(_)", another "Ok(_)", etc.]_
 
 Pattern matching in Rust is like a supercharged switch statement that can destructure complex types.
 
@@ -406,7 +407,7 @@ You can match on tuples, structs, arrays, and even combinations of these. It's p
 
 ## CHAPTER 13: LIFETIMES - TIME TRAVELERS IN YOUR CODE
 
-*[imagine a drawing of several clocks, each with a label like 'a, 'b, 'static, with arrows showing their relationships]*
+_[imagine a drawing of several clocks, each with a label like 'a, 'b, 'static, with arrows showing their relationships]_
 
 Lifetimes are one of Rust's most unique features, and they're all about ensuring references don't outlive the values they point to.
 
@@ -425,7 +426,7 @@ In the jig repository, you'll see fewer explicit lifetime annotations because ma
 
 ## CHAPTER 14: TESTING - BECAUSE EVEN FOXES MAKE MISTAKES
 
-*[imagine a cartoon fox in a lab coat, testing various mechanical contraptions with a clipboard]*
+_[imagine a cartoon fox in a lab coat, testing various mechanical contraptions with a clipboard]_
 
 Testing is a first-class citizen in Rust, built right into the language and tooling.
 
@@ -458,7 +459,7 @@ Running tests is as simple as `cargo test`. It's like having a tiny QA departmen
 
 ## CHAPTER 15: CARGO - THE MAGICAL BUILD SYSTEM
 
-*[imagine a cargo ship steered by a tiny crab, loaded with crates of different shapes and sizes]*
+_[imagine a cargo ship steered by a tiny crab, loaded with crates of different shapes and sizes]_
 
 Cargo is Rust's build system and package manager, and it's AMAZING.
 
@@ -476,7 +477,7 @@ The `Cargo.toml` file is your project's manifest, declaring its metadata and dep
 
 ## EPILOGUE: THE NEVER-ENDING JOURNEY
 
-*[imagine a tiny fox and a rust-colored crab walking off into a sunset, arm in arm]*
+_[imagine a tiny fox and a rust-colored crab walking off into a sunset, arm in arm]_
 
 And so, dear reader, we reach the end of our tour through the jig repository. But in reality, this is just the beginning of your Rust adventure.
 
@@ -488,4 +489,4 @@ So go forth! Write some Rust! Create something wonderful! And remember, in the i
 
 Happy coding, and may your compilations be swift and your runtime errors non-existent!
 
-*-- Your friendly neighborhood guide to the Rustacean territory*
+_-- Your friendly neighborhood guide to the Rustacean territory_

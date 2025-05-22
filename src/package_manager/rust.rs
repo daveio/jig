@@ -1,15 +1,16 @@
+use super::PackageManagerResult;
 use anyhow::{Context, Result};
 use log::{debug, info};
 use std::fs;
 use std::path::{Path, PathBuf};
-use walkdir::WalkDir;
 use toml::{Table, Value};
-use regex::Regex;
-use super::PackageManagerResult;
 
 /// Bump Rust package versions
 pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
-    debug!("Checking for Rust package managers in: {}", repo_path.display());
+    debug!(
+        "Checking for Rust package managers in: {}",
+        repo_path.display()
+    );
 
     let mut result = PackageManagerResult {
         name: "Rust".to_string(),
@@ -27,9 +28,11 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
                 if updated {
                     result.updated_files.push(cargo_toml_path.clone());
                 }
-            },
+            }
             Err(e) => {
-                result.errors.push(format!("Failed to update Cargo.toml: {}", e));
+                result
+                    .errors
+                    .push(format!("Failed to update Cargo.toml: {}", e));
             }
         }
 
@@ -42,15 +45,19 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
                             if updated {
                                 result.updated_files.push(member_path);
                             }
-                        },
+                        }
                         Err(e) => {
-                            result.errors.push(format!("Failed to update member Cargo.toml: {}", e));
+                            result
+                                .errors
+                                .push(format!("Failed to update member Cargo.toml: {}", e));
                         }
                     }
                 }
-            },
+            }
             Err(e) => {
-                result.errors.push(format!("Failed to find workspace members: {}", e));
+                result
+                    .errors
+                    .push(format!("Failed to find workspace members: {}", e));
             }
         }
     }
@@ -63,7 +70,8 @@ fn update_cargo_toml(path: &Path) -> Result<bool> {
     debug!("Updating Cargo.toml at: {}", path.display());
 
     let content = fs::read_to_string(path)?;
-    let mut doc = content.parse::<Table>()
+    let mut doc = content
+        .parse::<Table>()
         .context("Failed to parse Cargo.toml")?;
 
     let mut updated = false;
@@ -104,7 +112,7 @@ fn update_dependencies_table(dependencies: &mut Table) -> bool {
                     *version = "*".to_string();
                     updated = true;
                 }
-            },
+            }
             Value::Table(dep_table) => {
                 // Dependency table with additional settings
                 if let Some(Value::String(version)) = dep_table.get_mut("version") {
@@ -113,7 +121,7 @@ fn update_dependencies_table(dependencies: &mut Table) -> bool {
                         updated = true;
                     }
                 }
-            },
+            }
             _ => {}
         }
     }
@@ -123,10 +131,14 @@ fn update_dependencies_table(dependencies: &mut Table) -> bool {
 
 /// Find workspace members in Cargo.toml
 fn find_workspace_members(repo_path: &Path, cargo_toml_path: &Path) -> Result<Vec<PathBuf>> {
-    debug!("Finding workspace members in: {}", cargo_toml_path.display());
+    debug!(
+        "Finding workspace members in: {}",
+        cargo_toml_path.display()
+    );
 
     let content = fs::read_to_string(cargo_toml_path)?;
-    let doc = content.parse::<Table>()
+    let doc = content
+        .parse::<Table>()
         .context("Failed to parse Cargo.toml")?;
 
     let mut member_paths = Vec::new();
@@ -137,7 +149,8 @@ fn find_workspace_members(repo_path: &Path, cargo_toml_path: &Path) -> Result<Ve
                 if let Value::String(member_str) = member {
                     // Handle glob patterns in workspace members
                     if member_str.contains('*') {
-                        let glob_pattern = format!("{}/{}/Cargo.toml", repo_path.display(), member_str);
+                        let glob_pattern =
+                            format!("{}/{}/Cargo.toml", repo_path.display(), member_str);
                         for entry in glob::glob(&glob_pattern)? {
                             if let Ok(path) = entry {
                                 member_paths.push(path);

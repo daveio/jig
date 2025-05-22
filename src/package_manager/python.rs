@@ -1,15 +1,17 @@
+use super::PackageManagerResult;
 use anyhow::{Context, Result};
 use log::{debug, info};
-use std::fs;
-use std::path::{Path, PathBuf};
-use walkdir::WalkDir;
-use toml::{Table, Value};
 use regex::Regex;
-use super::PackageManagerResult;
+use std::fs;
+use std::path::Path;
+use toml::{Table, Value};
 
 /// Bump Python package versions
 pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
-    debug!("Checking for Python package managers in: {}", repo_path.display());
+    debug!(
+        "Checking for Python package managers in: {}",
+        repo_path.display()
+    );
 
     let mut result = PackageManagerResult {
         name: "Python".to_string(),
@@ -27,9 +29,11 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
                 if updated {
                     result.updated_files.push(pyproject_path);
                 }
-            },
+            }
             Err(e) => {
-                result.errors.push(format!("Failed to update pyproject.toml: {}", e));
+                result
+                    .errors
+                    .push(format!("Failed to update pyproject.toml: {}", e));
             }
         }
     }
@@ -47,9 +51,11 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
                     // If we're using a requirements.txt, ensure we have uv
                     migrate_to_uv(repo_path, &mut result)?;
                 }
-            },
+            }
             Err(e) => {
-                result.errors.push(format!("Failed to update requirements.txt: {}", e));
+                result
+                    .errors
+                    .push(format!("Failed to update requirements.txt: {}", e));
             }
         }
     }
@@ -68,9 +74,12 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
                 if migrated {
                     result.updated_files.push(repo_path.join("pyproject.toml"));
                 }
-            },
+            }
             Err(e) => {
-                result.errors.push(format!("Failed to migrate setup.py to pyproject.toml: {}", e));
+                result.errors.push(format!(
+                    "Failed to migrate setup.py to pyproject.toml: {}",
+                    e
+                ));
             }
         }
     }
@@ -94,7 +103,8 @@ fn update_pyproject_toml(path: &Path) -> Result<bool> {
     debug!("Updating pyproject.toml at: {}", path.display());
 
     let content = fs::read_to_string(path)?;
-    let mut doc = content.parse::<Table>()
+    let mut doc = content
+        .parse::<Table>()
         .context("Failed to parse pyproject.toml")?;
 
     let mut updated = false;
@@ -120,7 +130,10 @@ fn update_pyproject_toml(path: &Path) -> Result<bool> {
             if let Some(Value::Table(dependencies)) = poetry.get_mut("dependencies") {
                 for (_, value) in dependencies.iter_mut() {
                     if let Value::String(version) = value {
-                        if version.contains("==") || version.contains(">=") || version.contains("~=") {
+                        if version.contains("==")
+                            || version.contains(">=")
+                            || version.contains("~=")
+                        {
                             // Replace version specifiers with "*" to get latest
                             *version = "*".to_string();
                             updated = true;

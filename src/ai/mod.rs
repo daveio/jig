@@ -2,7 +2,6 @@ use anyhow::{Context, Result};
 use log::{debug, info};
 use std::fs;
 use std::path::{Path, PathBuf};
-use crate::utils::paths;
 
 /// Supported AI tools
 pub enum AiTool {
@@ -60,7 +59,10 @@ pub fn configure_tool(tool_name: &str) -> Result<()> {
     let baseline_path = Path::new("/Users/dave/src/github.com/daveio/_baseline");
 
     if !baseline_path.exists() {
-        anyhow::bail!("Baseline repository not found at {}", baseline_path.display());
+        anyhow::bail!(
+            "Baseline repository not found at {}",
+            baseline_path.display()
+        );
     }
 
     match tool {
@@ -72,7 +74,7 @@ pub fn configure_tool(tool_name: &str) -> Result<()> {
             copy_config_file(&source_file, &target_file)?;
 
             info!("Claude Desktop configuration updated successfully");
-        },
+        }
         AiTool::Cursor => {
             let source_dir = baseline_path.join("_cursor");
             let config_dir = tool.config_path()?;
@@ -86,7 +88,7 @@ pub fn configure_tool(tool_name: &str) -> Result<()> {
             copy_config_file(&mcp_source, &mcp_target)?;
 
             info!("Cursor configuration updated successfully");
-        },
+        }
         AiTool::Zed => {
             let source_dir = baseline_path.join(".zed");
             let config_dir = tool.config_path()?;
@@ -100,7 +102,7 @@ pub fn configure_tool(tool_name: &str) -> Result<()> {
             copy_config_file(&mcp_source, &mcp_target)?;
 
             info!("Zed configuration updated successfully");
-        },
+        }
         AiTool::Goose => {
             let source_file = baseline_path.join("mcp-goose.yaml");
             let config_dir = tool.config_path()?;
@@ -109,7 +111,7 @@ pub fn configure_tool(tool_name: &str) -> Result<()> {
             copy_config_file(&source_file, &target_file)?;
 
             info!("Goose configuration updated successfully");
-        },
+        }
     }
 
     Ok(())
@@ -117,12 +119,7 @@ pub fn configure_tool(tool_name: &str) -> Result<()> {
 
 /// Configure AI support for all tools
 pub fn configure_all_tools() -> Result<()> {
-    let tools = vec![
-        "claude-desktop",
-        "cursor",
-        "zed",
-        "goose",
-    ];
+    let tools = vec!["claude-desktop", "cursor", "zed", "goose"];
 
     for tool in tools {
         if let Err(e) = configure_tool(tool) {
@@ -136,7 +133,11 @@ pub fn configure_all_tools() -> Result<()> {
 
 /// Copy a configuration file, creating directories if needed
 fn copy_config_file(source: &Path, target: &Path) -> Result<()> {
-    debug!("Copying config file from {} to {}", source.display(), target.display());
+    debug!(
+        "Copying config file from {} to {}",
+        source.display(),
+        target.display()
+    );
 
     if !source.exists() {
         anyhow::bail!("Source file does not exist: {}", source.display());
@@ -147,15 +148,22 @@ fn copy_config_file(source: &Path, target: &Path) -> Result<()> {
         fs::create_dir_all(parent)?;
     }
 
-    fs::copy(source, target)
-        .context(format!("Failed to copy file from {} to {}", source.display(), target.display()))?;
+    fs::copy(source, target).context(format!(
+        "Failed to copy file from {} to {}",
+        source.display(),
+        target.display()
+    ))?;
 
     Ok(())
 }
 
 /// Copy a directory recursively
 fn copy_directory(source: &Path, target: &Path) -> Result<()> {
-    debug!("Copying directory from {} to {}", source.display(), target.display());
+    debug!(
+        "Copying directory from {} to {}",
+        source.display(),
+        target.display()
+    );
 
     if !source.exists() {
         anyhow::bail!("Source directory does not exist: {}", source.display());
@@ -168,8 +176,11 @@ fn copy_directory(source: &Path, target: &Path) -> Result<()> {
         .overwrite(true)
         .content_only(true);
 
-    fs_extra::dir::copy(source, target, &options)
-        .context(format!("Failed to copy directory from {} to {}", source.display(), target.display()))?;
+    fs_extra::dir::copy(source, target, &options).context(format!(
+        "Failed to copy directory from {} to {}",
+        source.display(),
+        target.display()
+    ))?;
 
     Ok(())
 }

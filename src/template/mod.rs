@@ -1,11 +1,11 @@
+use crate::utils::paths;
 use anyhow::{Context, Result};
 use log::{debug, info};
 use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
-use walkdir::WalkDir;
 use tera::Tera;
-use crate::utils::paths;
+use walkdir::WalkDir;
 
 pub mod language;
 
@@ -32,7 +32,10 @@ pub fn create_for_language(language: &str, repo_path: &Path) -> Result<()> {
 
 /// Update the template for an existing repository
 pub fn update_for_repository(repo_path: &Path) -> Result<UpdateResult> {
-    info!("Updating template for repository at: {}", repo_path.display());
+    info!(
+        "Updating template for repository at: {}",
+        repo_path.display()
+    );
 
     // Detect the language of the repository
     let detected_language = language::detect_language(repo_path)?;
@@ -42,7 +45,8 @@ pub fn update_for_repository(repo_path: &Path) -> Result<UpdateResult> {
     let template_dir = get_template_dir_for_language(&detected_language)?;
 
     // Check which files need updating
-    let update_result = check_and_update_template_files(&template_dir, repo_path, &detected_language)?;
+    let update_result =
+        check_and_update_template_files(&template_dir, repo_path, &detected_language)?;
 
     Ok(update_result)
 }
@@ -117,7 +121,7 @@ fn process_template_dir(template_dir: &Path, repo_path: &Path, language: &str) -
         }
 
         // Check if the file should be processed as a template
-        if entry_path.extension().map_or(false, |ext| ext == "tera") {
+        if entry_path.extension().is_some_and(|ext| ext == "tera") {
             // Read the template content
             let template_content = fs::read_to_string(entry_path)?;
 
@@ -126,10 +130,11 @@ fn process_template_dir(template_dir: &Path, repo_path: &Path, language: &str) -
 
             // Write the processed content to the target path without the .tera extension
             let target_path_without_tera = target_path.with_file_name(
-                target_path.file_name()
+                target_path
+                    .file_name()
                     .and_then(|name| name.to_str())
                     .unwrap_or("")
-                    .replace(".tera", "")
+                    .replace(".tera", ""),
             );
 
             fs::write(target_path_without_tera, processed_content)?;
@@ -145,7 +150,11 @@ fn process_template_dir(template_dir: &Path, repo_path: &Path, language: &str) -
 }
 
 /// Check which template files need updating and update them
-fn check_and_update_template_files(template_dir: &Path, repo_path: &Path, language: &str) -> Result<UpdateResult> {
+fn check_and_update_template_files(
+    template_dir: &Path,
+    repo_path: &Path,
+    language: &str,
+) -> Result<UpdateResult> {
     debug!("Checking for template updates");
 
     let mut updated_files = Vec::new();
@@ -191,13 +200,14 @@ fn check_and_update_template_files(template_dir: &Path, repo_path: &Path, langua
         let target_path = repo_path.join(rel_path);
 
         // Check if the file should be processed as a template
-        let is_template = entry_path.extension().map_or(false, |ext| ext == "tera");
+        let is_template = entry_path.extension().is_some_and(|ext| ext == "tera");
         let target_path_without_tera = if is_template {
             target_path.with_file_name(
-                target_path.file_name()
+                target_path
+                    .file_name()
                     .and_then(|name| name.to_str())
                     .unwrap_or("")
-                    .replace(".tera", "")
+                    .replace(".tera", ""),
             )
         } else {
             target_path.clone()
@@ -206,10 +216,11 @@ fn check_and_update_template_files(template_dir: &Path, repo_path: &Path, langua
         // Check if the file exists and needs updating
         let rel_path_to_check = if is_template {
             Path::new(rel_path).with_file_name(
-                rel_path.file_name()
+                rel_path
+                    .file_name()
                     .and_then(|name| name.to_str())
                     .unwrap_or("")
-                    .replace(".tera", "")
+                    .replace(".tera", ""),
             )
         } else {
             rel_path.to_path_buf()

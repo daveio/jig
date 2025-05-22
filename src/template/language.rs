@@ -5,46 +5,106 @@ use walkdir::WalkDir;
 
 /// Detect the programming language of a repository
 pub fn detect_language(repo_path: &Path) -> Result<String> {
-    debug!("Detecting language for repository at: {}", repo_path.display());
+    debug!(
+        "Detecting language for repository at: {}",
+        repo_path.display()
+    );
 
     // Language indicators with their corresponding file patterns
     let language_indicators = [
-        ("rust", vec![
-            "Cargo.toml", "Cargo.lock", ".rs", "rust-toolchain", "rust-toolchain.toml"
-        ]),
-        ("python", vec![
-            "pyproject.toml", "setup.py", "requirements.txt", ".py", "Pipfile", "poetry.lock"
-        ]),
-        ("javascript", vec![
-            "package.json", "package-lock.json", ".js", ".jsx", "yarn.lock", ".npmrc"
-        ]),
-        ("typescript", vec![
-            "tsconfig.json", ".ts", ".tsx", "tslint.json", "tsconfig.*.json"
-        ]),
-        ("go", vec![
-            "go.mod", "go.sum", ".go", "Gopkg.toml", "Gopkg.lock"
-        ]),
-        ("java", vec![
-            "pom.xml", "build.gradle", ".java", ".gradle", "gradle.properties", "settings.gradle"
-        ]),
-        ("ruby", vec![
-            "Gemfile", "Gemfile.lock", ".rb", ".gemspec", "Rakefile"
-        ]),
-        ("php", vec![
-            "composer.json", "composer.lock", ".php", "artisan"
-        ]),
-        ("csharp", vec![
-            ".csproj", ".sln", ".cs", "packages.config", "NuGet.Config"
-        ]),
-        ("cpp", vec![
-            "CMakeLists.txt", ".cpp", ".hpp", ".cc", ".hh", ".cxx", ".hxx"
-        ]),
-        ("c", vec![
-            ".c", ".h", "Makefile", "configure", "configure.ac", "autoconf"
-        ]),
-        ("shell", vec![
-            ".sh", ".bash", ".zsh", ".fish"
-        ]),
+        (
+            "rust",
+            vec![
+                "Cargo.toml",
+                "Cargo.lock",
+                ".rs",
+                "rust-toolchain",
+                "rust-toolchain.toml",
+            ],
+        ),
+        (
+            "python",
+            vec![
+                "pyproject.toml",
+                "setup.py",
+                "requirements.txt",
+                ".py",
+                "Pipfile",
+                "poetry.lock",
+            ],
+        ),
+        (
+            "javascript",
+            vec![
+                "package.json",
+                "package-lock.json",
+                ".js",
+                ".jsx",
+                "yarn.lock",
+                ".npmrc",
+            ],
+        ),
+        (
+            "typescript",
+            vec![
+                "tsconfig.json",
+                ".ts",
+                ".tsx",
+                "tslint.json",
+                "tsconfig.*.json",
+            ],
+        ),
+        (
+            "go",
+            vec!["go.mod", "go.sum", ".go", "Gopkg.toml", "Gopkg.lock"],
+        ),
+        (
+            "java",
+            vec![
+                "pom.xml",
+                "build.gradle",
+                ".java",
+                ".gradle",
+                "gradle.properties",
+                "settings.gradle",
+            ],
+        ),
+        (
+            "ruby",
+            vec!["Gemfile", "Gemfile.lock", ".rb", ".gemspec", "Rakefile"],
+        ),
+        (
+            "php",
+            vec!["composer.json", "composer.lock", ".php", "artisan"],
+        ),
+        (
+            "csharp",
+            vec![".csproj", ".sln", ".cs", "packages.config", "NuGet.Config"],
+        ),
+        (
+            "cpp",
+            vec![
+                "CMakeLists.txt",
+                ".cpp",
+                ".hpp",
+                ".cc",
+                ".hh",
+                ".cxx",
+                ".hxx",
+            ],
+        ),
+        (
+            "c",
+            vec![
+                ".c",
+                ".h",
+                "Makefile",
+                "configure",
+                "configure.ac",
+                "autoconf",
+            ],
+        ),
+        ("shell", vec![".sh", ".bash", ".zsh", ".fish"]),
     ];
 
     // Count occurrences of each language's indicators
@@ -85,7 +145,8 @@ pub fn detect_language(repo_path: &Path) -> Result<String> {
     }
 
     // Find the language with the most indicators
-    let detected_language = language_counts.into_iter()
+    let detected_language = language_counts
+        .into_iter()
         .max_by_key(|&(_, count)| count)
         .map(|(lang, _)| lang.to_string())
         .unwrap_or_else(|| "unknown".to_string());

@@ -1,9 +1,8 @@
 use anyhow::{Context, Result};
-use log::{debug, info};
+use log::debug;
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::path::{Path, PathBuf};
-use crate::utils::paths;
+use std::path::PathBuf;
 
 /// Configuration for the jig tool
 #[derive(Debug, Serialize, Deserialize)]
@@ -74,11 +73,13 @@ impl Config {
             return Ok(Config::default());
         }
 
-        let content = fs::read_to_string(&config_path)
-            .context(format!("Failed to read config file at {}", config_path.display()))?;
+        let content = fs::read_to_string(&config_path).context(format!(
+            "Failed to read config file at {}",
+            config_path.display()
+        ))?;
 
-        let config: Config = toml::from_str(&content)
-            .context("Failed to parse configuration file")?;
+        let config: Config =
+            toml::from_str(&content).context("Failed to parse configuration file")?;
 
         debug!("Loaded configuration from {}", config_path.display());
 
@@ -94,11 +95,12 @@ impl Config {
             fs::create_dir_all(parent)?;
         }
 
-        let content = toml::to_string_pretty(self)
-            .context("Failed to serialize configuration")?;
+        let content = toml::to_string_pretty(self).context("Failed to serialize configuration")?;
 
-        fs::write(&config_path, content)
-            .context(format!("Failed to write config to {}", config_path.display()))?;
+        fs::write(&config_path, content).context(format!(
+            "Failed to write config to {}",
+            config_path.display()
+        ))?;
 
         debug!("Saved configuration to {}", config_path.display());
 
@@ -108,8 +110,7 @@ impl Config {
 
 /// Get the path to the configuration file
 fn get_config_path() -> Result<PathBuf> {
-    let home_dir = dirs::home_dir()
-        .context("Failed to get home directory")?;
+    let home_dir = dirs::home_dir().context("Failed to get home directory")?;
 
     Ok(home_dir.join(".config/jig/config.toml"))
 }
