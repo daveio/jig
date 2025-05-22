@@ -1,4 +1,5 @@
 use super::PackageManagerResult;
+use crate::config::VersionsConfig;
 use anyhow::{Context, Result};
 use log::{debug, info};
 use std::fs;
@@ -17,6 +18,78 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
         updated_files: Vec::new(),
         errors: Vec::new(),
     };
+
+    // Check for Cargo.toml
+    let cargo_toml_path = repo_path.join("Cargo.toml");
+    if cargo_toml_path.exists() {
+        debug!("Found Cargo.toml");
+
+        match update_cargo_toml(&cargo_toml_path) {
+            Ok(updated) => {
+                if updated {
+                    result.updated_files.push(cargo_toml_path.clone());
+                }
+            }
+            Err(e) => {
+                result
+                    .errors
+                    .push(format!("Failed to update Cargo.toml: {}", e));
+            }
+        }
+
+        // Check for Cargo.toml files in workspace members
+        match find_workspace_members(repo_path, &cargo_toml_path) {
+            Ok(members) => {
+                for member_path in members {
+                    match update_cargo_toml(&member_path) {
+                        Ok(updated) => {
+                            if updated {
+                                result.updated_files.push(member_path);
+                            }
+                        }
+                        Err(e) => {
+                            result
+                                .errors
+                                .push(format!("Failed to update member Cargo.toml: {}", e));
+                        }
+                    }
+                }
+            }
+            Err(e) => {
+                result
+                    .errors
+                    .push(format!("Failed to find workspace members: {}", e));
+            }
+        }
+    }
+
+    Ok(result)
+}
+
+/// Bump Rust package versions using cached version information
+pub fn bump_versions_from_cache(
+    repo_path: &Path,
+    versions_config: &VersionsConfig,
+) -> Result<PackageManagerResult> {
+    debug!(
+        "Checking for Rust package managers using cached versions in: {}",
+        repo_path.display()
+    );
+
+    let mut result = PackageManagerResult {
+        name: "Rust".to_string(),
+        updated_files: Vec::new(),
+        errors: Vec::new(),
+    };
+
+    // Check if we have cached Rust versions
+    if !versions_config.package_managers.contains_key("rust") {
+        debug!("No cached Rust versions found");
+        return Ok(result);
+    }
+
+    // TODO: Implement actual version extraction from the cached config
+    // For now, we'll just use the same logic as the non-cached version
 
     // Check for Cargo.toml
     let cargo_toml_path = repo_path.join("Cargo.toml");

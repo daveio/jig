@@ -1,4 +1,5 @@
 use super::PackageManagerResult;
+use crate::config::VersionsConfig;
 use anyhow::{Context, Result};
 use log::{debug, info};
 use serde_json::{json, Value};
@@ -17,6 +18,55 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
         updated_files: Vec::new(),
         errors: Vec::new(),
     };
+
+    // Check for package.json
+    let package_json_path = repo_path.join("package.json");
+    if package_json_path.exists() {
+        debug!("Found package.json");
+
+        match update_package_json(&package_json_path) {
+            Ok(updated) => {
+                if updated {
+                    result.updated_files.push(package_json_path);
+                }
+            }
+            Err(e) => {
+                result
+                    .errors
+                    .push(format!("Failed to update package.json: {}", e));
+            }
+        }
+    }
+
+    Ok(result)
+}
+
+/// Bump JavaScript/TypeScript package versions using cached version information
+pub fn bump_versions_from_cache(
+    repo_path: &Path,
+    versions_config: &VersionsConfig,
+) -> Result<PackageManagerResult> {
+    debug!(
+        "Checking for JavaScript/TypeScript package managers using cached versions in: {}",
+        repo_path.display()
+    );
+
+    let mut result = PackageManagerResult {
+        name: "JavaScript/TypeScript".to_string(),
+        updated_files: Vec::new(),
+        errors: Vec::new(),
+    };
+
+    // Check if we have cached JavaScript/TypeScript versions
+    if !versions_config.package_managers.contains_key("javascript")
+        && !versions_config.package_managers.contains_key("typescript")
+    {
+        debug!("No cached JavaScript/TypeScript versions found");
+        return Ok(result);
+    }
+
+    // TODO: Implement actual version extraction from the cached config
+    // For now, we'll just use the same logic as the non-cached version
 
     // Check for package.json
     let package_json_path = repo_path.join("package.json");

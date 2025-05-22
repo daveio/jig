@@ -1,4 +1,5 @@
 use super::PackageManagerResult;
+use crate::config::VersionsConfig;
 use anyhow::{Context, Result};
 use log::{debug, info};
 use regex::Regex;
@@ -93,6 +94,72 @@ pub fn bump_versions(repo_path: &Path) -> Result<PackageManagerResult> {
         info!("poetry.lock found. Attempting to migrate to uv");
 
         migrate_to_uv(repo_path, &mut result)?;
+    }
+
+    Ok(result)
+}
+
+/// Bump Python package versions using cached version information
+pub fn bump_versions_from_cache(
+    repo_path: &Path,
+    versions_config: &VersionsConfig,
+) -> Result<PackageManagerResult> {
+    debug!(
+        "Checking for Python package managers using cached versions in: {}",
+        repo_path.display()
+    );
+
+    let mut result = PackageManagerResult {
+        name: "Python".to_string(),
+        updated_files: Vec::new(),
+        errors: Vec::new(),
+    };
+
+    // Check if we have cached Python versions
+    if !versions_config.package_managers.contains_key("python") {
+        debug!("No cached Python versions found");
+        return Ok(result);
+    }
+
+    // TODO: Implement actual version extraction from the cached config
+    // For now, we'll just use the same logic as the non-cached version
+
+    // Check for pyproject.toml
+    let pyproject_path = repo_path.join("pyproject.toml");
+    if pyproject_path.exists() {
+        debug!("Found pyproject.toml");
+
+        match update_pyproject_toml(&pyproject_path) {
+            Ok(updated) => {
+                if updated {
+                    result.updated_files.push(pyproject_path);
+                }
+            }
+            Err(e) => {
+                result
+                    .errors
+                    .push(format!("Failed to update pyproject.toml: {}", e));
+            }
+        }
+    }
+
+    // Check for requirements.txt
+    let requirements_path = repo_path.join("requirements.txt");
+    if requirements_path.exists() {
+        debug!("Found requirements.txt");
+
+        match update_requirements_txt(&requirements_path) {
+            Ok(updated) => {
+                if updated {
+                    result.updated_files.push(requirements_path);
+                }
+            }
+            Err(e) => {
+                result
+                    .errors
+                    .push(format!("Failed to update requirements.txt: {}", e));
+            }
+        }
     }
 
     Ok(result)

@@ -1,11 +1,19 @@
 use clap::Parser;
 use jig::cli::{Cli, Commands};
+use jig::config::ConfigManager;
 use jig::utils::logging;
 use std::process;
 
 fn main() {
     // Initialize logging
     logging::init_logger();
+
+    // Initialize configuration if it doesn't exist
+    // This ensures config files are created even when --help is called
+    if let Err(e) = ConfigManager::initialize_if_not_exists() {
+        eprintln!("Error initializing configuration: {}", e);
+        process::exit(1);
+    }
 
     // Parse command line arguments
     let cli = Cli::parse();

@@ -50,4 +50,8 @@ pub struct AiArgs {
 pub struct BumpArgs {
     /// Repository to update versions in (uses current directory if not specified)
     pub repository: Option<PathBuf>,
+
+    /// Use cached versions only (don't check for updates online)
+    #[arg(long, short)]
+    pub cached: bool,
 }
