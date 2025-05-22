@@ -31,7 +31,7 @@ Each language directory contains a complete project template with all the bells 
 
 It's like having a bunch of foxes that all need the same tail. Instead of knitting a tail for each fox, we just make one perfect tail pattern and let each fox point to it. Magnificently efficient!
 
-### Shared Components - The Code Reuse Revolution!
+### Shared Components - The Code Reuse Revolution
 
 In the `shared/` directory, we keep common components used by multiple language templates:
 
@@ -41,7 +41,7 @@ In the `shared/` directory, we keep common components used by multiple language 
 
 Then, in each language directory, we have placeholder files that tell `jig` which shared components to use. For example, a `gitignore` file might simply contain:
 
-```
+```plaintext
 common
 python
 ```

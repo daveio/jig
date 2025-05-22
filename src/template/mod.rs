@@ -108,6 +108,11 @@ fn get_templates_root_dir() -> Result<PathBuf> {
     Ok(templates_path)
 }
 
+/// Check if a filename contains template syntax
+fn contains_template_syntax(filename: &str) -> bool {
+    filename.contains("{{") && filename.contains("}}")
+}
+
 /// Process and copy template files to the repository
 fn process_template_dir(template_dir: &Path, repo_path: &Path, language: &str) -> Result<()> {
     debug!("Processing template directory: {}", template_dir.display());
@@ -143,7 +148,34 @@ fn process_template_dir(template_dir: &Path, repo_path: &Path, language: &str) -
 
         // Get the relative path from the template directory
         let rel_path = entry_path.strip_prefix(template_dir)?;
-        let target_path = repo_path.join(rel_path);
+
+        // Handle filenames with template syntax
+        let target_rel_path = if let Some(filename) = rel_path.file_name().and_then(|n| n.to_str())
+        {
+            if contains_template_syntax(filename) {
+                // For files with template syntax in their names, create a placeholder filename
+                // Extract the extension if any
+                let ext = rel_path.extension().and_then(|e| e.to_str()).unwrap_or("");
+
+                // Create a placeholder name using PROJECT_NAME placeholder
+                let new_filename = if ext.is_empty() {
+                    "PROJECT_NAME".to_string()
+                } else {
+                    format!("PROJECT_NAME.{}", ext)
+                };
+
+                // Create a new path with the placeholder name
+                let mut new_path = rel_path.to_path_buf();
+                new_path.set_file_name(new_filename);
+                new_path
+            } else {
+                rel_path.to_path_buf()
+            }
+        } else {
+            rel_path.to_path_buf()
+        };
+
+        let target_path = repo_path.join(&target_rel_path);
 
         // Create parent directories if needed
         if let Some(parent) = target_path.parent() {
@@ -164,19 +196,36 @@ fn process_template_dir(template_dir: &Path, repo_path: &Path, language: &str) -
             // Read the template content
             let template_content = fs::read_to_string(entry_path)?;
 
-            // Process the template
+            // If the file has template syntax in its name, we need to render the filename too
             let processed_content = tera.render_str(&template_content, &context)?;
 
-            // Write the processed content to the target path without the .tera extension
-            let target_path_without_tera = target_path.with_file_name(
-                target_path
-                    .file_name()
-                    .and_then(|name| name.to_str())
-                    .unwrap_or("")
-                    .replace(".tera", ""),
-            );
+            // Handle files with template syntax in the name
+            if let Some(filename) = rel_path.file_name().and_then(|n| n.to_str()) {
+                if contains_template_syntax(filename) {
+                    // Render the filename template
+                    let rendered_filename = tera.render_str(filename, &context)?;
 
-            fs::write(target_path_without_tera, processed_content)?;
+                    // Remove the .tera extension if present
+                    let final_filename = rendered_filename.replace(".tera", "");
+
+                    // Create the final path with the rendered filename
+                    let final_path = target_path.with_file_name(final_filename);
+
+                    // Write the processed content to the final path
+                    fs::write(final_path, processed_content)?;
+                } else {
+                    // Write the processed content to the target path without the .tera extension
+                    let target_path_without_tera = target_path.with_file_name(
+                        target_path
+                            .file_name()
+                            .and_then(|name| name.to_str())
+                            .unwrap_or("")
+                            .replace(".tera", ""),
+                    );
+
+                    fs::write(target_path_without_tera, processed_content)?;
+                }
+            }
         } else {
             // Just copy the file as-is
             fs::copy(entry_path, target_path)?;
@@ -239,7 +288,34 @@ fn check_and_update_template_files(
 
         // Get the relative path from the template directory
         let rel_path = entry_path.strip_prefix(template_dir)?;
-        let target_path = repo_path.join(rel_path);
+
+        // Handle filenames with template syntax
+        let target_rel_path = if let Some(filename) = rel_path.file_name().and_then(|n| n.to_str())
+        {
+            if contains_template_syntax(filename) {
+                // For files with template syntax in their names, create a placeholder filename
+                // Extract the extension if any
+                let ext = rel_path.extension().and_then(|e| e.to_str()).unwrap_or("");
+
+                // Create a placeholder name using PROJECT_NAME placeholder
+                let new_filename = if ext.is_empty() {
+                    "PROJECT_NAME".to_string()
+                } else {
+                    format!("PROJECT_NAME.{}", ext)
+                };
+
+                // Create a new path with the placeholder name
+                let mut new_path = rel_path.to_path_buf();
+                new_path.set_file_name(new_filename);
+                new_path
+            } else {
+                rel_path.to_path_buf()
+            }
+        } else {
+            rel_path.to_path_buf()
+        };
+
+        let target_path = repo_path.join(&target_rel_path);
 
         // Check if the file is a placeholder file
         let is_placeholder = component::is_placeholder_file(entry_path);
@@ -248,14 +324,30 @@ fn check_and_update_template_files(
         let is_template =
             !is_placeholder && entry_path.extension().is_some_and(|ext| ext == "tera");
 
+        // For files with template syntax in their names
+        let has_template_filename =
+            if let Some(filename) = rel_path.file_name().and_then(|n| n.to_str()) {
+                contains_template_syntax(filename)
+            } else {
+                false
+            };
+
         let target_path_without_ext = if is_template {
-            target_path.with_file_name(
-                target_path
-                    .file_name()
-                    .and_then(|name| name.to_str())
-                    .unwrap_or("")
-                    .replace(".tera", ""),
-            )
+            if has_template_filename {
+                // We need to render the filename too
+                let filename = rel_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+                let rendered_filename = tera.render_str(filename, &context)?;
+                let final_filename = rendered_filename.replace(".tera", "");
+                target_path.with_file_name(final_filename)
+            } else {
+                target_path.with_file_name(
+                    target_path
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .unwrap_or("")
+                        .replace(".tera", ""),
+                )
+            }
         } else {
             target_path.clone()
         };
@@ -272,13 +364,21 @@ fn check_and_update_template_files(
                 rel_path.to_path_buf()
             }
         } else if is_template {
-            Path::new(rel_path).with_file_name(
-                rel_path
-                    .file_name()
-                    .and_then(|name| name.to_str())
-                    .unwrap_or("")
-                    .replace(".tera", ""),
-            )
+            if has_template_filename {
+                // We need to render the filename too
+                let filename = rel_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+                let rendered_filename = tera.render_str(filename, &context)?;
+                let final_filename = rendered_filename.replace(".tera", "");
+                Path::new(rel_path.parent().unwrap_or(Path::new(""))).join(final_filename)
+            } else {
+                Path::new(rel_path).with_file_name(
+                    rel_path
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .unwrap_or("")
+                        .replace(".tera", ""),
+                )
+            }
         } else {
             rel_path.to_path_buf()
         };
@@ -315,8 +415,20 @@ fn check_and_update_template_files(
                 // Process and write the template
                 let template_content = fs::read_to_string(entry_path)?;
                 let processed_content = tera.render_str(&template_content, &context)?;
-                fs::write(&target_path_without_ext, processed_content)?;
-                updated_files.push(target_path_without_ext);
+
+                if has_template_filename {
+                    // We need to render the filename too
+                    let filename = rel_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+                    let rendered_filename = tera.render_str(filename, &context)?;
+                    let final_filename = rendered_filename.replace(".tera", "");
+                    let final_path = target_path.with_file_name(final_filename);
+
+                    fs::write(&final_path, processed_content)?;
+                    updated_files.push(final_path);
+                } else {
+                    fs::write(&target_path_without_ext, processed_content)?;
+                    updated_files.push(target_path_without_ext);
+                }
             } else {
                 // Just copy the file as-is
                 fs::copy(entry_path, &target_path_without_ext)?;

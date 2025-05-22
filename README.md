@@ -112,9 +112,9 @@ This command will:
 
 `jig` uses a clever template system with shared components to avoid duplication. Templates are organized like this:
 
-```
+```plaintext
 templates/
-├── shared/             # Shared template components
+├── shared/             # Shared components
 │   ├── gitignore/      # Common gitignore patterns
 │   └── github/         # Shared GitHub workflows
 ├── rust/               # Rust-specific templates
@@ -123,6 +123,29 @@ templates/
 ```
 
 Each language folder contains placeholder files that reference shared components. This means when you update a shared component, all languages get updated! It's like having one fox teach all the other foxes at once!
+
+### Template File Naming
+
+In templates, we avoid using template syntax directly in filenames. Instead:
+
+1. We use placeholders like `PROJECT_NAME` in filenames where dynamic content is needed
+2. The actual template logic is handled in the code, which translates these placeholders based on the project context
+3. Template logic is still used within the file contents where appropriate
+
+This approach ensures better maintainability and cleaner template organization while still allowing for dynamic file generation.
+
+### Recent Template System Improvements
+
+The template system has been reorganized to better support sharing components across languages:
+
+1. **Common components extraction**: Patterns shared across multiple languages are now stored in dedicated files
+2. **Placeholder system**: Simple text files reference these shared components
+3. **No template logic in filenames**: Filenames now use placeholders instead of template syntax
+4. **Logic extracted to template files**: The actual template logic now resides in the content of files
+
+These changes make templates more maintainable and reduce duplication. The code has been fully updated to support this new system while maintaining backward compatibility.
+
+_[imagine a drawing of foxes celebrating around a shared component tree, each holding a different language flag]_
 
 ## Dry Run Mode
 

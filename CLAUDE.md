@@ -49,6 +49,18 @@ templates/
 └── ... other languages
 ```
 
+### Template Filename Requirements
+
+When working with template files, never use template syntax (like `{{ variable }}`) directly in filenames. Instead:
+
+1. Use static placeholder names like `PROJECT_NAME.gemspec.tera` in filenames
+2. Place all template logic inside the file content where it belongs
+3. The system will translate these placeholders based on the project context
+
+Files with template syntax in filenames (e.g., `{{ project_name|lower|replace(from=" ", to="_") }}.gemspec.tera`) should be renamed to use placeholders (e.g., `PROJECT_NAME.gemspec.tera`).
+
+The code handles the translation of these placeholders to appropriate filenames during template processing. This improves maintainability and makes the template system more robust.
+
 ### Shared Components
 
 The `shared/` directory contains components that are used by multiple language templates:

@@ -20,7 +20,7 @@ _[imagine a fox juggling template files, with shared components glowing in the c
 
 We've organized templates with a shared component system to reduce duplication:
 
-```
+```plaintext
 templates/
 ├── shared/             # Shared components
 │   ├── gitignore/      # Common gitignore patterns
@@ -54,6 +54,16 @@ Each language directory uses placeholder files to reference shared components:
        workflow_name: Python
        jobs_template: python_jobs
      ```
+
+### Template Filenames
+
+Template filenames must not contain template syntax (like `{{ variable }}`). Instead:
+
+1. Use static placeholders (e.g., `PROJECT_NAME.gemspec.tera`) in filenames
+2. Place all template logic inside the file content
+3. The system will handle the translation of these placeholders based on the project context
+
+This approach improves maintainability and makes templates easier to work with, while still allowing for dynamic file generation.
 
 ### Implementation
 
