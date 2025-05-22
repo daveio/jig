@@ -1,0 +1,20 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+      - name: install
+        uses: dtolnay/rust-toolchain@b3b07ba8b418998c39fb20f53e8b695cdcc8de1b
+        with:
+          components: rustfmt,clippy
+          toolchain: 1.87.0
+      - name: build
+        run: cargo build
+      - name: test
+        run: cargo test
+name: ci
+on:
+  - push
+  - pull_request
+permissions: read-all
