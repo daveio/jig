@@ -1,18 +1,10 @@
-name: codacy
-on:
-  push:
-  pull_request:
-permissions:
-  actions: read
-  contents: read
-  security-events: write
 jobs:
   codacy:
+    name: codacy
     permissions:
+      actions: read
       contents: read
       security-events: write
-      actions: read
-    name: codacy
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -20,15 +12,23 @@ jobs:
       - name: analysis
         uses: codacy/codacy-analysis-cli-action@09916000460adeeedc96b9704f86deba53e2ad5d
         with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          verbose: true
-          output: results.sarif
           format: sarif
           gh-code-scanning-compat: true
           max-allowed-issues: 2147483647
+          output: results.sarif
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          verbose: true
       - name: clean
         run: jq '.runs |= unique_by({tool, invocations, results})' < results.sarif > codacy.sarif
       - name: upload
         uses: github/codeql-action/upload-sarif@396fd27c308b7ab96df64e7e4cb9a7c6e22f4ebc
         with:
           sarif_file: codacy.sarif
+name: codacy
+on:
+  pull_request: null
+  push: null
+permissions:
+  actions: read
+  contents: read
+  security-events: write

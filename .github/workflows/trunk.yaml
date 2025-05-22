@@ -1,0 +1,16 @@
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+      - name: trunk
+        uses: trunk-io/trunk-action@b8812b3da2f527db878ef7541c4177f8d280cd89
+name: lint
+on:
+  pull_request: null
+  push: null
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
