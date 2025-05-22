@@ -2,6 +2,7 @@ pub mod ai;
 pub mod cli;
 pub mod commands;
 pub mod config;
+pub mod dependabot;
 pub mod git;
 pub mod package_manager;
 pub mod template;

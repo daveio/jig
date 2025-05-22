@@ -1,4 +1,4 @@
-use crate::cli::NewArgs;
+use crate::cli::{CommonOptions, NewArgs};
 use crate::git;
 use crate::template;
 use anyhow::{Context, Result};
@@ -6,15 +6,32 @@ use log::{debug, info};
 use std::path::Path;
 
 /// Execute the 'new' command
-pub fn execute(args: &NewArgs, dry_run: bool) -> Result<()> {
-    info!("Creating new repository with language: {}", args.language);
-
-    if dry_run {
-        info!("Dry run mode: No changes will be made");
-        info!(
-            "Would create a new repository with {} language",
+pub fn execute(args: &NewArgs, options: &CommonOptions) -> Result<()> {
+    if options.verbose {
+        println!(
+            "🆕 Creating new repository with language: {}",
             args.language
         );
+    }
+    info!("Creating new repository with language: {}", args.language);
+
+    if options.info {
+        println!(
+            "ℹ️  Would create a new repository with {} language",
+            args.language
+        );
+        if options.ai {
+            println!("# New Repository Creation\n\nLanguage: {}\nAction: Initialize git repository and create template", args.language);
+        }
+        return Ok(());
+    }
+
+    if options.dry_run {
+        println!(
+            "🔍 [DRY RUN] Would create a new repository with {} language",
+            args.language
+        );
+        info!("Dry run mode: No changes will be made");
         return Ok(());
     }
 
@@ -32,6 +49,12 @@ pub fn execute(args: &NewArgs, dry_run: bool) -> Result<()> {
     git::commit_all(&repo, "Initial commit with template setup")
         .context("Failed to commit template files")?;
 
+    if options.verbose {
+        println!(
+            "✅ Repository created successfully with {} language!",
+            args.language
+        );
+    }
     info!(
         "Repository created successfully with {} language",
         args.language

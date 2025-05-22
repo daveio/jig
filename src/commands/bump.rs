@@ -1,4 +1,4 @@
-use crate::cli::BumpArgs;
+use crate::cli::{BumpArgs, BumpEcosystem, CommonOptions};
 use crate::config::{ConfigManager, PackageManagerVersions};
 use crate::git;
 use crate::package_manager;
@@ -8,13 +8,43 @@ use chrono::Utc;
 use log::{debug, info};
 use std::collections::HashMap;
 
+/// Get the display name for an ecosystem
+fn ecosystem_name(ecosystem: &BumpEcosystem) -> &'static str {
+    match ecosystem {
+        BumpEcosystem::Node => "Node.js",
+        BumpEcosystem::Python => "Python",
+        BumpEcosystem::Ruby => "Ruby",
+        BumpEcosystem::Rust => "Rust",
+        BumpEcosystem::Java => "Java",
+        BumpEcosystem::Go => "Go",
+        BumpEcosystem::Actions => "GitHub Actions",
+    }
+}
+
 /// Execute the 'bump' command
-pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
+pub fn execute(args: &BumpArgs, options: &CommonOptions) -> Result<()> {
     // Determine the repository path
     let repo_path = match &args.repository {
         Some(path) => paths::to_absolute_path(path)?,
         None => paths::get_current_dir()?,
     };
+
+    // Check for ecosystem-specific targeting
+    let ecosystem_filter = &args.ecosystem;
+
+    if options.verbose {
+        match ecosystem_filter {
+            Some(ecosystem) => println!(
+                "⬆️ Bumping {} ecosystem versions in: {}",
+                ecosystem_name(ecosystem),
+                repo_path.display()
+            ),
+            None => println!(
+                "⬆️ Bumping all ecosystem versions in: {}",
+                repo_path.display()
+            ),
+        }
+    }
 
     // Load configuration manager to access and update versions
     let mut config_manager = ConfigManager::new()?;
@@ -23,13 +53,25 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
     let versions_config_clone = config_manager.versions_config().clone();
 
     if args.cached {
+        if options.verbose {
+            println!("📦 Using cached versions from: {}", repo_path.display());
+        }
         info!("Using cached versions from: {}", repo_path.display());
 
         if versions_config_clone.last_checked.is_none() {
+            if options.verbose {
+                println!("⚠️  No cached versions available. Run without --cached first.");
+            }
             info!("No cached versions available. Run without --cached first.");
             return Ok(());
         }
 
+        if options.verbose {
+            println!(
+                "🕒 Last checked: {}",
+                versions_config_clone.last_checked.as_ref().unwrap()
+            );
+        }
         info!(
             "Last checked: {}",
             versions_config_clone.last_checked.as_ref().unwrap()
@@ -38,12 +80,39 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
         info!("Bumping versions in repository at: {}", repo_path.display());
     }
 
-    if dry_run {
-        info!("Dry run mode: No changes will be made");
-        info!(
-            "Would bump versions in repository at {}",
+    if options.info {
+        let action = match ecosystem_filter {
+            Some(ecosystem) => format!(
+                "Would bump {} ecosystem versions",
+                ecosystem_name(ecosystem)
+            ),
+            None => "Would bump all ecosystem versions".to_string(),
+        };
+        println!("ℹ️  {} in repository at {}", action, repo_path.display());
+        if options.ai {
+            println!(
+                "# Version Bumping Analysis\n\nRepository: {}\nAction: {}",
+                repo_path.display(),
+                action
+            );
+        }
+        return Ok(());
+    }
+
+    if options.dry_run {
+        let action = match ecosystem_filter {
+            Some(ecosystem) => format!(
+                "Would bump {} ecosystem versions",
+                ecosystem_name(ecosystem)
+            ),
+            None => "Would bump all ecosystem versions".to_string(),
+        };
+        println!(
+            "🔍 [DRY RUN] {} in repository at {}",
+            action,
             repo_path.display()
         );
+        info!("Dry run mode: No changes will be made");
         return Ok(());
     }
 
@@ -58,13 +127,22 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
             package_manager::bump_all_versions_from_cache(&repo_path, &versions_config_clone)?;
 
         if result.is_empty() {
+            if options.verbose {
+                println!("✅ No package managers found or no updates needed.");
+            }
             info!("No package managers found or no updates needed.");
             return Ok(());
         }
 
+        if options.verbose {
+            println!("📦 Updated {} package managers", result.len());
+        }
         debug!("Updated {} package managers", result.len());
 
         for pm in &result {
+            if options.verbose {
+                println!("✅ Updated {} dependencies", pm.name);
+            }
             info!("Updated {} dependencies", pm.name);
         }
 
@@ -76,6 +154,12 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
         )?;
 
         if github_actions_result.updated {
+            if options.verbose {
+                println!(
+                    "⚙️ Updated {} GitHub Actions workflows",
+                    github_actions_result.workflows.len()
+                );
+            }
             info!(
                 "Updated {} GitHub Actions workflows",
                 github_actions_result.workflows.len()
@@ -115,12 +199,21 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
             // Save the updated versions cache
             config_manager.save_versions()?;
 
+            if options.verbose {
+                println!("📦 Updated {} package managers", result.len());
+            }
             debug!("Updated {} package managers", result.len());
 
             for pm in &result {
+                if options.verbose {
+                    println!("✅ Updated {} dependencies", pm.name);
+                }
                 info!("Updated {} dependencies", pm.name);
             }
         } else {
+            if options.verbose {
+                println!("✅ No package managers found or no updates needed.");
+            }
             info!("No package managers found or no updates needed.");
             return Ok(());
         }
@@ -138,6 +231,12 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
             // Save the updated versions cache again
             config_manager.save_versions()?;
 
+            if options.verbose {
+                println!(
+                    "⚙️ Updated {} GitHub Actions workflows",
+                    github_actions_result.workflows.len()
+                );
+            }
             info!(
                 "Updated {} GitHub Actions workflows",
                 github_actions_result.workflows.len()
@@ -149,6 +248,9 @@ pub fn execute(args: &BumpArgs, dry_run: bool) -> Result<()> {
     git::commit_all(&repo, "Bump dependencies to latest versions")
         .context("Failed to commit version updates")?;
 
+    if options.verbose {
+        println!("✅ Version bumping completed successfully!");
+    }
     info!("Version bumping completed successfully");
 
     Ok(())
