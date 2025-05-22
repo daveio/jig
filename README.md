@@ -238,13 +238,76 @@ mise start   # Run the project
 - **DevSkim**: Security-focused static analysis
 - **Dependabot**: Automated dependency updates
 
+### Testing
+
+`jig` includes a comprehensive test suite covering all core functionality:
+
+```bash
+# Run all tests
+cargo test
+
+# Run tests with single thread (recommended to avoid environment variable race conditions)
+cargo test -- --test-threads=1
+
+# Run tests with verbose output
+cargo test -- --nocapture
+
+# Run specific test modules
+cargo test config::tests
+cargo test dependabot::tests
+cargo test git::tests
+```
+
+#### Test Structure
+
+```mermaid
+graph TD
+    A[Test Suite] --> B[Config Tests]
+    A --> C[Dependabot Tests]
+    A --> D[Git Tests]
+    A --> E[Template Tests]
+    A --> F[Utils Tests]
+
+    B --> B1[Configuration Loading]
+    B --> B2[Default Values]
+    B --> B3[Serialization]
+    B --> B4[XDG Support]
+
+    C --> C1[Ecosystem Detection]
+    C --> C2[Config File Parsing]
+    C --> C3[YAML Generation]
+
+    D --> D1[Repository Operations]
+    D --> D2[Signature Creation]
+    D --> D3[Environment Variables]
+
+    E --> E1[Component Processing]
+    E --> E2[Placeholder Detection]
+
+    F --> F1[Path Operations]
+    F --> F2[YAML Utilities]
+```
+
+The test suite validates:
+
+- **Configuration management**: Loading, saving, and default values
+- **Template processing**: Component detection and placeholder resolution
+- **Git operations**: Repository initialization, commits, and signature handling
+- **Dependabot configuration**: Ecosystem detection and YAML generation
+- **Utility functions**: Path handling, YAML parsing, and file operations
+
+#### Test Environment
+
+Tests use temporary directories and mock data to ensure isolation. The XDG configuration system is properly tested with environment variable overrides.
+
 ### Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run `mise ci` to ensure code quality
-5. Submit a pull request
+4. **Run the full test suite**: `cargo test`
+5. Run `mise ci` to ensure code quality
+6. Submit a pull request
 
 ## License
 

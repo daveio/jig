@@ -321,9 +321,9 @@ The borrow checker ensures:
 
 It's like having a very strict librarian who ensures nobody tears pages out of the books.
 
-## Chapter 11: Testing in Rust
+## Chapter 11: Testing in Rust - Where the Rubber Meets the Road
 
-Rust has built-in testing support:
+Rust has built-in testing support, and in `jig` we've got 54 tests proving it works:
 
 ```rust
 #[cfg(test)]
@@ -344,6 +344,157 @@ mod tests {
 ```
 
 Tests live right next to your code. Run them with `cargo test`. It's testing without the setup hassle!
+
+### Real-World Testing Lessons from Jig
+
+Let's talk about the testing approach in `jig`, because we learned some things the hard way:
+
+#### Environment Variable Testing
+
+```rust
+#[test]
+fn test_git_signature_with_env_vars() {
+    std::env::set_var("GIT_AUTHOR_NAME", "Test Author");
+    std::env::set_var("GIT_AUTHOR_EMAIL", "test@example.com");
+
+    let signature = get_signature(repo, &[])?;
+    assert_eq!(signature.name(), Some("Test Author"));
+}
+```
+
+The tricky part? Environment variables are global! We had to fix our git signature logic to prioritize environment variables over global git config. The test was failing because it expected "Test Author" but got "Dave Williams" from the global git config.
+
+#### XDG Configuration Testing
+
+```rust
+fn with_temp_config<F, R>(test_fn: F) -> R
+where
+    F: FnOnce() -> R,
+{
+    let temp_dir = tempfile::tempdir().unwrap();
+    let temp_path = temp_dir.path().to_string_lossy().to_string();
+
+    std::env::set_var("XDG_CONFIG_HOME", &temp_path);
+    let result = test_fn();
+    std::env::remove_var("XDG_CONFIG_HOME");
+
+    result
+}
+```
+
+This helper function ensures each test gets its own config directory. We had to fix our path resolution code to properly handle `XDG_CONFIG_HOME` by using `join()` correctly instead of string concatenation.
+
+#### Serde Default Values
+
+```rust
+#[derive(Serialize, Deserialize)]
+struct UpdateConfig {
+    #[serde(skip_serializing_if = "Vec::is_empty", default)]
+    pub assignees: Vec<String>,
+}
+```
+
+That `default` annotation is crucial! Without it, Serde expects the field to be present in the YAML. Our Dependabot tests were failing because some configs had empty assignees arrays while others had none at all.
+
+#### The Art of Temporary Directories
+
+```mermaid
+graph TD
+    A[Test Starts] --> B[Create temp_dir]
+    B --> C[Set Environment Variables]
+    C --> D[Run Test Logic]
+    D --> E[Cleanup Happens Automatically]
+    E --> F[Drop temp_dir]
+    F --> G[Test Ends]
+```
+
+The `tempfile` crate is your friend! It automatically cleans up when the `TempDir` goes out of scope. No more "my test failed because the previous test left files around" nonsense.
+
+#### Path Joining: The Cross-Platform Minefield
+
+```rust
+// Wrong! This breaks on Windows
+let path = format!("{}/jig/config.yaml", config_dir);
+
+// Right! This works everywhere
+let path = config_dir.join("jig").join("config.yaml");
+```
+
+We learned this the hard way when our path construction was using forward slashes directly instead of using `PathBuf::join()`. The fix was simple but critical for cross-platform compatibility.
+
+### Test Organization Philosophy
+
+Our tests follow a pattern:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    fn setup_test_env() -> TestResult {
+        // Common setup code
+    }
+
+    #[test]
+    fn test_the_happy_path() {
+        // When everything works
+    }
+
+    #[test]
+    fn test_the_sad_path() {
+        // When things go wrong
+    }
+
+    #[test]
+    fn test_edge_cases() {
+        // The weird stuff
+    }
+}
+```
+
+Each module (`config`, `dependabot`, `git`, `template`, `utils`) has its own test module. This keeps things organized and makes it easy to run just the tests you care about:
+
+```bash
+cargo test config::tests  # Just config tests
+cargo test -- --nocapture  # See println! output
+```
+
+### The Debugging Dance
+
+When tests fail, Rust gives you excellent error messages:
+
+```plaintext
+thread 'config::tests::test_config_manager_initialization' panicked at src/config/mod.rs:123:5:
+assertion failed: !manager.app_config().ai.tools.is_empty()
+```
+
+This tells you exactly where the test failed and what assertion broke. Combined with `--nocapture`, you can debug like a pro.
+
+### Testing Anti-Patterns to Avoid
+
+1. **Global State Pollution**: Don't let tests affect each other
+2. **Hardcoded Paths**: Use temp directories and relative paths
+3. **Network Dependencies**: Mock external services
+4. **Time Dependencies**: Use fixed timestamps in tests
+5. **Platform-Specific Logic**: Test abstractions, not implementations
+
+The beauty of Rust testing is that it forces you to think about these things upfront. If your code is hard to test, it's probably poorly designed!
+
+### The Race Condition Reality Check
+
+Speaking of global state pollution, we learned this the hard way! Some of our tests modify environment variables like `XDG_CONFIG_HOME` and `GIT_AUTHOR_*`, and when `cargo test` runs them in parallel (which is the default), they can step on each other's toes.
+
+The solution? Run tests with a single thread when you need to avoid race conditions:
+
+```bash
+# This prevents the embarrassing "why do my tests fail sometimes?" moments
+cargo test -- --test-threads=1
+```
+
+It's slower, but it's deterministic. And as we all know, slow and correct beats fast and broken every time!
+
+This is a classic example of how real-world software development teaches you things that no tutorial ever mentions. Environment variables are global! Who knew? (Everyone who's been bitten by this before, that's who.)
 
 ## Chapter 12: Modules and Visibility
 

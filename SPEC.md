@@ -230,12 +230,72 @@ Potential future improvements to the template system:
 2. More granular control over component inclusion
 3. Version-specific components for different language versions
 
+## Quality Assurance
+
+### Testing Requirements
+
+The system must include comprehensive test coverage for:
+
+1. **Configuration System**
+
+   - XDG Base Directory specification compliance
+   - Default value generation and validation
+   - Configuration persistence and loading
+   - Environment variable support
+
+2. **Template Processing**
+
+   - Component detection and validation
+   - Placeholder file resolution
+   - Template rendering accuracy
+   - Cross-platform path handling
+
+3. **Version Control Integration**
+
+   - Repository initialization and management
+   - Commit signature creation
+   - Environment variable precedence
+   - Branch operations
+
+4. **Ecosystem Detection**
+
+   - Package manager identification
+   - Configuration file parsing
+   - Multi-ecosystem projects
+   - Missing dependency handling
+
+5. **Utility Functions**
+   - Path normalization and validation
+   - File system operations
+   - YAML processing
+   - Error handling and recovery
+
+### Test Environment
+
+Tests should:
+
+- Use isolated temporary directories
+- Mock external dependencies where appropriate
+- Test both success and failure scenarios
+- Validate cross-platform compatibility
+- Ensure idempotent operations
+
+### Error Handling
+
+All operations must:
+
+- Return structured error information
+- Provide clear user-facing messages
+- Include context for debugging
+- Support dry-run validation
+- Gracefully handle missing dependencies
+
 ## Instructions
 
 - Write this software.
 - Prefer to use a package over doing something manually. I have no problem pulling in dependencies. Check the `context7` MCP tool to find things you can use.
 - Make sure you explore my Baseline repo (`/Users/dave/src/github.com/daveio/_baseline` ) and all repos underneath `/Users/dave/src` to get ideas of what can be set up, configured, and tweaked.
-- Write tests.
+- Write comprehensive tests covering all functionality and edge cases.
 - Include comprehensive documentation in [`README.md`](http://README.md) (for humans) and [`CLAUDE.md`](http://CLAUDE.md) (for AI).
 - Create a template repository in `templates/` inside the project and use it.
 - `git init` at the beginning and `commit` after each logical chunk. Commit often.

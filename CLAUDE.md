@@ -308,13 +308,93 @@ RUST_LOG=debug jig new rust
 
 ### Testing
 
-Run tests with:
+`jig` includes a comprehensive test suite with 54 tests covering all major functionality:
 
 ```bash
+# Run all tests
 cargo test
-# or using mise
+
+# Run tests with single thread (recommended to avoid race conditions)
+cargo test -- --test-threads=1
+
+# Run tests with verbose output
+cargo test -- --nocapture
+
+# Run specific test modules
+cargo test config::tests        # Configuration tests
+cargo test dependabot::tests    # Dependabot functionality
+cargo test git::tests          # Git operations
+cargo test template::tests     # Template processing
+cargo test utils::tests        # Utility functions
+
+# Using mise
 mise test
 ```
+
+#### Test Coverage Areas
+
+1. **Configuration Management** (`config::tests`)
+
+   - XDG Base Directory specification compliance
+   - Default configuration values
+   - Configuration serialization/deserialization
+   - Mutable access and initialization
+
+2. **Dependabot Configuration** (`dependabot::tests`)
+
+   - Ecosystem detection across multiple languages
+   - Configuration file parsing (YAML/YML)
+   - YAML generation and validation
+   - Dry-run functionality
+
+3. **Git Operations** (`git::tests`)
+
+   - Repository initialization and opening
+   - Signature creation with environment variables
+   - Default branch detection
+   - Commit operations
+
+4. **Template Processing** (`template::tests`)
+
+   - Placeholder file detection
+   - Component processing (gitignore, workflows)
+   - Shared component system
+
+5. **Utility Functions** (`utils::tests`)
+   - Path operations and normalization
+   - YAML parsing and serialization
+   - Directory creation
+
+#### Test Environment Setup
+
+Tests use:
+
+- Temporary directories for isolation
+- Environment variable mocking
+- Mock Git repositories
+- XDG configuration overrides
+
+#### Test Race Conditions
+
+Some tests modify global environment variables (particularly `XDG_CONFIG_HOME` and `GIT_AUTHOR_*` variables), which can cause race conditions when tests run in parallel. These tests use a `with_temp_config` helper that sets environment variables for isolation.
+
+**Important**: When running the full test suite, use `--test-threads=1` to avoid race conditions:
+
+```bash
+cargo test -- --test-threads=1
+```
+
+Individual test modules can be run safely in parallel since they don't interfere with each other.
+
+#### Recent Test Fixes
+
+Several test failures were resolved:
+
+1. **Configuration Path Handling**: Fixed XDG_CONFIG_HOME support in path resolution
+2. **Git Signature Environment**: Updated signature creation to prioritize environment variables
+3. **Dependabot Serialization**: Added proper default handling for optional fields
+4. **Path Construction**: Fixed cross-platform path joining issues
+5. **Test Isolation**: Identified race conditions in environment variable usage
 
 ### Building
 

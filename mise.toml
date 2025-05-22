@@ -5,7 +5,7 @@ JIG_MISE_ACTIVE = "true"
 env_file = ".env"
 
 [tools]
-rust = "1.87.0"
+rust = { version = '1.87.0', profile = 'default', components = 'rustc,cargo,rustfmt,clippy' }
 
 [tasks.build]
 run = "cargo build"
@@ -23,4 +23,4 @@ run = "trunk check -a --show-existing"
 run = "cargo run"
 
 [tasks.test]
-run = "cargo test"
+run = "cargo test --test-threads=1"
