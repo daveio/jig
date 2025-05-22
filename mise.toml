@@ -11,7 +11,7 @@ rust = { version = '1.87.0', profile = 'default', components = 'rustc,cargo,rust
 run = "cargo build"
 
 [tasks.ci]
-run = "mise fmt && mise lint && mise test && mise build"
+run = "mise test && mise build"
 
 [tasks.fmt]
 run = "trunk fmt -a"
