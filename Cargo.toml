@@ -13,7 +13,7 @@ clap = { version = "4.5.38", features = ["derive"] }
 # Terminal output formatting
 console = "0.15.8"
 indicatif = "0.17.9"
-colored = "2.1.0"
+colored = "3.0.0"
 # Template engine
 tera = "1.20.0"
 # Git support
