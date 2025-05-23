@@ -39,7 +39,7 @@ regex = "1.10.4"
 # HTTP client
 reqwest = { version = "0.12.7", features = ["blocking", "json"] }
 # GitHub API client
-octocrab = "0.36.0"
+octocrab = "0.44.1"
 # Async runtime for GitHub API
 tokio = { version = "1.37.0", features = ["rt-multi-thread"] }
 # Date and time utilities
