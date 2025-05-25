@@ -1,5 +1,5 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and GitHub Releases
-on:
+"on":
   push:
     tags:
       - "**"
@@ -8,29 +8,24 @@ jobs:
     name: Build distribution 📦
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
         with:
           persist-credentials: false
       - name: Set up Python
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@5db1cf9a59fb97c40a68accab29236f0da7e94db
         with:
           python-version: 3.12
       - name: Install poetry
-        run: >-
-          python3 -m
-          pip install
-          poetry
-          --user
+        run: python3 -m pip install poetry --user
       - name: Build a binary wheel and a source tarball
         run: python3 -m poetry build
       - name: Store the distribution packages
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@6027e3dd177782cd8ab9af838c04fd81a07f1d47
         with:
           name: python-package-distributions
           path: dist/
   pypi:
-    name: >-
-      Publish Python 🐍 distribution 📦 to PyPI
+    name: Publish Python 🐍 distribution 📦 to PyPI
     needs:
       - build
     runs-on: ubuntu-24.04
@@ -38,52 +33,41 @@ jobs:
       name: pypi
       url: https://pypi.org/p/belt-cli
     permissions:
-      id-token: write # IMPORTANT: mandatory for trusted publishing
+      id-token: write
     steps:
       - name: Download dists
-        uses: actions/download-artifact@v4.3.0
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: python-package-distributions
           path: dist/
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.12.4
+        uses: pypa/gh-action-pypi-publish@e9ccbe5a211ba3e8363f472cae362b56b104e796
   github-release:
-    name: >-
-      Sign the Python 🐍 distribution 📦 with Sigstore
-      and upload them to GitHub Release
+    name: Sign the Python 🐍 distribution 📦 with Sigstore and upload them to GitHub Release
     needs:
       - build
     runs-on: ubuntu-24.04
     permissions:
-      contents: write # IMPORTANT: mandatory for making GitHub Releases
-      id-token: write # IMPORTANT: mandatory for sigstore
+      contents: write
+      id-token: write
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v4.3.0
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           name: python-package-distributions
           path: dist/
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v3.0.0
+        uses: sigstore/gh-action-sigstore-python@42bbcff08f93bc51a1e4b48a19b633ab975d10a6
         with:
-          inputs: >-
-            ./dist/*.tar.gz
-            ./dist/*.whl
+          inputs: ./dist/*.tar.gz ./dist/*.whl
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: >-
-          gh release create
-          "$GITHUB_REF_NAME"
-          --repo "$GITHUB_REPOSITORY"
-          --notes ""
+        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes ""
       - name: Upload artifact signatures to GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: >-
-          gh release upload
-          "$GITHUB_REF_NAME" dist/**
-          --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$GITHUB_REF_NAME" dist/** --repo "$GITHUB_REPOSITORY"
   docker:
     name: Push Docker image to Docker Hub and GitHub
     runs-on: ubuntu-24.04
@@ -94,41 +78,41 @@ jobs:
       id-token: write
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3.4.0
+        uses: docker/login-action@6d4b68b490aef8836e8fb5e50ee7b3bdfa5894f0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Log in to the Container registry
-        uses: docker/login-action@v3.4.0
+        uses: docker/login-action@6d4b68b490aef8836e8fb5e50ee7b3bdfa5894f0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v5.7.0
+        uses: docker/metadata-action@418e4b98bf2841bd337d0b24fe63cb36dc8afa55
         with:
           images: |
             daveio/belt
             ghcr.io/${{ github.repository }}
       - name: Build and push Docker images
         id: push
-        uses: docker/build-push-action@v6.17.0
+        uses: docker/build-push-action@0788c444d8b4d67580213712e34a148cae3a6c4e
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Generate artifact attestation for Docker Hub
-        uses: actions/attest-build-provenance@v2.3.0
+        uses: actions/attest-build-provenance@39cb715ce0ddd23df1f705e863f642bfb72dfb2b
         with:
           subject-name: docker.io/daveio/belt
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
       - name: Generate artifact attestation for GitHub
-        uses: actions/attest-build-provenance@v2.3.0
+        uses: actions/attest-build-provenance@39cb715ce0ddd23df1f705e863f642bfb72dfb2b
         with:
           subject-name: ghcr.io/daveio/belt
           subject-digest: ${{ steps.push.outputs.digest }}
