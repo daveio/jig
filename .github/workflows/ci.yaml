@@ -7,12 +7,12 @@ jobs:
       - name: mise
         uses: jdx/mise-action@c94f0bf9e520b150e34c017db785461f7e71c5fb
         with:
-          install: true # `mise install`
-          cache: true # Use GitHub cache
+          install: true
+          cache: true
       - name: ci
         run: mise ci
 name: ci
-on:
+"on":
   - push
   - pull_request
 permissions: read-all
