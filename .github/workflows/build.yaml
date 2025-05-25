@@ -1,20 +1,16 @@
 name: build
-
 permissions:
   contents: read
-
-on:
+"on":
   - push
   - pull_request
-
 env:
   CARGO_TERM_COLOR: always
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
       - name: Build
         run: cargo build --verbose
       - name: Run tests
