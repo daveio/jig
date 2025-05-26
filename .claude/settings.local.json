@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p cmd/hubbit internal/{config,git,binary,utils} pkg/{parser,github})"
+    ],
+    "deny": []
+  }
+}
