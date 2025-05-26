@@ -1,6 +1,7 @@
 package hubbit
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -33,7 +34,9 @@ func runClone(cmd *cobra.Command, args []string) error {
 
 	username := viper.GetString("github.username")
 	if username == "" && parser.IsSimpleRepo(repoSpec) {
-		return fmt.Errorf("GitHub username not configured. Please set it in config or use 'username/repo' format")
+		return errors.New(
+			"GitHub username not configured. Please set it in config or use 'username/repo' format",
+		)
 	}
 
 	repoInfo, err := parser.ParseRepository(repoSpec, username)
@@ -63,5 +66,6 @@ func runClone(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Printf("Successfully cloned %s/%s\n", repoInfo.Owner, repoInfo.Name)
+
 	return nil
 }

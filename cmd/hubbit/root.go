@@ -1,6 +1,7 @@
 package hubbit
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -31,7 +32,8 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/hubbit/config.yaml)")
+	rootCmd.PersistentFlags().
+		StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/hubbit/config.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 }
 
@@ -45,8 +47,8 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		configPath := fmt.Sprintf("%s/.config/hubbit", home)
-		if err := os.MkdirAll(configPath, 0755); err != nil {
+		configPath := home + "/.config/hubbit"
+		if err := os.MkdirAll(configPath, 0o755); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -63,7 +65,8 @@ func initConfig() {
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+		var configFileNotFoundError viper.ConfigFileNotFoundError
+		if errors.As(err, &configFileNotFoundError) {
 			fmt.Fprintln(os.Stderr, "Error reading config file:", err)
 		}
 	}

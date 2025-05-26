@@ -41,6 +41,7 @@ func runBinaryGet(cmd *cobra.Command, args []string) error {
 	repoSpec := args[0]
 
 	username := viper.GetString("github.username")
+
 	repoInfo, err := parser.ParseRepository(repoSpec, username)
 	if err != nil {
 		return fmt.Errorf("failed to parse repository: %w", err)
@@ -60,6 +61,7 @@ func runBinaryGet(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Printf("Successfully downloaded binary for %s/%s\n", repoInfo.Owner, repoInfo.Name)
+
 	return nil
 }
 
@@ -80,11 +82,13 @@ func runBinaryUpdate(cmd *cobra.Command, args []string) error {
 		}
 
 		fmt.Printf("Updated %d binaries\n", updated)
+
 		return nil
 	}
 
 	repoSpec := args[0]
 	username := viper.GetString("github.username")
+
 	repoInfo, err := parser.ParseRepository(repoSpec, username)
 	if err != nil {
 		return fmt.Errorf("failed to parse repository: %w", err)
