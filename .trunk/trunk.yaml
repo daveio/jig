@@ -20,6 +20,7 @@ lint:
   disabled:
     - golangci-lint
   enabled:
+    - taplo@0.9.3
     - golangci-lint2@2.1.6
     - actionlint@1.7.7
     - checkov@3.2.432

@@ -96,6 +96,7 @@ Hubbit automatically detects the appropriate binary for your platform:
 
 - Go 1.24 or later
 - Git (for external git mode)
+- golangci-lint (for linting)
 
 ### Building
 
@@ -109,6 +110,8 @@ go build .
 go test ./...
 ```
 
-## License
+### Linting
 
-MIT License - see [LICENSE](LICENSE) file for details.
+```bash
+golangci-lint run
+```
