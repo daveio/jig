@@ -13,7 +13,7 @@ Hubbit is a command-line tool for managing Git repositories and GitHub release b
   - Owner/repo: `hubbit clone torvalds/linux`
   - Full URLs: `hubbit clone https://github.com/user/repo`
   - SSH URLs: `hubbit clone git@github.com:user/repo.git`
-- Clones to organized directory structure: `~/dev/github.com/owner/repo`
+- Clones to organized directory structure: `~/src/github.com/owner/repo`
 - Supports both HTTPS and SSH protocols
 - Can use either go-git library or external git CLI
 
@@ -68,13 +68,13 @@ User configuration at `~/.config/hubbit/config.yaml`:
 
 ```yaml
 main:
-  external_git: false # Use git CLI instead of library
+  external_git: true # Use git CLI instead of library
 
 github:
   username: myusername
   token: mytoken # For private repos/API rate limits
   protocol: ssh # or https
-  clone_directory: ~/dev
+  clone_directory: ~/src
 ```
 
 ## Dependencies
@@ -100,7 +100,7 @@ github:
 
 ## Recent Bug Fixes and Improvements
 
-### Version 2024-12-19 Bug Fixes
+### 2025-05-26
 
 The following bugs were identified and fixed during a comprehensive code review:
 
@@ -184,3 +184,7 @@ All fixes maintain backward compatibility and follow Go best practices. The code
 - GitHub token recommended for API rate limits
 - Verbose mode (`-v`) provides detailed output
 - All paths in config can use `~` for home directory
+
+## Planned Features and Fixes
+
+See `README.md`.

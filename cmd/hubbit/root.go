@@ -58,9 +58,9 @@ func initConfig() {
 		viper.SetConfigName("config")
 	}
 
-	viper.SetDefault("main.external_git", false)
+	viper.SetDefault("main.external_git", true)
 	viper.SetDefault("github.protocol", "https")
-	viper.SetDefault("github.clone_directory", "~/dev")
+	viper.SetDefault("github.clone_directory", "~/src")
 
 	viper.AutomaticEnv()
 

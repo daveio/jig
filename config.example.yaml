@@ -1,0 +1,8 @@
+main:
+  external_git: true # Use git CLI instead of built-in library
+
+github:
+  username: yourusername
+  token: your-github-token # Optional, for private repos
+  protocol: ssh # or https
+  clone_directory: ~/src
