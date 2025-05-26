@@ -1,6 +1,6 @@
 name: build
 permissions: read-all
-"on":
+on:
   push:
     branches:
       - main
@@ -10,19 +10,12 @@ permissions: read-all
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version:
-          - "1.21"
-          - "1.22"
-          - "1.23"
-          - "1.24"
     steps:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
       - name: go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.24.3
       - name: cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         with:
@@ -38,20 +31,13 @@ jobs:
         run: go test -v -race ./...
   platforms:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version:
-          - "1.21"
-          - "1.22"
-          - "1.23"
-          - "1.24"
     steps:
       - name: checkout
         uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
       - name: go
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.24.3
       - name: darwin-amd64
         run: GOOS=darwin GOARCH=amd64 go build -o hubbit-darwin-amd64 .
       - name: darwin-arm64
