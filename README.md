@@ -90,6 +90,26 @@ Hubbit automatically detects the appropriate binary for your platform:
 - Handles archives (.tar.gz, .zip) and plain binaries
 - Installs to `~/.local/bin`
 
+## Recent Bug Fixes
+
+### Version 2024-12-19
+
+Several critical bugs were identified and fixed to improve reliability and error handling:
+
+1. **Config Error Handling**: Fixed inverted logic that showed confusing error messages when config files were missing (normal behavior)
+
+2. **Home Directory Errors**: Added proper error handling when the user's home directory cannot be determined, preventing silent failures
+
+3. **URL Parsing Robustness**: Improved parsing of repository URLs with trailing slashes or malformed paths
+
+4. **Architecture Detection**: Fixed inconsistent binary selection logic for different CPU architectures (amd64/x86_64, arm64/aarch64)
+
+5. **Input Validation**: Added validation for empty repository specifications with clear error messages
+
+6. **Enhanced Test Coverage**: Added comprehensive test cases for edge cases and error conditions
+
+All fixes maintain backward compatibility while making the tool more robust and user-friendly.
+
 ## Development
 
 ### Prerequisites

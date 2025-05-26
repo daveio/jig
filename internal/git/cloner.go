@@ -31,7 +31,10 @@ func NewCloner(options ClonerOptions) *Cloner {
 }
 
 func (c *Cloner) Clone(repo *parser.RepositoryInfo) error {
-	destPath := c.getDestinationPath(repo)
+	destPath, err := c.getDestinationPath(repo)
+	if err != nil {
+		return err
+	}
 
 	if _, err := os.Stat(destPath); err == nil {
 		return fmt.Errorf("repository already exists at %s", destPath)
@@ -46,14 +49,17 @@ func (c *Cloner) Clone(repo *parser.RepositoryInfo) error {
 	return c.cloneWithLibrary(cloneURL, destPath)
 }
 
-func (c *Cloner) getDestinationPath(repo *parser.RepositoryInfo) string {
+func (c *Cloner) getDestinationPath(repo *parser.RepositoryInfo) (string, error) {
 	baseDir := os.ExpandEnv(c.options.CloneDirectory)
 	if strings.HasPrefix(baseDir, "~") {
-		home, _ := os.UserHomeDir()
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return "", fmt.Errorf("failed to get user home directory: %w", err)
+		}
 		baseDir = strings.Replace(baseDir, "~", home, 1)
 	}
 
-	return filepath.Join(baseDir, repo.Host, repo.Owner, repo.Name)
+	return filepath.Join(baseDir, repo.Host, repo.Owner, repo.Name), nil
 }
 
 func (c *Cloner) cloneWithCLI(cloneURL, destPath string) error {

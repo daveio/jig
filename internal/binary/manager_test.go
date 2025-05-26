@@ -30,8 +30,8 @@ func TestGetArchAlias(t *testing.T) {
 	}{
 		{"x86_64", "amd64"},
 		{"aarch64", "arm64"},
-		{"arm64", "arm64"},
-		{"amd64", "amd64"},
+		{"arm64", "aarch64"},
+		{"amd64", "x86_64"},
 	}
 
 	for _, tt := range tests {

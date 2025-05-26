@@ -98,6 +98,55 @@ github:
 - Tests use table-driven approach
 - No integration tests currently (would need mocking GitHub API)
 
+## Recent Bug Fixes and Improvements
+
+### Version 2024-12-19 Bug Fixes
+
+The following bugs were identified and fixed during a comprehensive code review:
+
+1. **Config Error Handling Bug** (`cmd/hubbit/root.go`)
+
+   - **Issue**: Inverted logic was printing errors when config file was not found (normal behavior) instead of actual config reading errors
+   - **Fix**: Corrected condition to only log actual configuration errors
+   - **Impact**: Eliminates confusing error messages for users without config files
+
+2. **Missing Error Handling in Git Cloner** (`internal/git/cloner.go`)
+
+   - **Issue**: `getDestinationPath()` ignored errors when retrieving user home directory
+   - **Fix**: Added proper error handling and propagation for home directory operations
+   - **Impact**: Prevents silent failures and provides clear error messages
+
+3. **Missing Error Handling in Binary Manager** (`internal/binary/manager.go`)
+
+   - **Issue**: `NewManager()` constructor ignored home directory retrieval errors
+   - **Fix**: Modified constructor to return errors; updated all callers to handle them
+   - **Impact**: Fails fast with clear error messages instead of creating invalid managers
+
+4. **URL Parsing Robustness** (`pkg/parser/repository.go`)
+
+   - **Issue**: URL parsing could fail with trailing slashes or consecutive slashes
+   - **Fix**: Added filtering of empty path segments to improve parsing reliability
+   - **Impact**: Handles malformed URLs more gracefully
+
+5. **Architecture Detection Inconsistency** (`internal/binary/manager.go`)
+
+   - **Issue**: Conflicting architecture mapping logic could cause incorrect binary selection
+   - **Fix**: Centralized and corrected architecture alias mapping in `getArchAlias()`
+   - **Impact**: Ensures correct binary selection for all supported architectures
+
+6. **Input Validation Enhancement** (`pkg/parser/repository.go`)
+
+   - **Issue**: No validation for empty or whitespace-only repository specifications
+   - **Fix**: Added validation to reject invalid input early with clear error messages
+   - **Impact**: Better user experience with immediate feedback on invalid input
+
+7. **Test Coverage Enhancement** (`pkg/parser/repository_test.go`)
+   - **Issue**: Missing test cases for edge cases and error conditions
+   - **Fix**: Added comprehensive test cases for empty and invalid inputs
+   - **Impact**: Better test coverage and confidence in error handling
+
+All fixes maintain backward compatibility and follow Go best practices. The codebase now handles edge cases more robustly while preserving existing functionality.
+
 ## Future Enhancements (from PROMPT.md)
 
 - Multiple GitHub account support

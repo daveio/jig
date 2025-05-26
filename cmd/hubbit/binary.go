@@ -47,10 +47,13 @@ func runBinaryGet(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to parse repository: %w", err)
 	}
 
-	manager := binary.NewManager(binary.ManagerOptions{
+	manager, err := binary.NewManager(binary.ManagerOptions{
 		GitHubToken: viper.GetString("github.token"),
 		Verbose:     verbose,
 	})
+	if err != nil {
+		return fmt.Errorf("failed to create binary manager: %w", err)
+	}
 
 	if verbose {
 		fmt.Printf("Downloading latest binary for %s/%s\n", repoInfo.Owner, repoInfo.Name)
@@ -66,10 +69,13 @@ func runBinaryGet(cmd *cobra.Command, args []string) error {
 }
 
 func runBinaryUpdate(cmd *cobra.Command, args []string) error {
-	manager := binary.NewManager(binary.ManagerOptions{
+	manager, err := binary.NewManager(binary.ManagerOptions{
 		GitHubToken: viper.GetString("github.token"),
 		Verbose:     verbose,
 	})
+	if err != nil {
+		return fmt.Errorf("failed to create binary manager: %w", err)
+	}
 
 	if len(args) == 0 {
 		if verbose {

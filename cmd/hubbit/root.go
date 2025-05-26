@@ -66,7 +66,7 @@ func initConfig() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		var configFileNotFoundError viper.ConfigFileNotFoundError
-		if errors.As(err, &configFileNotFoundError) {
+		if !errors.As(err, &configFileNotFoundError) {
 			fmt.Fprintln(os.Stderr, "Error reading config file:", err)
 		}
 	}

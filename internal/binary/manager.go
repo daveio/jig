@@ -32,7 +32,7 @@ type Manager struct {
 	installPath string
 }
 
-func NewManager(options ManagerOptions) *Manager {
+func NewManager(options ManagerOptions) (*Manager, error) {
 	var httpClient *http.Client
 	if options.GitHubToken != "" {
 		httpClient = &http.Client{
@@ -42,14 +42,17 @@ func NewManager(options ManagerOptions) *Manager {
 		}
 	}
 
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user home directory: %w", err)
+	}
 
 	return &Manager{
 		options:     options,
 		client:      github.NewClient(httpClient),
 		storePath:   filepath.Join(home, ".config", "hubbit", "binaries.yaml"),
 		installPath: filepath.Join(home, ".local", "bin"),
-	}
+	}, nil
 }
 
 type roundTripper struct {
@@ -175,10 +178,6 @@ func (m *Manager) findBestAsset(assets []*github.ReleaseAsset) *github.ReleaseAs
 	osName := runtime.GOOS
 	arch := runtime.GOARCH
 
-	if arch == "amd64" {
-		arch = "x86_64"
-	}
-
 	for _, asset := range assets {
 		name := strings.ToLower(asset.GetName())
 
@@ -209,6 +208,10 @@ func getPlatformAlias(platform string) string {
 
 func getArchAlias(arch string) string {
 	switch arch {
+	case "amd64":
+		return "x86_64"
+	case "arm64":
+		return "aarch64"
 	case "x86_64":
 		return "amd64"
 	case "aarch64":

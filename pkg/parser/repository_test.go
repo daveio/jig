@@ -29,6 +29,18 @@ func TestParseRepository(t *testing.T) {
 			wantErr:         true,
 		},
 		{
+			name:            "empty repository specification",
+			spec:            "",
+			defaultUsername: "daveio",
+			wantErr:         true,
+		},
+		{
+			name:            "whitespace only repository specification",
+			spec:            "   ",
+			defaultUsername: "daveio",
+			wantErr:         true,
+		},
+		{
 			name:            "owner/repo format",
 			spec:            "daveio/hubbit",
 			defaultUsername: "",

@@ -27,6 +27,10 @@ func IsSimpleRepo(spec string) bool {
 func ParseRepository(spec, defaultUsername string) (*RepositoryInfo, error) {
 	spec = strings.TrimSpace(spec)
 
+	if spec == "" {
+		return nil, fmt.Errorf("repository specification cannot be empty")
+	}
+
 	if simpleRepoRegex.MatchString(spec) {
 		if defaultUsername == "" {
 			return nil, fmt.Errorf("no username provided for repository '%s'", spec)
@@ -64,7 +68,16 @@ func parseHTTPURL(urlStr string) (*RepositoryInfo, error) {
 		return nil, fmt.Errorf("invalid URL: %w", err)
 	}
 
-	parts := strings.Split(strings.TrimPrefix(u.Path, "/"), "/")
+	pathParts := strings.Split(strings.TrimPrefix(u.Path, "/"), "/")
+
+	// Filter out empty parts
+	var parts []string
+	for _, part := range pathParts {
+		if part != "" {
+			parts = append(parts, part)
+		}
+	}
+
 	if len(parts) < 2 {
 		return nil, fmt.Errorf("invalid repository URL: %s", urlStr)
 	}
