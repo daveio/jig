@@ -94,7 +94,7 @@ Hubbit automatically detects the appropriate binary for your platform:
 
 ### Prerequisites
 
-- Go 1.21 or later
+- Go 1.24 or later
 - Git (for external git mode)
 
 ### Building
