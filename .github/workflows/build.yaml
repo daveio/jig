@@ -1,6 +1,6 @@
 name: build
 permissions: read-all
-on:
+"on":
   push:
     branches:
       - main
