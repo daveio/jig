@@ -57,7 +57,7 @@ func (c *Cloner) getDestinationPath(repo *parser.RepositoryInfo) string {
 }
 
 func (c *Cloner) cloneWithCLI(cloneURL, destPath string) error {
-	if err := os.MkdirAll(filepath.Dir(destPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(destPath), 0o755); err != nil {
 		return fmt.Errorf("failed to create directory: %w", err)
 	}
 
@@ -65,6 +65,7 @@ func (c *Cloner) cloneWithCLI(cloneURL, destPath string) error {
 	if c.options.Verbose {
 		args = append(args, "--verbose", "--progress")
 	}
+
 	args = append(args, cloneURL, destPath)
 
 	cmd := exec.Command("git", args...)
@@ -79,7 +80,7 @@ func (c *Cloner) cloneWithCLI(cloneURL, destPath string) error {
 }
 
 func (c *Cloner) cloneWithLibrary(cloneURL, destPath string) error {
-	if err := os.MkdirAll(filepath.Dir(destPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(destPath), 0o755); err != nil {
 		return fmt.Errorf("failed to create directory: %w", err)
 	}
 
@@ -96,6 +97,7 @@ func (c *Cloner) cloneWithLibrary(cloneURL, destPath string) error {
 	if err != nil {
 		return fmt.Errorf("failed to setup authentication: %w", err)
 	}
+
 	if auth != nil {
 		cloneOptions.Auth = auth
 	}
@@ -114,6 +116,7 @@ func (c *Cloner) getAuth(cloneURL string) (transport.AuthMethod, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to setup SSH auth: %w", err)
 		}
+
 		return auth, nil
 	}
 

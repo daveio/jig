@@ -106,20 +106,29 @@ func TestParseRepository(t *testing.T) {
 			got, err := ParseRepository(tt.spec, tt.defaultUsername)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseRepository() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
+
 			if !tt.wantErr {
 				if got.Host != tt.want.Host {
 					t.Errorf("ParseRepository() Host = %v, want %v", got.Host, tt.want.Host)
 				}
+
 				if got.Owner != tt.want.Owner {
 					t.Errorf("ParseRepository() Owner = %v, want %v", got.Owner, tt.want.Owner)
 				}
+
 				if got.Name != tt.want.Name {
 					t.Errorf("ParseRepository() Name = %v, want %v", got.Name, tt.want.Name)
 				}
+
 				if tt.want.Protocol != "" && got.Protocol != tt.want.Protocol {
-					t.Errorf("ParseRepository() Protocol = %v, want %v", got.Protocol, tt.want.Protocol)
+					t.Errorf(
+						"ParseRepository() Protocol = %v, want %v",
+						got.Protocol,
+						tt.want.Protocol,
+					)
 				}
 			}
 		})

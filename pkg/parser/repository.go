@@ -31,6 +31,7 @@ func ParseRepository(spec, defaultUsername string) (*RepositoryInfo, error) {
 		if defaultUsername == "" {
 			return nil, fmt.Errorf("no username provided for repository '%s'", spec)
 		}
+
 		return &RepositoryInfo{
 			Host:  "github.com",
 			Owner: defaultUsername,

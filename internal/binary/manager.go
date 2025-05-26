@@ -5,6 +5,7 @@ import (
 	"archive/zip"
 	"compress/gzip"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,7 +16,7 @@ import (
 	"time"
 
 	"github.com/daveio/hubbit/pkg/parser"
-	"github.com/google/go-github/v57/github"
+	"github.com/google/go-github/v72/github"
 	"gopkg.in/yaml.v3"
 )
 
@@ -57,6 +58,7 @@ type roundTripper struct {
 
 func (rt *roundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	req.Header.Set("Authorization", "Bearer "+rt.token)
+
 	return http.DefaultTransport.RoundTrip(req)
 }
 
@@ -114,11 +116,13 @@ func (m *Manager) Update(repo *parser.RepositoryInfo) (bool, error) {
 
 	key := fmt.Sprintf("%s/%s", repo.Owner, repo.Name)
 	existing, ok := store.Binaries[key]
+
 	if !ok {
 		return false, fmt.Errorf("binary not installed: %s", key)
 	}
 
 	ctx := context.Background()
+
 	release, _, err := m.client.Repositories.GetLatestRelease(ctx, repo.Owner, repo.Name)
 	if err != nil {
 		return false, fmt.Errorf("failed to get latest release: %w", err)
@@ -142,6 +146,7 @@ func (m *Manager) UpdateAll() (int, error) {
 	}
 
 	updated := 0
+
 	for _, binary := range store.Binaries {
 		repo := &parser.RepositoryInfo{
 			Host:  "github.com",
@@ -154,6 +159,7 @@ func (m *Manager) UpdateAll() (int, error) {
 			if m.options.Verbose {
 				fmt.Printf("Failed to update %s: %v\n", binary.Repository, err)
 			}
+
 			continue
 		}
 
@@ -219,6 +225,7 @@ func isArchive(name string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -243,6 +250,7 @@ func (m *Manager) downloadAsset(asset *github.ReleaseAsset) (string, error) {
 
 	if err != nil {
 		os.Remove(tmpFile.Name())
+
 		return "", err
 	}
 
@@ -250,7 +258,7 @@ func (m *Manager) downloadAsset(asset *github.ReleaseAsset) (string, error) {
 }
 
 func (m *Manager) extractAndInstall(tmpFile, assetName, binaryName string) (string, error) {
-	if err := os.MkdirAll(m.installPath, 0755); err != nil {
+	if err := os.MkdirAll(m.installPath, 0o755); err != nil {
 		return "", err
 	}
 
@@ -286,6 +294,7 @@ func (m *Manager) extractTarGz(src, dest, binaryName string) error {
 		if err == io.EOF {
 			break
 		}
+
 		if err != nil {
 			return err
 		}
@@ -296,18 +305,19 @@ func (m *Manager) extractTarGz(src, dest, binaryName string) error {
 
 		baseName := filepath.Base(header.Name)
 		if baseName == binaryName || strings.HasPrefix(baseName, binaryName) {
-			outFile, err := os.OpenFile(dest, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
+			outFile, err := os.OpenFile(dest, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o755)
 			if err != nil {
 				return err
 			}
 
 			_, err = io.Copy(outFile, tr)
 			outFile.Close()
+
 			return err
 		}
 	}
 
-	return fmt.Errorf("binary not found in archive")
+	return errors.New("binary not found in archive")
 }
 
 func (m *Manager) extractZip(src, dest, binaryName string) error {
@@ -325,20 +335,22 @@ func (m *Manager) extractZip(src, dest, binaryName string) error {
 				return err
 			}
 
-			outFile, err := os.OpenFile(dest, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
+			outFile, err := os.OpenFile(dest, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o755)
 			if err != nil {
 				rc.Close()
+
 				return err
 			}
 
 			_, err = io.Copy(outFile, rc)
 			rc.Close()
 			outFile.Close()
+
 			return err
 		}
 	}
 
-	return fmt.Errorf("binary not found in archive")
+	return errors.New("binary not found in archive")
 }
 
 func (m *Manager) copyBinary(src, dest string) error {
@@ -348,13 +360,14 @@ func (m *Manager) copyBinary(src, dest string) error {
 	}
 	defer input.Close()
 
-	output, err := os.OpenFile(dest, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
+	output, err := os.OpenFile(dest, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o755)
 	if err != nil {
 		return err
 	}
 	defer output.Close()
 
 	_, err = io.Copy(output, input)
+
 	return err
 }
 
@@ -372,11 +385,11 @@ func (m *Manager) saveBinary(binary *Binary) error {
 		return err
 	}
 
-	if err := os.MkdirAll(filepath.Dir(m.storePath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(m.storePath), 0o755); err != nil {
 		return err
 	}
 
-	return os.WriteFile(m.storePath, data, 0644)
+	return os.WriteFile(m.storePath, data, 0o644)
 }
 
 func (m *Manager) loadStore() (*BinaryStore, error) {
@@ -389,6 +402,7 @@ func (m *Manager) loadStore() (*BinaryStore, error) {
 		if os.IsNotExist(err) {
 			return store, nil
 		}
+
 		return nil, err
 	}
 

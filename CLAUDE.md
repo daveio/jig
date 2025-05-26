@@ -28,7 +28,7 @@ Hubbit is a command-line tool for managing Git repositories and GitHub release b
 
 ## Project Structure
 
-```
+```plaintext
 .
 ├── cmd/hubbit/          # CLI commands (Cobra)
 │   ├── root.go         # Root command and config initialization
