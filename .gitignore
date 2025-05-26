@@ -30,8 +30,8 @@ go.work
 Thumbs.db
 
 # Build output
-hubbit
 dist/
+/hubbit
 
 # Configuration files (for local testing)
 .env
