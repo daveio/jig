@@ -27,14 +27,14 @@ jobs:
       - name: checkout
         uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
       - name: trivy
-        uses: aquasecurity/trivy-action@26d71e622b84d103f86fb33a5a42c558e11f4ae0
+        uses: aquasecurity/trivy-action@76071ef0d7ec797419534a183b498b4d6366cf37
         with:
           scan-type: fs
           scan-ref: .
           format: sarif
           output: trivy-results.sarif
       - name: upload
-        uses: github/codeql-action/upload-sarif@7fd62151d9daff11d4b981415ffb365dcd93f75a
+        uses: github/codeql-action/upload-sarif@075e08aca6be12984ae56ae245bd0767609134f2
         with:
           sarif_file: trivy-results.sarif
   format:
