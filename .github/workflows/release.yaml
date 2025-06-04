@@ -57,7 +57,7 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@42bbcff08f93bc51a1e4b48a19b633ab975d10a6
+        uses: sigstore/gh-action-sigstore-python@250d1740e0d24c4565c8a5b94f10a952e06e9063
         with:
           inputs: ./dist/*.tar.gz ./dist/*.whl
       - name: Create GitHub Release
