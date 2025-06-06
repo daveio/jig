@@ -8,7 +8,7 @@ jobs:
     name: Build distribution 📦
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+      - uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
         with:
           persist-credentials: false
       - name: Set up Python
@@ -57,7 +57,7 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@250d1740e0d24c4565c8a5b94f10a952e06e9063
+        uses: sigstore/gh-action-sigstore-python@cbd4d80b10f2b708b7be83cdf2318a15ae9cf632
         with:
           inputs: ./dist/*.tar.gz ./dist/*.whl
       - name: Create GitHub Release
@@ -78,7 +78,7 @@ jobs:
       id-token: write
     steps:
       - name: Check out the repo
-        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
       - name: Log in to Docker Hub
         uses: docker/login-action@6d4b68b490aef8836e8fb5e50ee7b3bdfa5894f0
         with:
