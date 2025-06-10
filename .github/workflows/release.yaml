@@ -57,7 +57,7 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@cbd4d80b10f2b708b7be83cdf2318a15ae9cf632
+        uses: sigstore/gh-action-sigstore-python@e346064a371a9668bb0943cbbfd9d285feabfd06
         with:
           inputs: ./dist/*.tar.gz ./dist/*.whl
       - name: Create GitHub Release
@@ -106,13 +106,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Generate artifact attestation for Docker Hub
-        uses: actions/attest-build-provenance@39cb715ce0ddd23df1f705e863f642bfb72dfb2b
+        uses: actions/attest-build-provenance@11c67f22cd5a3968528de1f8de4bb4487ee5306e
         with:
           subject-name: docker.io/daveio/belt
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
       - name: Generate artifact attestation for GitHub
-        uses: actions/attest-build-provenance@39cb715ce0ddd23df1f705e863f642bfb72dfb2b
+        uses: actions/attest-build-provenance@11c67f22cd5a3968528de1f8de4bb4487ee5306e
         with:
           subject-name: ghcr.io/daveio/belt
           subject-digest: ${{ steps.push.outputs.digest }}
