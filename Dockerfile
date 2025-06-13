@@ -1,4 +1,4 @@
-FROM python:3.13.4-alpine3.21
+FROM python:3.13.5-alpine3.21
 HEALTHCHECK CMD "belt --version"
 RUN adduser -h /app -D belt
 USER belt
