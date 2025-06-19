@@ -12,7 +12,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python
-        uses: actions/setup-python@5db1cf9a59fb97c40a68accab29236f0da7e94db
+        uses: actions/setup-python@5fa0ee6f38acba344a11175befcf11c0c1d46f5a
         with:
           python-version: 3.12
       - name: Install poetry
@@ -57,7 +57,7 @@ jobs:
           name: python-package-distributions
           path: dist/
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@6409abb6b6aa159c173b7ccfc47078bec5735676
+        uses: sigstore/gh-action-sigstore-python@f38fa95e2fe947a0827cf83585e9cd65f6107d5a
         with:
           inputs: ./dist/*.tar.gz ./dist/*.whl
       - name: Create GitHub Release
