@@ -1,8 +1,0 @@
-[env]
-BELT_MISE_ACTIVE = 'true'
-
-[settings]
-env_file = '.env'
-
-[tools]
-python = { version = '3.13.3' }
