@@ -10,6 +10,7 @@
     "boxen": "^8.0.1",
     "chalk": "^5.4.1",
     "cloudflare": "^4.4.1",
+    "commander": "^14.0.0",
     "date-fns": "^4.1.0",
     "fast-xml-parser": "^5.2.5",
     "file-type": "^21.0.0",
