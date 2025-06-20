@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 Belt is a command-line toolbox written in Python that provides various utility functions for:
+
 - Cryptography (encryption/decryption, random generation, WireGuard keypairs)
 - DNS operations (lookups, DNSSEC checks, cache flushing)
 - TLS operations (certificate generation, cipher inspection)
@@ -41,6 +42,7 @@ poetry build
 ### Publishing
 
 This project uses GitHub Actions for CI/CD, which handles:
+
 - PyPI publishing
 - Docker image building and publishing to DockerHub and GitHub Container Registry
 - Sigstore signing for releases
@@ -68,6 +70,7 @@ The application follows a modular structure:
 ## Development Guidelines
 
 1. **Command Structure**: Follow the existing pattern where:
+
    - Commands are defined in `belt_cli.py`
    - Implementation is placed in a separate module named `*_commands.py`
    - Each command function returns a string or performs output with Click's echo

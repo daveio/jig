@@ -2,20 +2,7 @@
   "root": false,
   "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": [
-      "**",
-      "!**/../../node_modules",
-      "!**/../../.trunk",
-      "!**/../../dist",
-      "!**/../../.git",
-      "!**/../../.history",
-      "!**/../../.wrangler",
-      "!**/../../components.d.ts",
-      "!**/../../auto-imports.d.ts",
-      "!**/../../.nuxt",
-      "!**/../../.codacy",
-      "!**/../../.output"
-    ]
+    "includes": ["**", "!**/../../node_modules", "!**/../../.trunk", "!**/../../.git"]
   },
   "css": {
     "formatter": {
