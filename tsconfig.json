@@ -4,7 +4,6 @@
     "allowJs": false,
     "allowSyntheticDefaultImports": false,
     "declaration": true,
-    "declarationDir": "build/types",
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ESNext", "scripthost", "DOM"],
@@ -21,13 +20,12 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "build",
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "sourceMap": true,
     "strict": true,
     "target": "ESNext",
     "verbatimModuleSyntax": true
   },
   "exclude": ["node_modules"],
-  "include": ["src/**/*"]
+  "include": ["index.ts"]
 }
