@@ -2,7 +2,7 @@
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "extends": [".trunk/configs/biome.json"],
   "files": {
-    "includes": ["**", "!**/.git", "!**/.trunk", "!**/node_modules"]
+    "includes": ["**", "!**/.trunk", "!**/node_modules", "!**/.git"]
   },
   "linter": {
     "rules": {

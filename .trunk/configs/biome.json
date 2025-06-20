@@ -2,7 +2,12 @@
   "root": false,
   "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["**", "!**/../../node_modules", "!**/../../.trunk", "!**/../../.git"]
+    "includes": [
+      "**",
+      "!**/../../node_modules",
+      "!**/../../.trunk",
+      "!**/../../.git"
+    ]
   },
   "css": {
     "formatter": {
