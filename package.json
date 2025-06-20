@@ -31,8 +31,8 @@
     "axios": "^1.10.0",
     "semver": "^7.7.2",
     "cross-spawn": "^7.0.6",
-    "lodash.trim": "^4.5.1",
-    "lodash.trimend": "^4.5.1",
+    "lodash.trim": "npm:lodash@^4.17.21",
+    "lodash.trimend": "npm:lodash@^4.17.21",
     "ejs": "^3.1.10"
   },
   "description": "belt CLI",
@@ -87,7 +87,6 @@
     "build": "bun run-s reset build:tsc build:templates",
     "build:templates": "bun run copyfiles ./src/templates/* ./build/templates",
     "build:tsc": "tsc -p .",
-    "claude": "bun run claude",
     "fmt": "bun run format",
     "format": "bun run-s format:prettier format:biome format:trunk",
     "format:biome": "bun run biome format --write",

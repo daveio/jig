@@ -62,8 +62,8 @@
     "axios": "^1.10.0",
     "cross-spawn": "^7.0.6",
     "ejs": "^3.1.10",
-    "lodash.trim": "^4.5.1",
-    "lodash.trimend": "^4.5.1",
+    "lodash.trim": "npm:lodash@^4.17.21",
+    "lodash.trimend": "npm:lodash@^4.17.21",
     "semver": "^7.7.2",
   },
   "packages": {
@@ -893,9 +893,9 @@
 
     "lodash.startcase": ["lodash.startcase@4.4.0", "", {}, "sha512-+WKqsK294HMSc2jEbNgpHpd0JfIBhp7rEV4aqXWqFr6AlXov+SlcgB1Fv01y2kGe3Gc8nMW7VA0SrGuSkRfIEg=="],
 
-    "lodash.trim": ["lodash.trim@4.5.1", "", {}, "sha512-nJAlRl/K+eiOehWKDzoBVrSMhK0K3A3YQsUNXHQa5yIrKBAhsZgSu3KoAFoFT+mEgiyBHddZ0pRk1ITpIp90Wg=="],
+    "lodash.trim": ["lodash@4.17.21", "", {}, "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="],
 
-    "lodash.trimend": ["lodash.trimend@4.5.1", "", {}, "sha512-lsD+k73XztDsMBKPKvzHXRKFNMohTjoTKIIo4ADLn5dA65LZ1BqlAvSXhR2rPEC3BgAUQnzMnorqDtqn2z4IHA=="],
+    "lodash.trimend": ["lodash@4.17.21", "", {}, "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="],
 
     "lodash.trimstart": ["lodash.trimstart@4.5.1", "", {}, "sha512-b/+D6La8tU76L/61/aN0jULWHkT0EeJCmVstPBn/K9MtD2qBW83AsBNrr63dKuWYwVMO7ucv13QNO/Ek/2RKaQ=="],
 

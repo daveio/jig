@@ -3,6 +3,8 @@ import { build } from "gluegun"
 /**
  * Create the cli and kick it off
  */
+// trunk-ignore-all(trunk-toolbox/todo): it's ignores all the way down
+// @ts-ignore TS7006: TODO: give argv a proper type
 async function run(argv) {
   // create a CLI runtime
   const cli = build()
