@@ -25,6 +25,7 @@ cli:
 lint:
   # https://docs.trunk.io/check/configuration
   disabled:
+    - eslint
     - bandit
     - black
     - isort
@@ -57,6 +58,7 @@ lint:
         - ALL
       paths:
         - python/**
+        - "**/dist/**"
     - linters:
         - prettier
       paths:
