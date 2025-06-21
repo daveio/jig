@@ -150,7 +150,3 @@ Feel free to open issues or PRs. Keep in mind this is a personal tool that I'm s
 ## License
 
 MIT - See LICENSE file for details.
-
----
-
-_Built with ❤️ and probably too much coffee_

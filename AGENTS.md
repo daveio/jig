@@ -37,7 +37,7 @@ echo "data" | ./belt crypt simple encrypt | ./belt crypt simple decrypt
 
 ## Project Structure
 
-```
+```plaintext
 belt/
 ├── src/
 │   ├── main.go                 # Entry point
@@ -211,7 +211,7 @@ The dhowden/tag library doesn't extract technical metadata (sample rate, bit dep
 
 ## Additional Resources
 
-- Kong documentation: https://github.com/alecthomas/kong
-- Charmbracelet libraries: https://github.com/charmbracelet
-- Koanf documentation: https://github.com/knadh/koanf
-- Go crypto documentation: https://pkg.go.dev/golang.org/x/crypto
+- Kong documentation: <https://github.com/alecthomas/kong>
+- Charmbracelet libraries: <https://github.com/charmbracelet>
+- Koanf documentation: <https://github.com/knadh/koanf>
+- Go crypto documentation: <https://pkg.go.dev/golang.org/x/crypto>

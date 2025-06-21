@@ -13,7 +13,15 @@ go = { version = '1.24.4' }
 'go:github.com/nametake/golangci-lint-langserver' = { version = '0.0.11' }
 
 [tasks]
-'claude' = { run = "bun x @anthropic-ai/claude-code", description = "Run the claude CLI command via bun" }
-'lint' = { run = "golangci-lint run", description = "Run golangci-lint without automatic fixes" }
-'lint:fix' = { run = "golangci-lint run --fix", description = "Run golangci-lint with automatic fixes" }
-'fmt' = { run = "golancgi-lint fmt", description = "Run golangci-lint fmt to format the code" }
+'fix' = { run = "mise format && mise lint:fix", description = "Run formatter and linter with automatic fixes" }
+'claude' = { run = "bun x @anthropic-ai/claude-code", description = "Run the latest version of Claude Code" }
+'lint' = { run = "mise run lint:golangci; mise run lint:trunk", description = "Run golangci-lint without automatic fixes" }
+'lint:golangci' = { run = "golangci-lint run", description = "Run golangci-lint without automatic fixes" }
+'lint:trunk' = { run = "trunk check -a", description = "Run trunk check without automatic fixes" }
+'lint:fix' = { run = "mise run lint:fix:golangci; mise run lint:fix:trunk", description = "Run golangci-lint with automatic fixes" }
+'lint:fix:golangci' = { run = "golangci-lint run --fix", description = "Run golangci-lint with automatic fixes" }
+'lint:fix:trunk' = { run = "trunk check -a --fix", description = "Run trunk check with automatic fixes" }
+'format' = { run = "mise run format:go; mise run format:golangci; mise run format:trunk", description = "Run formatter pipeline" }
+'format:go' = { run = "go fmt ./...", description = "Run go fmt to format the code" }
+'format:golangci' = { run = "golangci-lint fmt", description = "Run golangci-lint fmt to format the code" }
+'format:trunk' = { run = "trunk fmt -a", description = "Run trunk fmt to format the code" }
