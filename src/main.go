@@ -71,16 +71,26 @@ func main() {
 	// Load configuration
 	cfg, err := config.Load()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error loading configuration: %v\n", err)
+		_, err := fmt.Fprintf(os.Stderr, "Error loading configuration: %v\n", err)
+		if err != nil {
+			return
+		}
 		os.Exit(1)
 	}
 
 	// Check if this is the first run (no config file)
 	if !config.ConfigExists() && len(os.Args) > 1 && os.Args[1] != "init" {
-		fmt.Fprintf(os.Stderr, "No configuration file found. Run 'belt init' to create one.\n")
+		_, err := fmt.Fprintf(
+			os.Stderr,
+			"No configuration file found. Run 'belt init' to create one.\n",
+		)
+		if err != nil {
+			return
+		}
+		os.Exit(1)
 	}
 
-	// Create output writer
+	// Create an output writer
 	outputFormat := output.FormatAuto
 	if cfg.Output.Format == "json" {
 		outputFormat = output.FormatJSON
@@ -88,7 +98,7 @@ func main() {
 
 	out := output.NewStdout(outputFormat)
 
-	// Create shared context
+	// Create a shared context
 	ctx := &types.Context{
 		Config: cfg,
 		Output: out,

@@ -16,7 +16,7 @@ import (
 // Cmd represents the decrypt command.
 type Cmd struct{}
 
-const delimiter = "||||"
+const delimiter = "\n"
 
 // Run executes the decrypt command.
 func (c *Cmd) Run(ctx *types.Context) error {

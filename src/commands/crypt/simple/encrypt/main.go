@@ -17,7 +17,7 @@ type Cmd struct{}
 
 const (
 	blockSize = 1024
-	delimiter = "||||"
+	delimiter = "\n"
 )
 
 // Run executes the encrypt command.

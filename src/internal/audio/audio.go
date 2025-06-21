@@ -9,8 +9,8 @@ import (
 	"github.com/dhowden/tag"
 )
 
-// AudioFile represents audio file metadata.
-type AudioFile struct {
+// FileAudio represents audio file metadata.
+type FileAudio struct {
 	Path          string
 	SampleRate    int
 	BitsPerSample int
@@ -29,7 +29,7 @@ func IsAudioFile(path string) bool {
 }
 
 // GetAudioInfo extracts metadata from an audio file.
-func GetAudioInfo(path string) (*AudioFile, error) {
+func GetAudioInfo(path string) (*FileAudio, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("opening file: %w", err)
@@ -50,7 +50,7 @@ func GetAudioInfo(path string) (*AudioFile, error) {
 		return nil, fmt.Errorf("reading metadata: %w", err)
 	}
 
-	audioFile := &AudioFile{
+	audioFile := &FileAudio{
 		Path:     path,
 		FileSize: info.Size(),
 	}
@@ -101,7 +101,7 @@ func WalkAudioFiles(root string, fn func(string) error) error {
 }
 
 // FormatAudioInfo formats audio file info for output.
-func FormatAudioInfo(info *AudioFile) string {
+func FormatAudioInfo(info *FileAudio) string {
 	return fmt.Sprintf("%s:%d:%d:%d",
 		info.Path,
 		info.SampleRate,

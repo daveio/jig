@@ -205,7 +205,7 @@ func (c *Cmd) Run(ctx *types.Context) error {
 - Nonce: 12 bytes per block
 - Hash: BLAKE3 64-byte hash as associated data
 - Block size: 1024 bytes for streaming
-- Output format: base58(nonce + ciphertext + hash) with "||||" delimiter
+- Output format: base58(nonce + ciphertext + hash) with "\n" delimiter
 
 ### Audio Metadata
 
