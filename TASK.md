@@ -9,6 +9,8 @@ Scaffold me a new Go CLI in the current directory.
   - Using libraries to reduce the amount of code we have to write is much more important than the size of our dependency graph.
   - Use `context7` to get information about any libraries you use. Don't trust your existing knowledge.
     - If `context7` information conflicts with your existing knowledge, `context7` wins.
+  - Use `perplexity` and `tavily` to search the web, for example to find libraries.
+  - Use `deepWiki` to understand GitHub repositories.
 
 ## Libraries
 
