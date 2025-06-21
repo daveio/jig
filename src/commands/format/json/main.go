@@ -10,19 +10,19 @@ import (
 	"github.com/daveio/belt/src/internal/types"
 )
 
-// Cmd represents the JSON format command
+// Cmd represents the JSON format command.
 type Cmd struct {
-	File     string `arg:"" optional:"" help:"JSON file to format (default: stdin)" type:"path"`
-	Indent   string `help:"Indentation string" default:"  "`
-	Compact  bool   `short:"c" help:"Compact output (no indentation)"`
-	Validate bool   `short:"V" help:"Only validate JSON, don't format"`
+	File     string `arg:"" help:"JSON file to format (default: stdin)" optional:"" type:"path"`
+	Indent   string `       help:"Indentation string"                                           default:"  "`
+	Compact  bool   `       help:"Compact output (no indentation)"                                           short:"c"`
+	Validate bool   `       help:"Only validate JSON, don't format"                                          short:"V"`
 }
 
-// Run executes the JSON format command
+// Run executes the JSON format command.
 func (c *Cmd) Run(ctx *types.Context) error {
 	if ctx.Config.App.Debug {
 		if c.File != "" {
-			ctx.Output.PrintInfo(fmt.Sprintf("Formatting JSON file: %s", c.File))
+			ctx.Output.PrintInfo("Formatting JSON file: " + c.File)
 		} else {
 			ctx.Output.PrintInfo("Formatting JSON from stdin")
 		}
@@ -30,6 +30,7 @@ func (c *Cmd) Run(ctx *types.Context) error {
 
 	// Read input
 	var input []byte
+
 	var err error
 
 	if c.File != "" {
@@ -52,6 +53,7 @@ func (c *Cmd) Run(ctx *types.Context) error {
 
 	if c.Validate {
 		ctx.Output.PrintSuccess("JSON is valid")
+
 		return nil
 	}
 

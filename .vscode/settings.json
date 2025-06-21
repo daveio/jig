@@ -1,4 +1,5 @@
 {
   "workbench.colorCustomizations": {},
-  "docwriter.style": "GoDoc"
+  "docwriter.style": "GoDoc",
+  "editor.wordWrap": "off"
 }

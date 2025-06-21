@@ -14,21 +14,21 @@ import (
 	"github.com/knadh/koanf/v2"
 )
 
-// Config holds the application configuration
+// Config holds the application configuration.
 type Config struct {
 	App     AppConfig     `koanf:"app"`
 	Output  OutputConfig  `koanf:"output"`
 	Logging LoggingConfig `koanf:"logging"`
 }
 
-// AppConfig holds application-specific settings
+// AppConfig holds application-specific settings.
 type AppConfig struct {
 	Name    string `koanf:"name"`
 	Version string `koanf:"version"`
 	Debug   bool   `koanf:"debug"`
 }
 
-// OutputConfig holds output formatting settings
+// OutputConfig holds output formatting settings.
 type OutputConfig struct {
 	Format string `koanf:"format"`
 	Color  bool   `koanf:"color"`
@@ -36,7 +36,7 @@ type OutputConfig struct {
 	Silent bool   `koanf:"silent"`
 }
 
-// LoggingConfig holds logging settings
+// LoggingConfig holds logging settings.
 type LoggingConfig struct {
 	Level  string `koanf:"level"`
 	Format string `koanf:"format"`
@@ -50,7 +50,7 @@ var (
 // Load loads configuration from multiple sources in order of precedence:
 // 1. Environment variables (BELT_*)
 // 2. Config files (belt.yaml, belt.json)
-// 3. Default values
+// 3. Default values.
 func Load() (*Config, error) {
 	k = koanf.New(".")
 
@@ -81,15 +81,16 @@ func Load() (*Config, error) {
 	return config, nil
 }
 
-// Get returns the loaded configuration
+// Get returns the loaded configuration.
 func Get() *Config {
 	if config == nil {
 		panic("configuration not loaded - call Load() first")
 	}
+
 	return config
 }
 
-// getDefaults returns the default configuration values
+// getDefaults returns the default configuration values.
 func getDefaults() Config {
 	return Config{
 		App: AppConfig{
@@ -110,7 +111,7 @@ func getDefaults() Config {
 	}
 }
 
-// loadConfigFiles loads configuration from standard locations
+// loadConfigFiles loads configuration from standard locations.
 func loadConfigFiles() error {
 	configPaths := []string{
 		"belt.yaml",
@@ -127,6 +128,7 @@ func loadConfigFiles() error {
 		}
 
 		var parser koanf.Parser
+
 		switch filepath.Ext(path) {
 		case ".yaml", ".yml":
 			parser = yaml.Parser()
@@ -139,6 +141,7 @@ func loadConfigFiles() error {
 		if err := k.Load(file.Provider(path), parser); err != nil {
 			return fmt.Errorf("loading config file %s: %w", path, err)
 		}
+
 		break // Use first found config file
 	}
 

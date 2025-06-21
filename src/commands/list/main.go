@@ -9,15 +9,15 @@ import (
 	"github.com/daveio/belt/src/internal/types"
 )
 
-// Cmd represents the list command
+// Cmd represents the list command.
 type Cmd struct {
-	Path    string `arg:"" optional:"" help:"Path to list (default: current directory)" default:"." type:"path"`
-	Hidden  bool   `short:"H" help:"Show hidden files"`
-	Long    bool   `short:"L" help:"Show detailed information"`
-	Recurse bool   `short:"R" help:"List recursively"`
+	Path    string `arg:"" default:"." help:"Path to list"              optional:"" type:"path"`
+	Hidden  bool   `                   help:"Show hidden files"                                 short:"H"`
+	Long    bool   `                   help:"Show detailed information"                         short:"L"`
+	Recurse bool   `                   help:"List recursively"                                  short:"R"`
 }
 
-// FileInfo represents file information for display
+// FileInfo represents file information for display.
 type FileInfo struct {
 	Name    string `json:"name"`
 	Path    string `json:"path"`
@@ -27,10 +27,10 @@ type FileInfo struct {
 	ModTime string `json:"mod_time,omitempty"`
 }
 
-// Run executes the list command
+// Run executes the list command.
 func (c *Cmd) Run(ctx *types.Context) error {
 	if ctx.Config.App.Debug {
-		ctx.Output.PrintInfo(fmt.Sprintf("Listing path: %s", c.Path))
+		ctx.Output.PrintInfo("Listing path: " + c.Path)
 	}
 
 	files, err := c.listFiles(c.Path)
@@ -40,6 +40,7 @@ func (c *Cmd) Run(ctx *types.Context) error {
 
 	if len(files) == 0 {
 		ctx.Output.PrintInfo("No files found")
+
 		return nil
 	}
 
@@ -62,7 +63,7 @@ func (c *Cmd) Run(ctx *types.Context) error {
 	return nil
 }
 
-// listFiles lists files in the specified path
+// listFiles lists files in the specified path.
 func (c *Cmd) listFiles(path string) ([]FileInfo, error) {
 	var files []FileInfo
 
@@ -76,12 +77,15 @@ func (c *Cmd) listFiles(path string) ([]FileInfo, error) {
 				if info.IsDir() {
 					return filepath.SkipDir
 				}
+
 				return nil
 			}
 
 			files = append(files, c.fileInfoFromOS(walkPath, info))
+
 			return nil
 		})
+
 		return files, err
 	}
 
@@ -107,7 +111,7 @@ func (c *Cmd) listFiles(path string) ([]FileInfo, error) {
 	return files, nil
 }
 
-// fileInfoFromOS converts os.FileInfo to our FileInfo struct
+// fileInfoFromOS converts os.FileInfo to our FileInfo struct.
 func (c *Cmd) fileInfoFromOS(path string, info os.FileInfo) FileInfo {
 	fi := FileInfo{
 		Name:  info.Name(),
@@ -124,7 +128,7 @@ func (c *Cmd) fileInfoFromOS(path string, info os.FileInfo) FileInfo {
 	return fi
 }
 
-// printFiles prints files in a styled format
+// printFiles prints files in a styled format.
 func (c *Cmd) printFiles(ctx *types.Context, files []FileInfo) {
 	for _, file := range files {
 		if c.Long {
@@ -138,7 +142,7 @@ func (c *Cmd) printFiles(ctx *types.Context, files []FileInfo) {
 			if file.IsDir {
 				ctx.Output.PrintInfo(fmt.Sprintf("📁 %s/", file.Name))
 			} else {
-				ctx.Output.Print(fmt.Sprintf("📄 %s", file.Name))
+				ctx.Output.Print("📄 " + file.Name)
 			}
 		}
 	}

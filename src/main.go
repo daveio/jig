@@ -13,21 +13,21 @@ import (
 	"github.com/daveio/belt/src/internal/types"
 )
 
-// CLI represents the command line interface structure
+// CLI represents the command line interface structure.
 type CLI struct {
 	// Global flags available to all commands
-	Help      bool   `short:"h" help:"Show help information and exit."`
-	Version   bool   `short:"v" help:"Show program version and exit."`
-	All       bool   `short:"a" help:"Show all information or operate on all arguments."`
-	Input     string `short:"i" help:"Read input from filename." type:"path"`
-	Output    string `short:"o" help:"Write output to filename." type:"path"`
-	Quiet     bool   `short:"q" help:"Quiet: less output to stdout."`
-	Silent    bool   `short:"s" help:"Silent: No output to stdout."`
-	Recursive bool   `short:"r" help:"Recursive: Operate recursively (down directory tree)."`
-	Verbose   bool   `help:"Verbose: output additional information to stdout or stderr."`
-	Compress  bool   `short:"z" help:"Compress: apply zstd compression."`
-	Force     bool   `short:"f" help:"Force: force overwrite or other destructive operation."`
-	Pipe      bool   `short:"p" help:"Output structured data as JSON for use in a pipe."`
+	Help      bool   `help:"Show help information and exit."                             short:"h"`
+	Version   bool   `help:"Show program version and exit."                              short:"V"`
+	All       bool   `help:"Show all information or operate on all arguments."           short:"a"`
+	Input     string `help:"Read input from filename."                                   short:"i" type:"path"`
+	Output    string `help:"Write output to filename."                                   short:"o" type:"path"`
+	Quiet     bool   `help:"Quiet: less output to stdout."                               short:"q"`
+	Silent    bool   `help:"Silent: No output to stdout."                                short:"s"`
+	Recursive bool   `help:"Recursive: Operate recursively (down directory tree)."       short:"r"`
+	Verbose   bool   `help:"Verbose: output additional information to stdout or stderr." short:"v"`
+	Compress  bool   `help:"Compress: apply zstd compression."                           short:"z"`
+	Force     bool   `help:"Force: force overwrite or other destructive operation."      short:"f"`
+	Pipe      bool   `help:"Output structured data as JSON for use in a pipe."           short:"p"`
 
 	// Commands
 	Hello  hello.Cmd  `cmd:"" help:"Say hello to someone."`
@@ -35,15 +35,17 @@ type CLI struct {
 	Format format.Cmd `cmd:"" help:"Format data in various ways."`
 }
 
-// Run executes the CLI application
+// Run executes the CLI application.
 func (cli *CLI) Run(ctx *types.Context) error {
 	// Apply global flags to configuration
 	if cli.Quiet {
 		ctx.Config.Output.Quiet = true
 	}
+
 	if cli.Silent {
 		ctx.Config.Output.Silent = true
 	}
+
 	if cli.Pipe {
 		ctx.Config.Output.Format = "json"
 		// Recreate output writer with JSON format
@@ -72,6 +74,7 @@ func main() {
 	if cfg.Output.Format == "json" {
 		outputFormat = output.FormatJSON
 	}
+
 	out := output.NewStdout(outputFormat)
 
 	// Create shared context
@@ -98,6 +101,7 @@ func main() {
 	// Handle version flag
 	if cli.Version {
 		fmt.Printf("belt version %s (%s, built %s)\n", version, commit, date)
+
 		return
 	}
 

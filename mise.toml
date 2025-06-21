@@ -14,3 +14,6 @@ go = { version = '1.24.4' }
 
 [tasks]
 'claude' = { run = "bun x @anthropic-ai/claude-code", description = "Run the claude CLI command via bun" }
+'lint' = { run = "golangci-lint run", description = "Run golangci-lint without automatic fixes" }
+'lint:fix' = { run = "golangci-lint run --fix", description = "Run golangci-lint with automatic fixes" }
+'fmt' = { run = "golancgi-lint fmt", description = "Run golangci-lint fmt to format the code" }

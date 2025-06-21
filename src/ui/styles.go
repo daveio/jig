@@ -2,7 +2,7 @@ package ui
 
 import "github.com/charmbracelet/lipgloss"
 
-// Color definitions
+// Color definitions.
 var (
 	Primary   = lipgloss.Color("#7D56F4")
 	Secondary = lipgloss.Color("#F25D94")
@@ -15,7 +15,7 @@ var (
 	Border    = lipgloss.Color("#383838")
 )
 
-// Base styles
+// Base styles.
 var (
 	Base = lipgloss.NewStyle().
 		Foreground(Text)
@@ -68,7 +68,7 @@ var (
 			Italic(true)
 )
 
-// Table styles
+// Table styles.
 var (
 	TableHeaderStyle = lipgloss.NewStyle().
 				Bold(true).
@@ -84,7 +84,7 @@ var (
 				Foreground(Border)
 )
 
-// Status indicator styles
+// Status indicator styles.
 var (
 	StatusRunning = lipgloss.NewStyle().
 			Foreground(Warning).

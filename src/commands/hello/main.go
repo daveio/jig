@@ -7,13 +7,13 @@ import (
 	"github.com/daveio/belt/src/internal/types"
 )
 
-// Cmd represents the hello command
+// Cmd represents the hello command.
 type Cmd struct {
-	Name string `arg:"" optional:"" help:"Name to greet (default: World)" default:"World"`
-	Loud bool   `short:"L" help:"Make the greeting loud (uppercase)"`
+	Name string `arg:"" default:"World" help:"Name to greet (default: World)"     optional:""`
+	Loud bool   `                       help:"Make the greeting loud (uppercase)"             short:"L"`
 }
 
-// Run executes the hello command
+// Run executes the hello command.
 func (c *Cmd) Run(ctx *types.Context) error {
 	greeting := fmt.Sprintf("Hello, %s!", c.Name)
 
@@ -22,7 +22,7 @@ func (c *Cmd) Run(ctx *types.Context) error {
 	}
 
 	if ctx.Config.App.Debug {
-		ctx.Output.PrintInfo(fmt.Sprintf("Greeting person: %s", c.Name))
+		ctx.Output.PrintInfo("Greeting person: " + c.Name)
 	}
 
 	ctx.Output.PrintSuccess(greeting)
