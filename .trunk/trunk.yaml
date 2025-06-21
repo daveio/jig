@@ -19,6 +19,10 @@ runtimes:
 lint:
   ignore:
     - linters:
+        - ALL
+      paths:
+        - incoming/**
+    - linters:
         - trunk-toolbox
       paths:
         # trunk-ignore-all(trunk-toolbox/todo): round and round we go
