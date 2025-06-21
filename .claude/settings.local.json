@@ -1,0 +1,6 @@
+{
+  "permissions": {
+    "allow": ["mcp__dockerProxy__resolve-library-id", "mcp__dockerProxy__get-library-docs"],
+    "deny": []
+  }
+}
