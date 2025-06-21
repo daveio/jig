@@ -27,6 +27,7 @@ lint:
       paths:
         # trunk-ignore-all(trunk-toolbox/todo): round and round we go
         - TODO.md
+        - .idea/betterCommentsSettings.xml
   enabled:
     - trunk-toolbox@0.5.4
     - sourcery@1.37.0
