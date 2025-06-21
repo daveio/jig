@@ -102,3 +102,78 @@ var (
 			Foreground(Info).
 			SetString("●")
 )
+
+// Box styles for pretty output.
+var (
+	BoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(Primary).
+			Padding(1, 2).
+			MarginTop(1).
+			MarginBottom(1)
+
+	WarningBox = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(Warning).
+			Padding(1, 2).
+			MarginTop(1).
+			MarginBottom(1)
+
+	ErrorBox = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(Error).
+			Padding(1, 2).
+			MarginTop(1).
+			MarginBottom(1)
+
+	SuccessBox = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(Success).
+			Padding(1, 2).
+			MarginTop(1).
+			MarginBottom(1)
+)
+
+// Spinner characters for loading states.
+var SpinnerFrames = []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+
+// Progress bar styles.
+var (
+	ProgressEmpty = lipgloss.NewStyle().
+			Foreground(Muted).
+			SetString("░")
+
+	ProgressFull = lipgloss.NewStyle().
+			Foreground(Primary).
+			SetString("█")
+)
+
+// Command output styles.
+var (
+	CommandStyle = lipgloss.NewStyle().
+			Foreground(Info).
+			Bold(true).
+			SetString("$ ")
+
+	OutputStyle = lipgloss.NewStyle().
+			Foreground(Text).
+			PaddingLeft(2)
+)
+
+// Key-value display styles.
+var (
+	KeyStyle = lipgloss.NewStyle().
+			Foreground(Primary).
+			Bold(true).
+			Width(15).
+			Align(lipgloss.Right).
+			MarginRight(1)
+
+	ValueStyle = lipgloss.NewStyle().
+			Foreground(Text)
+
+	MonospaceStyle = lipgloss.NewStyle().
+			Foreground(Info).
+			Background(lipgloss.Color("#1A1A1A")).
+			Padding(0, 1)
+)

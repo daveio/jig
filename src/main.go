@@ -5,9 +5,12 @@ import (
 	"os"
 
 	"github.com/alecthomas/kong"
-	"github.com/daveio/belt/src/commands/format"
-	"github.com/daveio/belt/src/commands/hello"
-	"github.com/daveio/belt/src/commands/list"
+	"github.com/daveio/belt/src/commands/audio"
+	"github.com/daveio/belt/src/commands/crypt"
+	"github.com/daveio/belt/src/commands/dns"
+	"github.com/daveio/belt/src/commands/domain"
+	initcmd "github.com/daveio/belt/src/commands/init"
+	"github.com/daveio/belt/src/commands/tls"
 	"github.com/daveio/belt/src/config"
 	"github.com/daveio/belt/src/internal/output"
 	"github.com/daveio/belt/src/internal/types"
@@ -30,9 +33,12 @@ type CLI struct {
 	Pipe      bool   `help:"Output structured data as JSON for use in a pipe."           short:"p"`
 
 	// Commands
-	Hello  hello.Cmd  `cmd:"" help:"Say hello to someone."`
-	List   list.Cmd   `cmd:"" help:"List files and directories."`
-	Format format.Cmd `cmd:"" help:"Format data in various ways."`
+	Init   initcmd.Cmd `cmd:"" help:"Initialize configuration file."`
+	Audio  audio.Cmd   `cmd:"" help:"Audio file operations."`
+	Crypt  crypt.Cmd   `cmd:"" help:"Cryptography operations."`
+	DNS    dns.Cmd     `cmd:"" help:"DNS operations."`
+	Domain domain.Cmd  `cmd:"" help:"Domain operations."`
+	TLS    tls.Cmd     `cmd:"" help:"TLS certificate operations."`
 }
 
 // Run executes the CLI application.
@@ -69,6 +75,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Check if this is the first run (no config file)
+	if !config.ConfigExists() && len(os.Args) > 1 && os.Args[1] != "init" {
+		fmt.Fprintf(os.Stderr, "No configuration file found. Run 'belt init' to create one.\n")
+	}
+
 	// Create output writer
 	outputFormat := output.FormatAuto
 	if cfg.Output.Format == "json" {
@@ -87,7 +98,7 @@ func main() {
 	var cli CLI
 	kongCtx := kong.Parse(&cli,
 		kong.Name("belt"),
-		kong.Description("A modern CLI toolkit built with Go."),
+		kong.Description("A modular CLI toolbelt for cryptography, DNS, audio, and more."),
 		kong.Vars{
 			"version": fmt.Sprintf("%s (%s, built %s)", version, commit, date),
 		},

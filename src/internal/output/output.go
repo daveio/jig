@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/daveio/belt/src/config"
 	"github.com/daveio/belt/src/ui"
 )
@@ -206,6 +207,87 @@ func (w *Writer) printList(data []interface{}) {
 		_, _ = fmt.Fprintf(w.writer, "%s %v\n", bullet, item)
 
 		_ = i // avoid unused variable warning
+	}
+}
+
+// PrintBox outputs text in a styled box.
+func (w *Writer) PrintBox(message string, boxStyle lipgloss.Style) {
+	if w.config.Output.Silent {
+		return
+	}
+
+	// Always write boxes to stderr to avoid interfering with data output
+	writer := w.writer
+	if writer == os.Stdout {
+		writer = os.Stderr
+	}
+
+	switch w.format {
+	case FormatJSON:
+		// Skip boxes in JSON mode
+		return
+	case FormatPlain:
+		_, _ = fmt.Fprintln(writer, message)
+	case FormatStyled:
+		_, _ = fmt.Fprintln(writer, boxStyle.Render(message))
+	}
+}
+
+// PrintCommand outputs a command being executed.
+func (w *Writer) PrintCommand(command string) {
+	if w.config.Output.Silent {
+		return
+	}
+
+	switch w.format {
+	case FormatJSON:
+		w.printJSON(map[string]interface{}{
+			"command": command,
+			"type":    "command",
+		})
+	case FormatPlain:
+		_, _ = fmt.Fprintf(w.writer, "$ %s\n", command)
+	case FormatStyled:
+		_, _ = fmt.Fprintln(w.writer, ui.CommandStyle.String()+command)
+	}
+}
+
+// PrintKeyValue outputs a key-value pair.
+func (w *Writer) PrintKeyValue(key, value string) {
+	if w.config.Output.Silent {
+		return
+	}
+
+	switch w.format {
+	case FormatJSON:
+		w.printJSON(map[string]interface{}{
+			key: value,
+		})
+	case FormatPlain:
+		_, _ = fmt.Fprintf(w.writer, "%s: %s\n", key, value)
+	case FormatStyled:
+		k := ui.KeyStyle.Render(key + ":")
+		v := ui.ValueStyle.Render(value)
+		_, _ = fmt.Fprintln(w.writer, k+v)
+	}
+}
+
+// PrintMonospace outputs text in monospace style.
+func (w *Writer) PrintMonospace(text string) {
+	if w.config.Output.Silent {
+		return
+	}
+
+	switch w.format {
+	case FormatJSON:
+		w.printJSON(map[string]interface{}{
+			"code": text,
+			"type": "monospace",
+		})
+	case FormatPlain:
+		_, _ = fmt.Fprintln(w.writer, text)
+	case FormatStyled:
+		_, _ = fmt.Fprintln(w.writer, ui.MonospaceStyle.Render(text))
 	}
 }
 

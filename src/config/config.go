@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/adrg/xdg"
 	"github.com/knadh/koanf/parsers/json"
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/env"
@@ -19,6 +20,8 @@ type Config struct {
 	App     AppConfig     `koanf:"app"`
 	Output  OutputConfig  `koanf:"output"`
 	Logging LoggingConfig `koanf:"logging"`
+	Crypt   CryptConfig   `koanf:"crypt"`
+	DNS     DNSConfig     `koanf:"dns"`
 }
 
 // AppConfig holds application-specific settings.
@@ -40,6 +43,19 @@ type OutputConfig struct {
 type LoggingConfig struct {
 	Level  string `koanf:"level"`
 	Format string `koanf:"format"`
+}
+
+// CryptConfig holds cryptography settings.
+type CryptConfig struct {
+	Env    string `koanf:"env"`    // Environment variable name for encryption key
+	Key    string `koanf:"key"`    // Base58-encoded encryption key
+	Warned bool   `koanf:"warned"` // Whether user has been warned about key backup
+}
+
+// DNSConfig holds DNS settings.
+type DNSConfig struct {
+	Server string `koanf:"server"` // Default DNS server
+	Root   bool   `koanf:"root"`   // Whether to use root servers by default
 }
 
 var (
@@ -108,18 +124,32 @@ func getDefaults() Config {
 			Level:  "info",
 			Format: "text",
 		},
+		Crypt: CryptConfig{
+			Env:    "BELT_CRYPT_KEY",
+			Key:    "",
+			Warned: false,
+		},
+		DNS: DNSConfig{
+			Server: "1.1.1.1",
+			Root:   false,
+		},
 	}
 }
 
 // loadConfigFiles loads configuration from standard locations.
 func loadConfigFiles() error {
+	// Get XDG config paths
+	xdgYaml, _ := xdg.ConfigFile("belt/config.yaml")
+	xdgYml, _ := xdg.ConfigFile("belt/config.yml")
+	xdgJson, _ := xdg.ConfigFile("belt/config.json")
+
 	configPaths := []string{
 		"belt.yaml",
 		"belt.yml",
 		"belt.json",
-		filepath.Join(os.Getenv("HOME"), ".config", "belt", "config.yaml"),
-		filepath.Join(os.Getenv("HOME"), ".config", "belt", "config.yml"),
-		filepath.Join(os.Getenv("HOME"), ".config", "belt", "config.json"),
+		xdgYaml,
+		xdgYml,
+		xdgJson,
 	}
 
 	for _, path := range configPaths {
@@ -146,4 +176,29 @@ func loadConfigFiles() error {
 	}
 
 	return nil
+}
+
+// GetKey returns the encryption key, checking environment variable first.
+func (c *CryptConfig) GetKey() string {
+	if c.Env != "" {
+		if envKey := os.Getenv(c.Env); envKey != "" {
+			return envKey
+		}
+	}
+	return c.Key
+}
+
+// GetConfigPath returns the path to the belt configuration file.
+func GetConfigPath() (string, error) {
+	return xdg.ConfigFile("belt/config.yaml")
+}
+
+// ConfigExists returns true if the config file exists.
+func ConfigExists() bool {
+	path, err := GetConfigPath()
+	if err != nil {
+		return false
+	}
+	_, err = os.Stat(path)
+	return err == nil
 }
