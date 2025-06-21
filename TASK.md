@@ -10,7 +10,7 @@ Scaffold me a new Go CLI in the current directory.
   - Use `context7` to get information about any libraries you use. Don't trust your existing knowledge.
   - Use `toolbaseProxy:deepwiki*` to understand GitHub repositories.
     - If `context7` information conflicts with your existing knowledge, `context7` and `deepWiki` win.
-  - Use `perplexity` and `tavily` to search the web, for example to find libraries.
+  - Use `perplexity` and `tavily` to search the web, for example to find libraries. Use the libraries I tell you to, but search for others to handle other tasks.
 
 ## Libraries
 
@@ -31,7 +31,7 @@ Kong has gained popularity as a cleaner, more modern alternative to Cobra for CL
 
 Conflex is a configuration library.
 
-Conflex is not on `context7` but you can use the `toolbaseProxy:deepwiki*` tools to get information.
+Conflex is not on `context7` but you can use the `toolbaseProxy:deepwiki*` tools to get information. Make sure to paginate, the default result gives you `Error: MCP tool "deepwiki_read_wiki_contents" response (49675 tokens) exceeds maximum allowed tokens (25000). Please use pagination, filtering, or limit parameters to reduce the response size`.
 
 - Easy Integration: Simple and intuitive API.
 - Flexible Sources: Load from files, environment variables (with custom prefixes), Consul, and easily extend with custom sources.
