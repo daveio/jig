@@ -1,5 +1,7 @@
 {
   "workbench.colorCustomizations": {},
   "docwriter.style": "GoDoc",
-  "editor.wordWrap": "off"
+  "[go]": {
+    "editor.wordWrap": "off"
+  }
 }
