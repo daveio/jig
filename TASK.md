@@ -8,9 +8,9 @@ Scaffold me a new Go CLI in the current directory.
   - I am not concerned about the size of our dependency graph.
   - Using libraries to reduce the amount of code we have to write is much more important than the size of our dependency graph.
   - Use `context7` to get information about any libraries you use. Don't trust your existing knowledge.
-    - If `context7` information conflicts with your existing knowledge, `context7` wins.
-  - Use `perplexity` and `tavily` to search the web, for example to find libraries.
   - Use `deepWiki` to understand GitHub repositories.
+    - If `context7` information conflicts with your existing knowledge, `context7` and `deepWiki` win.
+  - Use `perplexity` and `tavily` to search the web, for example to find libraries.
 
 ## Libraries
 
@@ -58,7 +58,7 @@ Use `context7` to get documentation on these libraries and any others you want t
 
 Use `perplexity` and `tavily` to search the web, for example to find libraries.
 
-Use `deepWiki` to understand GitHub repositories.
+Use `deepWiki` to understand GitHub repositories. If the wiki for a repository you want to understand has not been generated yet, start the generation process with email `dave@dave.io` if you can, and abort so that we can wait for it to be generated.
 
 Don't just trust your inbuilt knowledge. Use the tools.
 
@@ -116,4 +116,5 @@ Set up useful helpers for things like configuration and pretty output with the `
 
 - I am not concerned about the size of the dependency graph, and I am eager to use libraries instead of implementing things from scratch.
 - That's true for the whole project, so bear it in mind as you're scaffolding things.
-- Add packages freely, just make sure you add them at their latest version.
+- Add packages freely, just make sure you add them at their latest version, and that they have a commit in the last 6 months.
+  - Remember, `context7` and `deepWiki` can help you learn about a library.
