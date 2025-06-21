@@ -37,7 +37,7 @@ archives:
         format: zip
 
 checksum:
-  name_template: "checksums.txt"
+  name_template: checksums.txt
 
 changelog:
   sort: asc
@@ -73,8 +73,8 @@ brews:
 
 dockers:
   - image_templates:
-      - "ghcr.io/daveio/belt:{{ .Version }}"
-      - "ghcr.io/daveio/belt:latest"
+      - ghcr.io/daveio/belt:{{ .Version }}
+      - ghcr.io/daveio/belt:latest
     dockerfile: Dockerfile.goreleaser
     build_flag_templates:
       - "--label=org.opencontainers.image.created={{.Date}}"

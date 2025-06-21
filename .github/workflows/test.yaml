@@ -1,4 +1,5 @@
 name: test
+permissions: read-all
 on:
   push: null
   pull_request: null

@@ -1,4 +1,5 @@
 name: lint
+permissions: read-all
 on:
   push: null
   pull_request: null
