@@ -1,4 +1,4 @@
-# bubbletea-app-template
+me # bubbletea-app-template
 
 A template repository to create [Bubble Tea][bubbletea] apps.
 
