@@ -1,6 +1,6 @@
 {
   "bin": {
-    "belt": "index.ts"
+    "belt": "src/index.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.54.0",
@@ -48,7 +48,7 @@
     "node": "^22.16.0"
   },
   "license": "MIT",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "name": "belt",
   "packageManager": "bun@1.2.16",
   "prettier": {
