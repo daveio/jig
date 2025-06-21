@@ -1,2 +1,1 @@
-exclude_paths:
-  - worker-configuration.d.ts
+exclude_paths: []

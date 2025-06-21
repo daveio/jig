@@ -1,5 +1,5 @@
 [env]
-NEXT_DAVE_IO_MISE_ACTIVE = 'true'
+BELT_MISE_ACTIVE = 'true'
 
 [settings]
 env_file = '.env'
@@ -8,10 +8,9 @@ idiomatic_version_file_enable_tools = []
 
 
 [tools]
-node = { version = '22.16.0' }
-bun = { version = '1.2.16' }
-rust = { version = '1.87.0' }
+go = { version = '1.24.4' }
+'go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint' = { version = '2.1.6' }
+'go:github.com/nametake/golangci-lint-langserver' = { version = '0.0.11' }
 
 [tasks]
-'hello' = { run = "echo 'Hello, world!'" }
-'claude' = { run = "bun run claude", description = "Run the claude CLI command via bun" }
+'claude' = { run = "bun x @anthropic-ai/claude-code", description = "Run the claude CLI command via bun" }

@@ -22,7 +22,7 @@ updates:
       all-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: pip
+  - package-ecosystem: gomod
     directory: /
     schedule:
       interval: daily
