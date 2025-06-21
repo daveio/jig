@@ -69,7 +69,7 @@
     "lint:fix:trunk": "bun run trunk check -a --fix",
     "lint:trunk": "bun run trunk check -a",
     "lint:types": "bun run tsc --noEmit",
-    "reset": "bun run rimraf node_modules bun.lock && bun install"
+    "reset": "bun run rimraf node_modules bun.lock && bun install && chmod +x node_modules/@biomejs/cli-darwin-arm64/biome"
   },
   "type": "module",
   "version": "0.0.1",
