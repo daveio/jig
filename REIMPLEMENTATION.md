@@ -1,6 +1,6 @@
 # Belt CLI - Python Implementation Behavior Documentation
 
-This document describes the complete behavior of the Python Belt CLI application for reimplementation in the Bun/TypeScript CLI framework. Focus is on BEHAVIOR, not implementation details.
+This document describes the complete behavior of the Python Belt CLI application for reimplementation in Go. Focus is on BEHAVIOR, not implementation details.
 
 ## Application Overview
 
@@ -157,10 +157,12 @@ dns:
   **Behavior**:
 - Generates X25519 keypair for WireGuard
 - Default output format:
-  ```
-  Private key : <base64-private-key>
-  Public key  : <base64-public-key>
-  ```
+
+```plaintext
+Private key : <base64-private-key>
+Public key  : <base64-public-key>
+```
+
 - Script format: `<private-key> <public-key>` (space-separated)
 - Keys are base64-encoded (standard encoding, not base58)
 

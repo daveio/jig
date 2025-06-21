@@ -1,35 +1,50 @@
-version: 2
 updates:
-  - package-ecosystem: docker
-    directory: /
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 100
-    assignees:
+  - assignees:
       - daveio
+    commit-message:
+      include: scope
+      prefix: chore
+    directory: /
     groups:
       all-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: github-actions
-    directory: /
+    labels:
+      - dependencies
+    open-pull-requests-limit: 100
+    package-ecosystem: docker
     schedule:
       interval: daily
-    open-pull-requests-limit: 100
-    assignees:
+  - assignees:
       - daveio
+    commit-message:
+      include: scope
+      prefix: chore
+    directory: /
     groups:
       all-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: gomod
-    directory: /
+    labels:
+      - dependencies
+    open-pull-requests-limit: 100
+    package-ecosystem: github-actions
     schedule:
       interval: daily
-    open-pull-requests-limit: 100
-    assignees:
+  - assignees:
       - daveio
+    commit-message:
+      include: scope
+      prefix: chore
+    directory: /
     groups:
       all-dependencies:
         patterns:
           - "*"
+    labels:
+      - dependencies
+    open-pull-requests-limit: 100
+    package-ecosystem: gomod
+    schedule:
+      interval: daily
+version: 2
