@@ -14,6 +14,7 @@ import (
 	"github.com/daveio/belt/src/config"
 	"github.com/daveio/belt/src/internal/output"
 	"github.com/daveio/belt/src/internal/types"
+	"github.com/daveio/belt/src/internal/version"
 )
 
 // CLI represents the command line interface structure.
@@ -61,13 +62,12 @@ func (cli *CLI) Run(ctx *types.Context) error {
 	return nil
 }
 
-var (
-	version = "1.0.0"
-	commit  = "dev"
-	date    = "unknown"
-)
-
 func main() {
+	// Check for version flag before doing anything else
+	if version.CheckVersionFlag(os.Args) {
+		return
+	}
+
 	// Load configuration
 	cfg, err := config.Load()
 	if err != nil {
@@ -110,7 +110,7 @@ func main() {
 		kong.Name("belt"),
 		kong.Description("A modular CLI toolbelt for cryptography, DNS, audio, and more."),
 		kong.Vars{
-			"version": fmt.Sprintf("%s (%s, built %s)", version, commit, date),
+			"version": version.VersionString(),
 		},
 		kong.UsageOnError(),
 		kong.ConfigureHelp(kong.HelpOptions{
@@ -118,13 +118,6 @@ func main() {
 		}),
 		kong.Bind(ctx),
 	)
-
-	// Handle version flag
-	if cli.Version {
-		fmt.Printf("belt version %s (%s, built %s)\n", version, commit, date)
-
-		return
-	}
 
 	// Execute the command
 	err = kongCtx.Run()

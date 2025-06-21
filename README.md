@@ -34,6 +34,13 @@ A modular CLI toolbelt that consolidates various utility scripts into a single, 
 
 ## Installation
 
+### From Releases
+
+```bash
+# Download the latest release for your platform from:
+# https://github.com/daveio/belt/releases
+```
+
 ### From Source
 
 ```bash
@@ -46,6 +53,16 @@ go build -o belt ./src
 
 # Move to your PATH
 sudo mv belt /usr/local/bin/
+```
+
+### Using Docker
+
+```bash
+# Pull the image
+docker pull ghcr.io/daveio/belt:latest
+
+# Run a command
+docker run --rm ghcr.io/daveio/belt:latest crypt random hex 32
 ```
 
 ### First Run
@@ -150,6 +167,35 @@ Because it's a toolbelt. And I already have a project called "tools". Naming is 
 ## Contributing
 
 Feel free to open issues or PRs. Keep in mind this is a personal tool that I'm sharing because someone might find it useful. If you want a feature, you're probably better off forking it.
+
+## Development
+
+### CI/CD Workflows
+
+This project uses GitHub Actions for continuous integration and delivery:
+
+- **Lint and Test**: Runs on every push and pull request to ensure code quality
+- **Docker Build**: Builds and pushes the Docker image to GitHub Container Registry on pushes to main and tags
+- **Release**: Creates releases with binaries for multiple platforms when a tag is pushed
+
+### Creating a Release
+
+To create a new release:
+
+```bash
+# Tag the commit
+git tag -a v1.0.0 -m "Release v1.0.0"
+
+# Push the tag
+git push origin v1.0.0
+```
+
+This will trigger the release workflow, which will:
+
+1. Build binaries for multiple platforms
+2. Create a GitHub release
+3. Upload the binaries to the release
+4. Build and push a Docker image with the version tag
 
 ## License
 

@@ -1,37 +1,87 @@
+# GoReleaser configuration for Belt
+project_name: belt
+
 before:
   hooks:
     - go mod tidy
+
 builds:
-  - env:
+  - main: ./src
+    env:
       - CGO_ENABLED=0
-    flags:
-      - -trimpath
-    # mod_timestamp: { { .CommitTimestamp } }
-    targets:
-      - go_first_class
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/daveio/belt/src/internal/version.Version={{.Version}}
+      - -X github.com/daveio/belt/src/internal/version.Commit={{.Commit}}
+      - -X github.com/daveio/belt/src/internal/version.Date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: "checksums.txt"
+
 changelog:
+  sort: asc
   filters:
     exclude:
       - "^docs:"
       - "^test:"
-      - ^chore
+      - "^ci:"
       - Merge pull request
-      - Merge remote-tracking branch
       - Merge branch
-      - go mod tidy
-  groups:
-    - order: 0
-      regexp: ^.*feat[(\w)]*:+.*$
-      title: New Features
-    - order: 10
-      regexp: ^.*fix[(\w)]*:+.*$
-      title: Bug fixes
-    - order: 999
-      title: Other work
-  sort: asc
-  use: github
-gomod:
-  proxy: true
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-version: 2
+
+release:
+  github:
+    owner: daveio
+    name: belt
+  prerelease: auto
+  draft: false
+  name_template: "Belt v{{ .Version }}"
+
+brews:
+  - name: belt
+    tap:
+      owner: daveio
+      name: homebrew-tap
+    folder: Formula
+    homepage: https://github.com/daveio/belt
+    description: A modular CLI toolbelt
+    license: MIT
+    test: |
+      system "#{bin}/belt --version"
+    install: |
+      bin.install "belt"
+
+dockers:
+  - image_templates:
+      - "ghcr.io/daveio/belt:{{ .Version }}"
+      - "ghcr.io/daveio/belt:latest"
+    dockerfile: Dockerfile.goreleaser
+    build_flag_templates:
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+    skip_push: false
+
+sboms:
+  - artifacts: archive

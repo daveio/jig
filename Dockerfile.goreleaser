@@ -1,0 +1,19 @@
+# This Dockerfile is used by GoReleaser to build the Docker image
+FROM alpine:latest
+
+# Install CA certificates for HTTPS requests
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+# Copy the pre-built binary from GoReleaser
+COPY belt /usr/local/bin/belt
+
+# Create a directory for belt configuration
+RUN mkdir -p /root/.config/belt
+
+# Set the entrypoint
+ENTRYPOINT ["belt"]
+
+# Default command (shows help)
+CMD ["--help"]
