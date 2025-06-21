@@ -1,6 +1,6 @@
 # Belt 🛠️
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/daveio/belt) | [![Go Reference](https://pkg.go.dev/badge/github.com/daveio/belt.svg)](https://pkg.go.dev/github.com/daveio/belt) | [![Go Report Card](https://goreportcard.com/badge/github.com/daveio/belt)](https://goreportcard.com/report/github.com/daveio/belt) | [![License](https://img.shields.io/github/license/daveio/belt)](https://github.com/daveio/belt/blob/main/LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/daveio/belt) [![Go Reference](https://pkg.go.dev/badge/github.com/daveio/belt.svg)](https://pkg.go.dev/github.com/daveio/belt) [![Go Report Card](https://goreportcard.com/badge/github.com/daveio/belt)](https://goreportcard.com/report/github.com/daveio/belt) [![License](https://img.shields.io/github/license/daveio/belt)](https://github.com/daveio/belt/blob/main/LICENSE)
 
 ## About
 
