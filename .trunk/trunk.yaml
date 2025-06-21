@@ -17,7 +17,14 @@ runtimes:
     - python@3.10.8
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
+  ignore:
+    - linters:
+        - trunk-toolbox
+      paths:
+        # trunk-ignore-all(trunk-toolbox/todo): round and round we go
+        - TODO.md
   enabled:
+    - trunk-toolbox@0.5.4
     - sourcery@1.37.0
     - actionlint@1.7.7
     - checkov@3.2.443
