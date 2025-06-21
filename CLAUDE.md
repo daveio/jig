@@ -17,10 +17,10 @@ go build -o belt ./src    # Build the CLI binary
 go run ./src/main.go      # Run the application directly
 
 # Code quality
-golangci-lint run         # Run Go-specific linters
-golangci-lint run --fix   # Run linters with automatic fixes
-trunk check               # Run all configured linters (includes golangci-lint)
-trunk fmt                 # Auto-format all code
+mise lint                 # Run Go-specific linters
+mise lint:fix             # Run linters with automatic fixes
+trunk check -a            # Run all configured linters (includes golangci-lint)
+trunk fmt -a              # Auto-format all code
 
 # Testing
 go test ./...             # Run all tests (when tests exist)
