@@ -1,4 +1,8 @@
-# Implementation Plan: `jig`
+# Implementation Plan
+
+## Project
+
+`jig`: a CLI toolbox.
 
 ## Layout
 
@@ -10,11 +14,11 @@
   - <https://github.com/str4d/rage>
 - Terminal spinners from `spinoff`
   - <https://github.com/ad4mx/spinoff>
-- MCP server using `LIBRARY`
-  - <>
+- MCP server with `rust-mcp-sdk`
+  - <https://github.com/rust-mcp-stack/rust-mcp-sdk>
+  - Also `rmcp`: <https://github.com/modelcontextprotocol/rust-sdk>
+    - `rmcp` guide: <https://hackmd.io/@Hamze/SytKkZP01l>
 - [Easter Egg](#easter-egg) with ludicrous effects
-  - Not present in `--help`
-  - Not exposed via MCP
 
 ## Command Tree
 
@@ -33,26 +37,36 @@ graph TD
   A --> 5(format)
   A --> 6(convert)
   A --> 7(mcp)
+  A --> 8(dance)
+
+  style 8 stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
-# Notes
+## Notes
 
 - `clap` supports command shortening to disambiguation
   - Derive API: `#[command(infer_subcommands = true)]`
 - `jig fmt` is an alias for `jig format`
 - `tachyonfx` integrates nicely with `ratatui`
 
-# Easter Egg
+## Easter Egg
 
-Use TachyonFX as the primary effects engine.
+- Not present in `--help`.
+- Not exposed via MCP.
+- Use TachyonFX as the primary effects engine.
+- Use TUI-Rain for atmospheric background effects.
+- Layer in Firework-RS for explosive moments.
+- Use RASCII to convert a photo of yourself into animated ASCII art.
+- Add Rusty TermColor typewriter effects for text reveals.
+- Finish with Spinoff spinners for loading sequences.
 
--  Use TUI-Rain for atmospheric background effects.
--  Layer in Firework-RS for explosive moments.
--  Use RASCII to convert a photo of yourself into animated ASCII art.
--  Add Rusty TermColor typewriter effects for text reveals.
--  Finish with Spinoff spinners for loading sequences.
+### Invocation
 
-### Core Effects Engine
+`jig dance`
+
+### Effects
+
+#### Core Effects Engine
 
 `tachyonfx`
 
@@ -60,7 +74,7 @@ Use TachyonFX as the primary effects engine.
 - The primary shader-like effects engine for ratatui applications
 - A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
 
-### Atmospheric Effects
+#### Atmospheric Effects
 
 `tui-rain`
 
@@ -68,7 +82,7 @@ Use TachyonFX as the primary effects engine.
 - Rain and atmospheric effects widget
 - A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
 
-### Explosive Visual Effects
+#### Explosive Visual Effects
 
 `firework-rs`
 
@@ -76,7 +90,7 @@ Use TachyonFX as the primary effects engine.
 - ASCII art firework simulator
 - A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
 
-### ASCII Art Generation
+#### ASCII Art Generation
 
 `rascii_art`
 
@@ -84,7 +98,7 @@ Use TachyonFX as the primary effects engine.
 - Advanced image to ASCII art converter
 - An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
 
-### Text Effects
+#### Text Effects
 
 `rusty-termcolor`
 
@@ -92,7 +106,7 @@ Use TachyonFX as the primary effects engine.
 - Terminal text formatting and effects
 - A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
 
-### Progress Indicators
+#### Progress Indicators
 
 `spinoff`
 
