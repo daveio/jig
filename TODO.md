@@ -16,6 +16,37 @@ All core features from the implementation plan have been successfully implemente
 - ✅ `belt dns flush/lookup/sec` - DNS operations
 - ✅ Placeholder commands for future features
 
+## Bug Fixes
+
+### Critical Issues
+
+- **TODO**: (a1b2c3) Fix memory exhaustion in decrypt command - use streaming instead of io.ReadAll()
+- **TODO**: (b2c3d4) Fix potential panic in config.Get() - ensure Load() is called before Get()
+- **TODO**: (c3d4e5) Add nonce length validation in DecryptBlock() before aead.Open()
+
+### Security Issues
+
+- **TODO**: (d4e5f6) Fix partial encryption on read errors in encrypt command
+- **TODO**: (e5f6g7) Add proper DNS server address validation in NewResolver()
+- **TODO**: (f6g7h8) Add timeout handling for all network operations
+
+### Error Handling
+
+- **TODO**: (g7h8i9) Propagate file close errors in init command instead of just logging
+- **TODO**: (h8i9j0) Add nil checks for config in output.go print methods
+- **TODO**: (i9j0k1) Add proper error handling for type assertions in dns/lookup.go
+
+### Platform Issues
+
+- **TODO**: (j0k1l2) Fix Windows compilation issue with os.Geteuid() in platform.go
+- **TODO**: (k1l2m3) Fix race condition in audio.go between file open and stat
+
+### Resource Management
+
+- **TODO**: (l2m3n4) Add bounds checking for all array/slice operations
+- **TODO**: (m3n4o5) Use sync.Once for one-time config initialization
+- **TODO**: (n4o5p6) Add context.Context support for proper cancellation handling
+
 ## Known Limitations
 
 ### Audio Metadata Extraction
