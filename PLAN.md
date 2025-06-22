@@ -36,3 +36,4 @@ graph TD
 - `clap` supports command shortening to disambiguation
   - Derive API: `#[command(infer_subcommands = true)]`
 - `jig fmt` is an alias for `jig format`
+- `tachyonfx` integrates nicely with `ratatui`
