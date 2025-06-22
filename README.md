@@ -18,8 +18,9 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
   - <https://github.com/ad4mx/spinoff>
 - MCP server with `rust-mcp-sdk`
   - <https://github.com/rust-mcp-stack/rust-mcp-sdk>
-  - Also `rmcp`: <https://github.com/modelcontextprotocol/rust-sdk>
-    - `rmcp` guide: <https://hackmd.io/@Hamze/SytKkZP01l>
+  - Also `rmcp`
+    - <https://github.com/modelcontextprotocol/rust-sdk>
+    - <https://hackmd.io/@Hamze/SytKkZP01l>
 - [Easter Egg](#easter-egg) with ludicrous effects
 - Encryption and decryption with `rage`
   - <https://github.com/str4d/rage>
@@ -27,15 +28,21 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 ## Command Tree
 
 ```mermaid
-graph TD
-  A[jig] --> 1(crypt)
-  A --> 3(generate)
-    3 --> 3A(hex)
-    3 --> 3B(password)
-    3 --> 3C(key)
-      3C --> 3C1(crypt)
-      3C --> 3C2(wireguard)
-      3C --> 3C3(ssh)
+---
+config:
+  theme: dark
+  layout: elk
+---
+graph LR
+  A[jig] --> 1(init)
+  A --> 2(generate)
+    2 --> 2A(hex)
+    2 --> 2B(password)
+    2 --> 2C(key)
+      2C --> 2C1(crypt)
+      2C --> 2C2(wireguard)
+      2C --> 2C3(ssh)
+  A --> 3(crypt)
   A --> 4(network)
     4 --> 4A(dns)
   A --> 5(format)
