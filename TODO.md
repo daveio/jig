@@ -20,7 +20,7 @@ All core features from the implementation plan have been successfully implemente
 
 ### Critical Issues
 
-- **TODO**: (a1b2c3) Fix memory exhaustion in decrypt command - use streaming instead of io.ReadAll()
+- **TODO**: (a1b2c3) Fix memory exhaustion in decrypt command - use streaming instead of io.ReadAll(), match encrypt behaviour
 - **TODO**: (b2c3d4) Fix potential panic in config.Get() - ensure Load() is called before Get()
 - **TODO**: (c3d4e5) Add nonce length validation in DecryptBlock() before aead.Open()
 
