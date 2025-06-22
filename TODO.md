@@ -47,6 +47,10 @@ All core features from the implementation plan have been successfully implemente
 - **TODO**: (m3n4o5) Use sync.Once for one-time config initialization
 - **TODO**: (n4o5p6) Add context.Context support for proper cancellation handling
 
+### CI
+
+- **TODO**: (fh59bf) Update versions in CI, especially `lint` which uses `golangci-lint` version 1.
+
 ## Known Limitations
 
 ### Audio Metadata Extraction
