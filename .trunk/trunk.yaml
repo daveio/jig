@@ -16,6 +16,12 @@ runtimes:
     - python@3.10.8
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
+  ignore:
+    - linters:
+        - ALL
+      paths:
+        - target/**
+        - tmp/**
   enabled:
     - clippy@1.87.0
     - git-diff-check
