@@ -23,6 +23,8 @@ lint:
         - target/**
         - tmp/**
   enabled:
+    - checkov@3.2.443
+    - yamllint@1.37.1
     - clippy@1.87.0
     - git-diff-check
     - markdownlint@0.45.0
