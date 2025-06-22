@@ -4,14 +4,13 @@
 
 - Base CLI framework with `clap`
   - <https://github.com/clap-rs/clap>
-  - Supports command shortening to disambiguation
-    - Derive API: `#[command(infer_subcommands = true)]`
-  - `jig fmt` is an alias for `jig format`
 - Terminal UI with `ratatui`
   - <https://github.com/ratatui/ratatui>
-- Encryption and decryption with `age` via `rage`
+- Encryption and decryption with  `rage`
   - <https://github.com/str4d/rage>
-
+- Easter egg with ludicrous effects with `tachyonfx`
+  - <https://github.com/junkdog/tachyonfx>
+  - Web-based editor: <https://junkdog.github.io/tachyonfx-ftl>
 
 ## Command Tree
 
@@ -31,3 +30,9 @@ graph TD
   A --> 6(convert)
   A --> 7(mcp)
 ```
+
+# Notes
+
+- `clap` supports command shortening to disambiguation
+  - Derive API: `#[command(infer_subcommands = true)]`
+- `jig fmt` is an alias for `jig format`
