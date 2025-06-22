@@ -10,8 +10,6 @@
   - <https://github.com/clap-rs/clap>
 - Terminal UI with `ratatui`
   - <https://github.com/ratatui/ratatui>
-- Encryption and decryption with  `rage`
-  - <https://github.com/str4d/rage>
 - Terminal spinners from `spinoff`
   - <https://github.com/ad4mx/spinoff>
 - MCP server with `rust-mcp-sdk`
@@ -19,6 +17,8 @@
   - Also `rmcp`: <https://github.com/modelcontextprotocol/rust-sdk>
     - `rmcp` guide: <https://hackmd.io/@Hamze/SytKkZP01l>
 - [Easter Egg](#easter-egg) with ludicrous effects
+- Encryption and decryption with  `rage`
+  - <https://github.com/str4d/rage>
 
 ## Command Tree
 
