@@ -10,7 +10,11 @@
   - <https://github.com/str4d/rage>
 - Terminal spinners from `spinoff`
   - <https://github.com/ad4mx/spinoff>
+- MCP server using `LIBRARY`
+  - <>
 - [Easter Egg](#easter-egg) with ludicrous effects
+  - Not present in `--help`
+  - Not exposed via MCP
 
 ## Command Tree
 
