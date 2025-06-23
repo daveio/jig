@@ -4,10 +4,6 @@
 
 `jig` is a utility which collects tools for various tasks into one place. It merges all my disparate tools into a single CLI toolbox, making it easier to manage and use them, and teaches me Rust.
 
-The plan is to also offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
-
-The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too.
-
 ## Layout
 
 - Base CLI framework with `clap`
@@ -53,12 +49,11 @@ graph LR
   style 8 stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
-## Notes
+## MCP Server
 
-- `clap` supports command shortening to disambiguation
-  - Derive API: `#[command(infer_subcommands = true)]`
-- `jig fmt` is an alias for `jig format`
-- `tachyonfx` integrates nicely with `ratatui`
+The plan is to also offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
+
+The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too.
 
 ## Easter Egg
 
@@ -124,6 +119,13 @@ graph LR
 - <https://github.com/ad4mx/spinoff>
 - Terminal spinner library
 - An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
+
+## Notes
+
+- `clap` supports command shortening to the point of disambiguation
+  - Derive API: `#[command(infer_subcommands = true)]`
+- `jig fmt` is an alias for `jig format`
+- `tachyonfx` integrates nicely with `ratatui`
 
 ## Tool Migration Analysis
 
