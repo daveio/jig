@@ -84,10 +84,6 @@ graph LR
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
-## Commands
-
-[to be stubbed]
-
 ## Libraries
 
 - Base CLI framework with `clap`
@@ -101,7 +97,6 @@ graph LR
   - Also `rmcp`
     - <https://github.com/modelcontextprotocol/rust-sdk>
     - <https://hackmd.io/@Hamze/SytKkZP01l>
-- [Easter Egg](#easter-egg) uses multiple libraries
 - Encryption and decryption with `rage`
   - <https://github.com/str4d/rage>
 - Terminal image support with `viuer`
@@ -117,22 +112,53 @@ graph LR
 - Base64 encoding
 - JSON, YAML, and TOML parsing and writing (`serde`?)
 
-## Notes
+## Commands
 
-- `clap` supports command shortening to the point of disambiguation
-  - Derive API: `#[command(infer_subcommands = true)]`
-- `jig fmt` is an alias for `jig format`
-- `tachyonfx` integrates nicely with `ratatui`
-- `generate` can be deterministic with `-k` / `--keyed` `[name]`
-  - Uses encryption key and `[name]` to generate deterministic output
-  - Use `-s` / `--seed` `[value]` to use custom value instead of encryption key
-    - Run a KDF on `[value]` to get data to actually use
-    - Does BLAKE3 have a compute-hard or memory-hard construction?
-    - Are there newer funkier KDFs? Post-quantum ones?
-- `init` sets up shell integration for `jig workspace`
-- Reimplement `oco` so we don't have to shell out to it as `jig git commit`
+`clap` supports command shortening to the point of disambiguation.
 
-## JWT Operations
+Derive API: `#[command(infer_subcommands = true)]`
+
+### `jig init`
+
+Shell integration setup for workspace functionality.
+
+`init` sets up shell integration for `jig workspace`
+
+### `jig generate`
+
+Generation utilities for various data types.
+
+`generate` can be deterministic with `-k` / `--keyed` `[name]`
+
+- Uses encryption key and `[name]` to generate deterministic output
+- Use `-s` / `--seed` `[value]` to use custom value instead of encryption key
+  - Run a KDF on `[value]` to get data to actually use
+  - Does BLAKE3 have a compute-hard or memory-hard construction?
+  - Are there newer funkier KDFs? Post-quantum ones?
+
+#### `jig generate hex`
+
+Generate hexadecimal values.
+
+#### `jig generate password`
+
+Generate secure passwords.
+
+#### `jig generate key`
+
+Generate cryptographic keys.
+
+##### `jig generate key crypt`
+
+Generate encryption keys.
+
+##### `jig generate key wireguard`
+
+Generate WireGuard keys.
+
+#### `jig generate jwt`
+
+Generate JSON Web Tokens.
 
 - `--sub <subject>`: Token subject/scope (e.g., "ai:alt", "api:tokens")
 - `--description <text>`: Human-readable token description
@@ -141,7 +167,137 @@ graph LR
 - `--secret <secret>`: JWT signing secret (or use config/env)
 - `--algorithm <alg>`: Signing algorithm (default: HS256)
 
-## MCP Server
+### `jig crypto`
+
+Encryption and decryption operations.
+
+#### `jig crypto encrypt`
+
+Encrypt data using rage encryption.
+
+#### `jig crypto decrypt`
+
+Decrypt data using rage encryption.
+
+### `jig network`
+
+Network utilities and diagnostics.
+
+#### `jig network dns`
+
+DNS operations and utilities.
+
+##### `jig network dns flush`
+
+Flush DNS cache.
+
+##### `jig network dns lookup`
+
+Perform DNS lookups.
+
+##### `jig network dns sec`
+
+DNS security operations.
+
+### `jig domain`
+
+Domain management and information tools.
+
+#### `jig domain expiry`
+
+Check domain expiration dates.
+
+#### `jig domain whois`
+
+Perform WHOIS lookups.
+
+#### `jig domain ns`
+
+Check nameserver information.
+
+#### `jig domain available`
+
+Check domain availability.
+
+### `jig tls`
+
+TLS/SSL utilities and diagnostics.
+
+#### `jig tls cert`
+
+Certificate operations and analysis.
+
+#### `jig tls ciphers`
+
+Cipher suite analysis.
+
+### `jig format`
+
+Data formatting operations. (Alias: `jig fmt`)
+
+### `jig convert`
+
+Data conversion utilities.
+
+### `jig api`
+
+API operations and utilities.
+
+#### `jig api ticket`
+
+Ticket management operations.
+
+##### `jig api ticket title`
+
+Generate ticket titles.
+
+##### `jig api ticket description`
+
+Generate ticket descriptions.
+
+##### `jig api ticket enrich`
+
+Enrich ticket information.
+
+#### `jig api image`
+
+Image processing operations.
+
+##### `jig api image alt`
+
+Generate alt text for images.
+
+##### `jig api image optimise`
+
+Optimize image files.
+
+#### `jig api token`
+
+Token management operations.
+
+##### `jig api token info`
+
+Get token information.
+
+##### `jig api token revoke`
+
+Revoke tokens.
+
+##### `jig api token usage`
+
+Check token usage.
+
+#### `jig api dashboard`
+
+Dashboard operations.
+
+#### `jig api ping`
+
+API health checks.
+
+### `jig mcp`
+
+Model Context Protocol server functionality.
 
 `jig` will offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
 
@@ -149,7 +305,9 @@ This will be implemented 'eventually'.
 
 The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too.
 
-## Easter Egg
+### `jig dance`
+
+Easter egg command with terminal effects.
 
 - Not present in `--help`.
 - Not exposed via MCP.
@@ -159,14 +317,11 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 - Use RASCII to convert a photo of yourself into animated ASCII art.
 - Add Rusty TermColor typewriter effects for text reveals.
 - Finish with Spinoff spinners for loading sequences.
+- `tachyonfx` integrates nicely with `ratatui`.
 
-### Invocation
+#### Effects
 
-`jig dance`
-
-### Effects
-
-#### Core Effects Engine
+##### Core Effects Engine
 
 `tachyonfx`
 
@@ -174,7 +329,7 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 - The primary shader-like effects engine for ratatui applications
 - A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
 
-#### Atmospheric Effects
+##### Atmospheric Effects
 
 `tui-rain`
 
@@ -182,7 +337,7 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 - Rain and atmospheric effects widget
 - A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
 
-#### Explosive Visual Effects
+##### Explosive Visual Effects
 
 `firework-rs`
 
@@ -190,7 +345,7 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 - ASCII art firework simulator
 - A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
 
-#### ASCII Art Generation
+##### ASCII Art Generation
 
 `rascii_art`
 
@@ -198,7 +353,7 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 - Advanced image to ASCII art converter
 - An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
 
-#### Text Effects
+##### Text Effects
 
 `rusty-termcolor`
 
@@ -206,10 +361,100 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 - Terminal text formatting and effects
 - A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
 
-#### Progress Indicators
+##### Progress Indicators
 
 `spinoff`
 
 - <https://github.com/ad4mx/spinoff>
 - Terminal spinner library
 - An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
+
+### `jig terminal`
+
+Terminal utilities and enhancements.
+
+#### `jig terminal xkcd`
+
+Display XKCD comics in terminal.
+
+### `jig project`
+
+Project management utilities.
+
+#### `jig project new`
+
+Create new projects.
+
+#### `jig project update`
+
+Update project dependencies.
+
+#### `jig project bump`
+
+Bump project versions.
+
+#### `jig project dependabot`
+
+Dependabot configuration.
+
+### `jig git`
+
+Git utilities and enhancements.
+
+#### `jig git clone`
+
+Enhanced git cloning.
+
+#### `jig git binary`
+
+Binary file management.
+
+##### `jig git binary get`
+
+Retrieve binary files.
+
+##### `jig git binary update`
+
+Update binary files.
+
+#### `jig git secrets`
+
+Secret scanning and management.
+
+#### `jig git commit`
+
+AI-assisted commit messages.
+
+Reimplement `oco` so we don't have to shell out to it.
+
+#### `jig git yank`
+
+Yank/remove commits.
+
+#### `jig git latest`
+
+Get latest repository information.
+
+### `jig workspace`
+
+Workspace management and switching.
+
+#### `jig workspace switch`
+
+Switch between workspaces.
+
+#### `jig workspace list`
+
+List available workspaces.
+
+### `jig ai`
+
+AI-powered utilities.
+
+#### `jig ai image`
+
+AI image operations.
+
+##### `jig ai image rename`
+
+AI-powered image renaming.
