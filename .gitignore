@@ -13,3 +13,6 @@ src/node/index.mjs
 **/*.DS_Store
 tests/browser/output/*
 .node-version
+.env
+.trunk
+target/

@@ -1,0 +1,547 @@
+# CyberChef Operations
+
+This document lists all operations available in CyberChef, organized by category.
+
+## Data format
+
+- **To Hexdump**: Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside. The 'UNIX format' argument defines which subset of printable characters are displayed in the preview column.
+- **From Hexdump**: Attempts to convert a hexdump back into raw data. This operation supports many different hexdump variations, but probably not all. Make sure you verify that the data it gives you is correct before continuing analysis.
+- **To Hex**: Converts the input string to hexadecimal bytes separated by the specified delimiter. e.g. The UTF-8 encoded string Γειά σου becomes ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a
+- **From Hex**: Converts a hexadecimal byte string back into its raw value. e.g. ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a becomes the UTF-8 encoded string Γειά σου
+- **To Charcode**: Converts text to its unicode character code equivalent. e.g. Γειά σου becomes 0393 03b5 03b9 03ac 20 03c3 03bf 03c5
+- **From Charcode**: Converts unicode character codes back into text. e.g. 0393 03b5 03b9 03ac 20 03c3 03bf 03c5 becomes Γειά σου
+- **To Decimal**: Converts the input data to an ordinal integer array. e.g. Hello becomes 72 101 108 108 111
+- **From Decimal**: Converts the data from an ordinal integer array back into its raw form. e.g. 72 101 108 108 111 becomes Hello
+- **To Float**: Convert to IEEE754 Floating Point Numbers
+- **From Float**: Convert from IEEE754 Floating Point Numbers
+- **To Binary**: Displays the input data as a binary string. e.g. Hi becomes 01001000 01101001
+- **From Binary**: Converts a binary string back into its raw form. e.g. 01001000 01101001 becomes Hi
+- **To Octal**: Converts the input string to octal bytes separated by the specified delimiter. e.g. The UTF-8 encoded string Γειά σου becomes 316 223 316 265 316 271 316 254 40 317 203 316 277 317 205
+- **From Octal**: Converts an octal byte string back into its raw value. e.g. 316 223 316 265 316 271 316 254 40 317 203 316 277 317 205 becomes the UTF-8 encoded string Γειά σου
+- **To Base32**: Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.
+- **From Base32**: Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.
+- **To Base45**: Base45 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system. Base45 is optimized for usage with QR codes.
+- **From Base45**: Base45 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system. Base45 is optimized for usage with QR codes.
+- **To Base58**: Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability. This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included). e.g. hello world becomes StV1DL6CwTryKyV Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).
+- **From Base58**: Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability. This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included) back into its raw form. e.g. StV1DL6CwTryKyV becomes hello world Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).
+- **To Base62**: Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.
+- **From Base62**: Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.
+- **To Base64**: Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. This operation encodes raw data into an ASCII Base64 string. e.g. hello becomes aGVsbG8=
+- **From Base64**: Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. This operation decodes data from an ASCII Base64 string back into its raw format. e.g. aGVsbG8= becomes hello
+- **Show Base64 offsets**: When a string is within a block of data and the whole block is Base64'd, the string itself could be represented in Base64 in three distinct ways depending on its offset within the block. This operation shows all possible offsets for a given string so that each possible encoding can be considered.
+- **To Base92**: Base92 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.
+- **From Base92**: Base92 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.
+- **To Base85**: Base85 (also called Ascii85) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64. This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included). e.g. hello world becomes BOu!rD]j7BEbo7 Base85 is commonly used in Adobe's PostScript and PDF file formats. Options AlphabetStandard - The standard alphabet, referred to as Ascii85Z85 (ZeroMQ) - A string-safe variant of Base85, which avoids quote marks and backslash charactersIPv6 - A variant of Base85 suitable for encoding IPv6 addresses (RFC 1924)Include delimiter Adds a '' delimiter to the start and end of the data. This is standard for Adobe's implementation of Base85.
+- **From Base85**: Base85 (also called Ascii85) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64. This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included). e.g. BOu!rD]j7BEbo7 becomes hello world Base85 is commonly used in Adobe's PostScript and PDF file formats.
+- **To Base**: Converts a decimal number to a given numerical base.
+- **From Base**: Converts a number to decimal from a given numerical base.
+- **To BCD**: Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign
+- **From BCD**: Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.
+- **To HTML Entity**: Converts characters to HTML entities e.g. &amp; becomes &amp;amp;
+- **From HTML Entity**: Converts HTML entities back to characters e.g. &amp;amp; becomes &amp;
+- **URL Encode**: Encodes problematic characters into percent-encoding, a format supported by URIs/URLs. e.g. = becomes %3d
+- **URL Decode**: Converts URI/URL percent-encoded characters back to their raw values. e.g. %3d becomes =
+- **Escape Unicode Characters**: Converts characters to their unicode-escaped notations. Supports the prefixes:\\u%uU+e.g. σου becomes \\u03C3\\u03BF\\u03C5
+- **Unescape Unicode Characters**: Converts unicode-escaped character notation back into raw characters. Supports the prefixes:\\u%uU+e.g. \\u03c3\\u03bf\\u03c5 becomes σου
+- **Normalise Unicode**: Transform Unicode characters to one of the Normalisation Forms
+- **To Quoted Printable**: Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in e-mail. QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.
+- **From Quoted Printable**: Converts QP-encoded text back to standard text. e.g. The quoted-printable encoded string hello=20world becomes hello world
+- **To Punycode**: Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System. e.g. m\xfcnchen encodes to mnchen-3ya
+- **From Punycode**: Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System. e.g. mnchen-3ya decodes to m\xfcnchen
+- **AMF Encode**: Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.
+- **AMF Decode**: Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.
+- **To Hex Content**: Converts special characters in a string to hexadecimal. This format is used by SNORT for representing hex within ASCII text. e.g. foo=bar becomes foo|3d|bar.
+- **From Hex Content**: Translates hexadecimal bytes in text back to raw bytes. This format is used by SNORT for representing hex within ASCII text. e.g. foo|3d|bar becomes foo=bar.
+- **PEM to Hex**: Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.
+- **Hex to PEM**: Converts a hexadecimal DER (Distinguished Encoding Rules) string into PEM (Privacy Enhanced Mail) format.
+- **Parse ASN.1 hex string**: Abstract Syntax Notation One (ASN.1) is a standard and notation that describes rules and structures for representing, encoding, transmitting, and decoding data in telecommunications and computer networking. This operation parses arbitrary ASN.1 data (encoded as an hex string: use the 'To Hex' operation if necessary) and presents the resulting tree.
+- **Change IP format**: Convert an IP address from one format to another, e.g. 172.20.23.54 to ac141736
+- **Encode text**: Operation description not available
+- **Decode text**: Operation description not available
+- **Text Encoding Brute Force**: Operation description not available
+- **Swap endianness**: Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.
+- **To MessagePack**: Converts JSON to MessagePack encoded byte buffer. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.
+- **From MessagePack**: Converts MessagePack encoded data to JSON. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.
+- **To Braille**: Converts text to six-dot braille symbols.
+- **From Braille**: Converts six-dot braille symbols to text.
+- **Parse TLV**: Converts a Type-Length-Value (TLV) encoded string into a JSON object. Can optionally include a Key / Type entry. Tags: Key-Length-Value, KLV, Length-Value, LV
+- **CSV to JSON**: Converts a CSV file to JSON format.
+- **JSON to CSV**: Converts JSON data to a CSV based on the definition in RFC 4180.
+- **Avro to JSON**: Converts Avro encoded data into JSON.
+- **CBOR Encode**: Concise Binary Object Representation (CBOR) is a binary data serialization format loosely based on JSON. Like JSON it allows the transmission of data objects that contain name–value pairs, but in a more concise manner. This increases processing and transfer speeds at the cost of human readability. It is defined in IETF RFC 8949.
+- **CBOR Decode**: Concise Binary Object Representation (CBOR) is a binary data serialization format loosely based on JSON. Like JSON it allows the transmission of data objects that contain name–value pairs, but in a more concise manner. This increases processing and transfer speeds at the cost of human readability. It is defined in IETF RFC 8949.
+- **YAML to JSON**: Convert YAML to JSON
+- **JSON to YAML**: Format a JSON object into YAML
+- **Caret/M-decode**: Decodes caret or M-encoded strings, i.e. ^M turns into a newline, M-^] turns into 0x9d. Sources such as `cat -v`. Please be aware that when using `cat -v` ^_ (caret-underscore) will not be encoded, but represents a valid encoding (namely that of 0x1f).
+- **Rison Encode**: Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.
+- **Rison Decode**: Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.
+- **To Modhex**: Converts the input string to modhex bytes separated by the specified delimiter.
+- **From Modhex**: Converts a modhex byte string back into its raw value.
+- **MIME Decoding**: Enables the decoding of MIME message header extensions for non-ASCII text
+
+## Encryption / Encoding
+
+- **AES Encrypt**: Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated. Key: The following algorithms will be used based on the size of the key:16 bytes = AES-12824 bytes = AES-19232 bytes = AES-256You can generate a password-based key using one of the KDF operations. IV: The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes. Padding: In CBC and ECB mode, PKCS#7 padding will be used.
+- **AES Decrypt**: Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated. Key: The following algorithms will be used based on the size of the key:16 bytes = AES-12824 bytes = AES-19232 bytes = AES-256 IV: The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes. Padding: In CBC and ECB mode, PKCS#7 padding will be used as a default. GCM Tag: This field is ignored unless 'GCM' mode is used.
+- **Blowfish Encrypt**: Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention. IV: The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.
+- **Blowfish Decrypt**: Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention. IV: The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.
+- **DES Encrypt**: DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size. Key: DES uses a key length of 8 bytes (64 bits). You can generate a password-based key using one of the KDF operations. IV: The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes. Padding: In CBC and ECB mode, PKCS#7 padding will be used.
+- **DES Decrypt**: DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size. Key: DES uses a key length of 8 bytes (64 bits). IV: The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes. Padding: In CBC and ECB mode, PKCS#7 padding will be used as a default.
+- **Triple DES Encrypt**: Triple DES applies DES three times to each block to increase key size. Key: Triple DES uses a key length of 24 bytes (192 bits). You can generate a password-based key using one of the KDF operations. IV: The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes. Padding: In CBC and ECB mode, PKCS#7 padding will be used.
+- **Triple DES Decrypt**: Triple DES applies DES three times to each block to increase key size. Key: Triple DES uses a key length of 24 bytes (192 bits). IV: The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes. Padding: In CBC and ECB mode, PKCS#7 padding will be used as a default.
+- **Fernet Encrypt**: Fernet is a symmetric encryption method which makes sure that the message encrypted cannot be manipulated/read without the key. It uses URL safe encoding for the keys. Fernet uses 128-bit AES in CBC mode and PKCS7 padding, with HMAC using SHA256 for authentication. The IV is created from os.random(). Key: The key must be 32 bytes (256 bits) encoded with Base64.
+- **Fernet Decrypt**: Fernet is a symmetric encryption method which makes sure that the message encrypted cannot be manipulated/read without the key. It uses URL safe encoding for the keys. Fernet uses 128-bit AES in CBC mode and PKCS7 padding, with HMAC using SHA256 for authentication. The IV is created from os.random(). Key: The key must be 32 bytes (256 bits) encoded with Base64.
+- **LS47 Encrypt**: This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold. The LS47 alphabet consists of following characters: _abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'() A LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.
+- **LS47 Decrypt**: This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold. The LS47 alphabet consists of following characters: _abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'() An LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.
+- **RC2 Encrypt**: RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'. Key: RC2 uses a variable size key. You can generate a password-based key using one of the KDF operations. IV: To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode. Padding: In both CBC and ECB mode, PKCS#7 padding will be used.
+- **RC2 Decrypt**: RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'. Key: RC2 uses a variable size key. IV: To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode. Padding: In both CBC and ECB mode, PKCS#7 padding will be used.
+- **RC4**: RC4 (also known as ARC4) is a widely-used stream cipher designed by Ron Rivest. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.
+- **RC4 Drop**: It was discovered that the first few bytes of the RC4 keystream are strongly non-random and leak information about the key. We can defend against this attack by discarding the initial portion of the keystream. This modified algorithm is traditionally called RC4-drop.
+- **ChaCha**: ChaCha is a stream cipher designed by Daniel J. Bernstein. It is a variant of the Salsa stream cipher. Several parameterizations exist; 'ChaCha' may refer to the original construction, or to the variant as described in RFC-8439. ChaCha is often used with Poly1305, in the ChaCha20-Poly1305 AEAD construction. Key: ChaCha uses a key of 16 or 32 bytes (128 or 256 bits). Nonce: ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits). Counter: ChaCha uses a counter of 4 or 8 bytes (32 or 64 bits); together, the nonce and counter must add up to 16 bytes. The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.
+- **Salsa20**: Salsa20 is a stream cipher designed by Daniel J. Bernstein and submitted to the eSTREAM project; Salsa20/8 and Salsa20/12 are round-reduced variants. It is closely related to the ChaCha stream cipher. Key: Salsa20 uses a key of 16 or 32 bytes (128 or 256 bits). Nonce: Salsa20 uses a nonce of 8 bytes (64 bits). Counter: Salsa uses a counter of 8 bytes (64 bits). The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.
+- **XSalsa20**: XSalsa20 is a variant of the Salsa20 stream cipher designed by Daniel J. Bernstein; XSalsa uses longer nonces. Key: XSalsa20 uses a key of 16 or 32 bytes (128 or 256 bits). Nonce: XSalsa20 uses a nonce of 24 bytes (192 bits). Counter: XSalsa uses a counter of 8 bytes (64 bits). The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.
+- **Rabbit**: Rabbit is a high-speed stream cipher introduced in 2003 and defined in RFC 4503. The cipher uses a 128-bit key and an optional 64-bit initialization vector (IV). big-endian: based on RFC4503 and RFC3447 little-endian: compatible with Crypto++
+- **SM4 Encrypt**: SM4 is a 128-bit block cipher, currently established as a national standard (GB/T 32907-2016) of China. Multiple block cipher modes are supported. When using CBC or ECB mode, the PKCS#7 padding scheme is used.
+- **SM4 Decrypt**: SM4 is a 128-bit block cipher, currently established as a national standard (GB/T 32907-2016) of China.
+- **GOST Encrypt**: The GOST block cipher (Magma), defined in the standard GOST 28147-89 (RFC 5830), is a Soviet and Russian government standard symmetric key block cipher with a block size of 64 bits. The original standard, published in 1989, did not give the cipher any name, but the most recent revision of the standard, GOST R 34.12-2015 (RFC 7801, RFC 8891), specifies that it may be referred to as Magma. The GOST hash function is based on this cipher. The new standard also specifies a new 128-bit block cipher called Kuznyechik. Developed in the 1970s, the standard had been marked 'Top Secret' and then downgraded to 'Secret' in 1990. Shortly after the dissolution of the USSR, it was declassified and it was released to the public in 1994. GOST 28147 was a Soviet alternative to the United States standard algorithm, DES. Thus, the two are very similar in structure.
+- **GOST Decrypt**: The GOST block cipher (Magma), defined in the standard GOST 28147-89 (RFC 5830), is a Soviet and Russian government standard symmetric key block cipher with a block size of 64 bits. The original standard, published in 1989, did not give the cipher any name, but the most recent revision of the standard, GOST R 34.12-2015 (RFC 7801, RFC 8891), specifies that it may be referred to as Magma. The GOST hash function is based on this cipher. The new standard also specifies a new 128-bit block cipher called Kuznyechik. Developed in the 1970s, the standard had been marked 'Top Secret' and then downgraded to 'Secret' in 1990. Shortly after the dissolution of the USSR, it was declassified and it was released to the public in 1994. GOST 28147 was a Soviet alternative to the United States standard algorithm, DES. Thus, the two are very similar in structure.
+- **GOST Sign**: Sign a plaintext message using one of the GOST block ciphers.
+- **GOST Verify**: Verify the signature of a plaintext message using one of the GOST block ciphers. Enter the signature in the MAC field.
+- **GOST Key Wrap**: A key wrapping algorithm for protecting keys in untrusted storage using one of the GOST block cipers.
+- **GOST Key Unwrap**: A decryptor for keys wrapped using one of the GOST block ciphers.
+- **ROT13**: A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).
+- **ROT13 Brute Force**: Try all meaningful amounts for ROT13. Optionally you can enter your known plaintext (crib) to filter the result.
+- **ROT47**: A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.
+- **ROT47 Brute Force**: Try all meaningful amounts for ROT47. Optionally you can enter your known plaintext (crib) to filter the result.
+- **ROT8000**: The simple Caesar-cypher encryption that replaces each Unicode character with the one 0x8000 places forward or back along the alphabet.
+- **XOR**: XOR the input with the given key. e.g. fe023da5 Options Null preserving: If the current byte is 0x00 or the same as the key, skip it. Scheme:Standard - key is unchanged after each roundInput differential - key is set to the value of the previous unprocessed byteOutput differential - key is set to the value of the previous processed byteCascade - key is set to the input byte shifted by one
+- **XOR Brute Force**: Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance. Optionally enter a string that you expect to find in the plaintext to filter results (crib).
+- **Vigenère Encode**: The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.
+- **Vigenère Decode**: The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.
+- **XXTEA Encrypt**: Corrected Block TEA (often referred to as XXTEA) is a block cipher designed to correct weaknesses in the original Block TEA. XXTEA operates on variable-length blocks that are some arbitrary multiple of 32 bits in size (minimum 64 bits). The number of full cycles depends on the block size, but there are at least six (rising to 32 for small block sizes). The original Block TEA applies the XTEA round function to each word in the block and combines it additively with its leftmost neighbour. Slow diffusion rate of the decryption process was immediately exploited to break the cipher. Corrected Block TEA uses a more involved round function which makes use of both immediate neighbours in processing each word in the block.
+- **XXTEA Decrypt**: Corrected Block TEA (often referred to as XXTEA) is a block cipher designed to correct weaknesses in the original Block TEA. XXTEA operates on variable-length blocks that are some arbitrary multiple of 32 bits in size (minimum 64 bits). The number of full cycles depends on the block size, but there are at least six (rising to 32 for small block sizes). The original Block TEA applies the XTEA round function to each word in the block and combines it additively with its leftmost neighbour. Slow diffusion rate of the decryption process was immediately exploited to break the cipher. Corrected Block TEA uses a more involved round function which makes use of both immediate neighbours in processing each word in the block.
+- **To Morse Code**: Translates alphanumeric characters into International Morse Code. Ignores non-Morse characters. e.g. SOS becomes ... --- ...
+- **From Morse Code**: Translates Morse Code into (upper case) alphanumeric characters.
+- **Bacon Cipher Encode**: Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.
+- **Bacon Cipher Decode**: Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.
+- **Bifid Cipher Encode**: The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.
+- **Bifid Cipher Decode**: The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.
+- **Caesar Box Cipher**: Caesar Box is a transposition cipher used in the Roman Empire, in which letters of the message are written in rows in a square (or a rectangle) and then, read by column.
+- **Affine Cipher Encode**: The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, (ax + b) % 26, and converted back to a letter.
+- **Affine Cipher Decode**: The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.
+- **A1Z26 Cipher Encode**: Converts alphabet characters into their corresponding alphabet order number. e.g. a becomes 1 and b becomes 2. Non-alphabet characters are dropped.
+- **A1Z26 Cipher Decode**: Converts alphabet order numbers into their corresponding alphabet character. e.g. 1 becomes a and 2 becomes b.
+- **Rail Fence Cipher Encode**: Encodes Strings using the Rail fence Cipher provided a key and an offset
+- **Rail Fence Cipher Decode**: Decodes Strings that were created using the Rail fence Cipher provided a key and an offset
+- **Atbash Cipher**: Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.
+- **CipherSaber2 Encrypt**: CipherSaber is a simple symmetric encryption protocol based on the RC4 stream cipher. It gives reasonably strong protection of message confidentiality, yet it's designed to be simple enough that even novice programmers can memorize the algorithm and implement it from scratch.
+- **CipherSaber2 Decrypt**: CipherSaber is a simple symmetric encryption protocol based on the RC4 stream cipher. It gives reasonably strong protection of message confidentiality, yet it's designed to be simple enough that even novice programmers can memorize the algorithm and implement it from scratch.
+- **Cetacean Cipher Encode**: Converts any input into Cetacean Cipher. e.g. hi becomes EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe
+- **Cetacean Cipher Decode**: Decode Cetacean Cipher input. e.g. EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe becomes hi
+- **Substitute**: A substitution cipher allowing you to specify bytes to replace with other byte values. This can be used to create Caesar ciphers but is more powerful as any byte value can be substituted, not just letters, and the substitution values need not be in order. Enter the bytes you want to replace in the Plaintext field and the bytes to replace them with in the Ciphertext field. Non-printable bytes can be specified using string escape notation. For example, a line feed character can be written as either \ or \\x0a. Byte ranges can be specified using a hyphen. For example, the sequence 0123456789 can be written as 0-9. Note that blackslash characters are used to escape special characters, so will need to be escaped themselves if you want to use them on their own (e.g.\\\\).
+- **Derive PBKDF2 key**: PBKDF2 is a password-based key derivation function. It is part of RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, specifically PKCS #5 v2.0, also published as Internet Engineering Task Force's RFC 2898. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required. A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack. If you leave the salt argument empty, a random salt will be generated.
+- **Derive EVP key**: This operation performs a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required. A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack. If you leave the salt argument empty, a random salt will be generated.
+- **Derive HKDF key**: A simple Hashed Message Authenticaton Code (HMAC)-based key derivation function (HKDF), defined in RFC5869.
+- **Bcrypt**: bcrypt is a password hashing function designed by Niels Provos and David Mazi\xe8res, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count (rounds) can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power. Enter the password in the input to generate its hash.
+- **Scrypt**: scrypt is a password-based key derivation function (PBKDF) created by Colin Percival. The algorithm was specifically designed to make it costly to perform large-scale custom hardware attacks by requiring large amounts of memory. In 2016, the scrypt algorithm was published by IETF as RFC 7914. Enter the password in the input to generate its hash.
+- **JWT Sign**: Signs a JSON object as a JSON Web Token using a provided secret / private key. The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.
+- **JWT Verify**: Verifies that a JSON Web Token is valid and has been signed with the provided secret / private key. The key should be either the secret for HMAC algorithms or the PEM-encoded public key for RSA and ECDSA.
+- **JWT Decode**: Decodes a JSON Web Token without checking whether the provided secret / private key is valid. Use 'JWT Verify' to check if the signature is valid as well.
+- **Citrix CTX1 Encode**: Encodes strings to Citrix CTX1 password format.
+- **Citrix CTX1 Decode**: Decodes strings in a Citrix CTX1 password format to plaintext.
+- **AES Key Wrap**: A key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES. This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to encrypt 64-bit blocks.
+- **AES Key Unwrap**: Decryptor for a key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES. This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to decrypt 64-bit blocks.
+- **Pseudo-Random Number Generator**: A cryptographically-secure pseudo-random number generator (PRNG). This operation uses the browser's built-in crypto.getRandomValues() method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.
+- **Enigma**: Encipher/decipher with the WW2 Enigma machine. Enigma was used by the German military, among others, around the WW2 era as a portable cipher machine to protect sensitive military, diplomatic and commercial communications. The standard set of German military rotors and reflectors are provided. To configure the plugboard, enter a string of connected pairs of letters, e.g. AB CD EF connects A to B, C to D, and E to F. This is also used to create your own reflectors. To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by &lt; then a list of stepping points. This is deliberately fairly permissive with rotor placements etc compared to a real Enigma (on which, for example, a four-rotor Enigma uses only the thin reflectors and the beta or gamma rotor in the 4th slot). More detailed descriptions of the Enigma, Typex and Bombe operations can be found here.
+- **Bombe**: Emulation of the Bombe machine used at Bletchley Park to attack Enigma, based on work by Polish and British cryptanalysts. To run this you need to have a 'crib', which is some known plaintext for a chunk of the target ciphertext, and know the rotors used. (See the 'Bombe (multiple runs)' operation if you don't know the rotors.) The machine will suggest possible configurations of the Enigma. Each suggestion has the rotor start positions (left to right) and known plugboard pairs. Choosing a crib: First, note that Enigma cannot encrypt a letter to itself, which allows you to rule out some positions for possible cribs. Secondly, the Bombe does not simulate the Enigma's middle rotor stepping. The longer your crib, the more likely a step happened within it, which will prevent the attack working. However, other than that, longer cribs are generally better. The attack produces a 'menu' which maps ciphertext letters to plaintext, and the goal is to produce 'loops': for example, with ciphertext ABC and crib CAB, we have the mappings A&lt;-&gt;C, B&lt;-&gt;A, and C&lt;-&gt;B, which produces a loop A-B-C-A. The more loops, the better the crib. The operation will output this: if your menu has too few loops or is too short, a large number of incorrect outputs will usually be produced. Try a different crib. If the menu seems good but the right answer isn't produced, your crib may be wrong, or you may have overlapped the middle rotor stepping - try a different crib. Output is not sufficient to fully decrypt the data. You will have to recover the rest of the plugboard settings by inspection. And the ring position is not taken into account: this affects when the middle rotor steps. If your output is correct for a bit, and then goes wrong, adjust the ring and start position on the right-hand rotor together until the output improves. If necessary, repeat for the middle rotor. By default this operation runs the checking machine, a manual process to verify the quality of Bombe stops, on each stop, discarding stops which fail. If you want to see how many times the hardware actually stops for a given input, disable the checking machine. More detailed descriptions of the Enigma, Typex and Bombe operations can be found here.
+- **Multiple Bombe**: Emulation of the Bombe machine used to attack Enigma. This version carries out multiple Bombe runs to handle unknown rotor configurations. You should test your menu on the single Bombe operation before running it here. See the description of the Bombe operation for instructions on choosing a crib. More detailed descriptions of the Enigma, Typex and Bombe operations can be found here.
+- **Typex**: Encipher/decipher with the WW2 Typex machine. Typex was originally built by the British Royal Air Force prior to WW2, and is based on the Enigma machine with some improvements made, including using five rotors with more stepping points and interchangeable wiring cores. It was used across the British and Commonwealth militaries. A number of later variants were produced; here we simulate a WW2 era Mark 22 Typex with plugboards for the reflector and input. Typex rotors were changed regularly and none are public: a random example set are provided. To configure the reflector plugboard, enter a string of connected pairs of letters in the reflector box, e.g. AB CD EF connects A to B, C to D, and E to F (you'll need to connect every letter). There is also an input plugboard: unlike Enigma's plugboard, it's not restricted to pairs, so it's entered like a rotor (without stepping). To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by &lt; then a list of stepping points. More detailed descriptions of the Enigma, Typex and Bombe operations can be found here.
+- **Lorenz**: The Lorenz SZ40/42 cipher attachment was a WW2 German rotor cipher machine with twelve rotors which attached in-line between remote teleprinters. It used the Vernam cipher with two groups of five rotors (named the psi(ψ) wheels and chi(χ) wheels at Bletchley Park) to create two pseudorandom streams of five bits, encoded in ITA2, which were XOR added to the plaintext. Two other rotors, dubbed the mu(μ) or motor wheels, could hold up the stepping of the psi wheels meaning they stepped intermittently. Each rotor has a different number of cams/lugs around their circumference which could be set active or inactive changing the key stream. Three models of the Lorenz are emulated, SZ40, SZ42a and SZ42b and three example wheel patterns (the lug settings) are included (KH, ZMUG & BREAM) with the option to set a custom set using the letter 'x' for active or '.' for an inactive lug. The input can either be plaintext or ITA2 when sending and ITA2 when receiving. To learn more, Virtual Lorenz, an online, browser based simulation of the Lorenz SZ40/42 is available at lorenz.virtualcolossus.co.uk. A more detailed description of this operation can be found here.
+- **Colossus**: Colossus is the name of the world's first electronic computer. Ten Colossi were designed by Tommy Flowers and built at the Post Office Research Labs at Dollis Hill in 1943 during World War 2. They assisted with the breaking of the German Lorenz cipher attachment, a machine created to encipher communications between Hitler and his generals on the front lines. To learn more, Virtual Colossus, an online, browser based simulation of a Colossus computer is available at virtualcolossus.co.uk. A more detailed description of this operation can be found here.
+- **SIGABA**: Encipher/decipher with the WW2 SIGABA machine. SIGABA, otherwise known as ECM Mark II, was used by the United States for message encryption during WW2 up to the 1950s. It was developed in the 1930s by the US Army and Navy, and has up to this day never been broken. Consisting of 15 rotors: 5 cipher rotors and 10 rotors (5 control rotors and 5 index rotors) controlling the stepping of the cipher rotors, the rotor stepping for SIGABA is much more complex than other rotor machines of its time, such as Enigma. All example rotor wirings are random example sets. To configure rotor wirings, for the cipher and control rotors enter a string of letters which map from A to Z, and for the index rotors enter a sequence of numbers which map from 0 to 9. Note that encryption is not the same as decryption, so first choose the desired mode. Note: Whilst this has been tested against other software emulators, it has not been tested against hardware.
+
+## Public Key
+
+- **Parse X.509 certificate**: X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security. This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool. Tags: X509, server hello, handshake
+- **Parse X.509 CRL**: Parse Certificate Revocation List (CRL)
+- **Parse ASN.1 hex string**: Abstract Syntax Notation One (ASN.1) is a standard and notation that describes rules and structures for representing, encoding, transmitting, and decoding data in telecommunications and computer networking. This operation parses arbitrary ASN.1 data (encoded as an hex string: use the 'To Hex' operation if necessary) and presents the resulting tree.
+- **PEM to Hex**: Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.
+- **Hex to PEM**: Converts a hexadecimal DER (Distinguished Encoding Rules) string into PEM (Privacy Enhanced Mail) format.
+- **Hex to Object Identifier**: Converts a hexadecimal string into an object identifier (OID).
+- **Object Identifier to Hex**: Converts an object identifier (OID) into a hexadecimal string.
+- **PEM to JWK**: Converts Keys in PEM format to a JSON Web Key format.
+- **JWK to PEM**: Converts Keys in JSON Web Key format to PEM format (PKCS#8).
+- **Generate PGP Key Pair**: Operation description not available
+- **PGP Encrypt**: Operation description not available
+- **PGP Decrypt**: Operation description not available
+- **PGP Verify**: Operation description not available
+- **PGP Encrypt and Sign**: Operation description not available
+- **PGP Decrypt and Verify**: Operation description not available
+- **Generate RSA Key Pair**: Operation description not available
+- **RSA Sign**: Sign a plaintext message with a PEM encoded RSA key.
+- **RSA Verify**: Verify a message against a signature and a public PEM encoded RSA key.
+- **RSA Encrypt**: Encrypt a message with a PEM encoded RSA public key.
+- **RSA Decrypt**: Decrypt an RSA encrypted message with a PEM encoded private key.
+- **Generate ECDSA Key Pair**: Operation description not available
+- **ECDSA Signature Conversion**: Convert an ECDSA signature between hex, asn1 and json.
+- **ECDSA Sign**: Sign a plaintext message with a PEM encoded EC key.
+- **ECDSA Verify**: Verify a message against a signature and a public PEM encoded EC key.
+- **Parse SSH Host Key**: Parses a SSH host key and extracts fields from it. The key type can be:ssh-rsassh-dssecdsa-sha2ssh-ed25519The key format can be either Hex or Base64.
+- **Parse CSR**: Parse Certificate Signing Request (CSR) for an X.509 certificate
+- **Public Key from Certificate**: Extracts the Public Key from a Certificate.
+- **Public Key from Private Key**: Extracts the Public Key from a Private Key.
+- **SM2 Encrypt**: Encrypts a message utilizing the SM2 standard
+- **SM2 Decrypt**: Decrypts a message utilizing the SM2 standard
+
+## Arithmetic / Logic
+
+- **Set Union**: Calculates the union of two sets.
+- **Set Intersection**: Calculates the intersection of two sets.
+- **Set Difference**: Calculates the difference, or relative complement, of two sets.
+- **Symmetric Difference**: Calculates the symmetric difference of two sets.
+- **Cartesian Product**: Calculates the cartesian product of multiple sets of data, returning all possible combinations.
+- **Power Set**: Calculates all the subsets of a set.
+- **XOR**: XOR the input with the given key. e.g. fe023da5 Options Null preserving: If the current byte is 0x00 or the same as the key, skip it. Scheme:Standard - key is unchanged after each roundInput differential - key is set to the value of the previous unprocessed byteOutput differential - key is set to the value of the previous processed byteCascade - key is set to the input byte shifted by one
+- **XOR Brute Force**: Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance. Optionally enter a string that you expect to find in the plaintext to filter results (crib).
+- **OR**: OR the input with the given key. e.g. fe023da5
+- **NOT**: Returns the inverse of each byte.
+- **AND**: AND the input with the given key. e.g. fe023da5
+- **ADD**: ADD the input with the given key (e.g. fe023da5), MOD 255
+- **SUB**: SUB the input with the given key (e.g. fe023da5), MOD 255
+- **Sum**: Adds together a list of numbers. If an item in the string is not a number it is excluded from the list. e.g. 0x0a 8 .5 becomes 18.5
+- **Subtract**: Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list. e.g. 0x0a 8 .5 becomes 1.5
+- **Multiply**: Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list. e.g. 0x0a 8 .5 becomes 40
+- **Divide**: Divides a list of numbers. If an item in the string is not a number it is excluded from the list. e.g. 0x0a 8 .5 becomes 2.5
+- **Mean**: Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list. e.g. 0x0a 8 .5 .5 becomes 4.75
+- **Median**: Computes the median of a number list. If an item in the string is not a number it is excluded from the list. e.g. 0x0a 8 1 .5 becomes 4.5
+- **Standard Deviation**: Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list. e.g. 0x0a 8 .5 becomes 4.089281382128433
+- **Bit shift left**: Shifts the bits in each byte towards the left by the specified amount.
+- **Bit shift right**: Shifts the bits in each byte towards the right by the specified amount. Logical shifts replace the leftmost bits with zeros. Arithmetic shifts preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).
+- **Rotate left**: Rotates each byte to the left by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.
+- **Rotate right**: Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.
+- **ROT13**: A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).
+- **ROT8000**: The simple Caesar-cypher encryption that replaces each Unicode character with the one 0x8000 places forward or back along the alphabet.
+
+## Networking
+
+- **HTTP request**: Operation description not available
+- **DNS over HTTPS**: Operation description not available
+- **Strip HTTP headers**: Removes HTTP headers from a request or response by looking for the first instance of a double newline.
+- **Dechunk HTTP response**: Parses an HTTP response transferred using Transfer-Encoding: Chunked
+- **Parse User Agent**: Attempts to identify and categorise information contained in a user-agent string.
+- **Parse IP range**: Given a CIDR range (e.g. 10.0.0.0/24), hyphenated range (e.g. 10.0.0.0 - 10.0.1.0), or a list of IPs and/or CIDR ranges (separated by a new line), this operation provides network information and enumerates all IP addresses in the range. IPv6 is supported but will not be enumerated.
+- **Parse IPv6 address**: Displays the longhand and shorthand versions of a valid IPv6 address. Recognises all reserved ranges and parses encapsulated or tunnelled addresses including Teredo and 6to4.
+- **IPv6 Transition Addresses**: Converts IPv4 addresses to their IPv6 Transition addresses. IPv6 Transition addresses can also be converted back into their original IPv4 address. MAC addresses can also be converted into the EUI-64 format, this can them be appended to your IPv6 /64 range to obtain a full /128 address. Transition technologies enable translation between IPv4 and IPv6 addresses or tunneling to allow traffic to pass through the incompatible network, allowing the two standards to coexist. Only /24 ranges and currently handled. Remove headers to easily copy out results.
+- **Parse IPv4 header**: Given an IPv4 header, this operations parses and displays each field in an easily readable format.
+- **Strip IPv4 header**: Strips the IPv4 header from an IPv4 packet, outputting the payload.
+- **Parse TCP**: Parses a TCP header and payload (if present).
+- **Strip TCP header**: Strips the TCP header from a TCP segment, outputting the payload.
+- **Parse TLS record**: Parses one or more TLS records
+- **Parse UDP**: Parses a UDP header and payload (if present).
+- **Strip UDP header**: Strips the UDP header from a UDP datagram, outputting the payload.
+- **Parse SSH Host Key**: Parses a SSH host key and extracts fields from it. The key type can be:ssh-rsassh-dssecdsa-sha2ssh-ed25519The key format can be either Hex or Base64.
+- **Parse URI**: Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.
+- **URL Encode**: Encodes problematic characters into percent-encoding, a format supported by URIs/URLs. e.g. = becomes %3d
+- **URL Decode**: Converts URI/URL percent-encoded characters back to their raw values. e.g. %3d becomes =
+- **Protobuf Decode**: Decodes any Protobuf encoded data to a JSON representation of the data using the field number as the field key. If a .proto schema is defined, the encoded data will be decoded with reference to the schema. Only one message instance will be decoded. Show Unknown Fields When a schema is used, this option shows fields that are present in the input data but not defined in the schema. Show Types Show the type of a field next to its name. For undefined fields, the wiretype and example types are shown instead.
+- **Protobuf Encode**: Encodes a valid JSON object into a protobuf byte array using the input .proto schema.
+- **VarInt Encode**: Encodes a Vn integer as a VarInt. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.
+- **VarInt Decode**: Decodes a VarInt encoded integer. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.
+- **JA3 Fingerprint**: Generates a JA3 fingerprint to help identify TLS clients based on hashing together values from the Client Hello. Input: A hex stream of the TLS Client Hello packet application layer.
+- **JA3S Fingerprint**: Generates a JA3S fingerprint to help identify TLS servers based on hashing together values from the Server Hello. Input: A hex stream of the TLS Server Hello record application layer.
+- **JA4 Fingerprint**: Generates a JA4 fingerprint to help identify TLS clients based on hashing together values from the Client Hello. Input: A hex stream of the TLS or QUIC Client Hello packet application layer.
+- **JA4Server Fingerprint**: Generates a JA4Server Fingerprint (JA4S) to help identify TLS servers or sessions based on hashing together values from the Server Hello. Input: A hex stream of the TLS or QUIC Server Hello packet application layer.
+- **HASSH Client Fingerprint**: Generates a HASSH fingerprint to help identify SSH clients based on hashing together values from the Client Key Exchange Init message. Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Client to Server.
+- **HASSH Server Fingerprint**: Generates a HASSH fingerprint to help identify SSH servers based on hashing together values from the Server Key Exchange Init message. Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Server to Client.
+- **Format MAC addresses**: Displays given MAC addresses in multiple different formats. Expects addresses in a list separated by newlines, spaces or commas. WARNING: There are no validity checks.
+- **Change IP format**: Convert an IP address from one format to another, e.g. 172.20.23.54 to ac141736
+- **Group IP addresses**: Groups a list of IP addresses into subnets. Supports both IPv4 and IPv6 addresses.
+- **Encode NetBIOS Name**: NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used. There are two levels of encoding. The first level maps a NetBIOS name into a domain system name. The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system. This operation carries out the first level of encoding. See RFC 1001 for full details.
+- **Decode NetBIOS Name**: NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used. There are two levels of encoding. The first level maps a NetBIOS name into a domain system name. The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system. This operation decodes the first level of encoding. See RFC 1001 for full details.
+- **Defang URL**: Takes a Universal Resource Locator (URL) and 'Defangs' it; meaning the URL becomes invalid, neutralising the risk of accidentally clicking on a malicious link. This is often used when dealing with malicious links or IOCs. Works well when combined with the 'Extract URLs' operation.
+- **Fang URL**: Takes a 'Defanged' Universal Resource Locator (URL) and 'Fangs' it. Meaning, it removes the alterations (defanged) that render it useless so that it can be used again.
+- **Defang IP Addresses**: Takes a IPv4 or IPv6 address and 'Defangs' it, meaning the IP becomes invalid, removing the risk of accidentally utilising it as an IP address.
+
+## Language
+
+- **Encode text**: Operation description not available
+- **Decode text**: Operation description not available
+- **Unicode Text Format**: Adds Unicode combining characters to change formatting of plaintext.
+- **Remove Diacritics**: Replaces accented characters with their latin character equivalent. Accented characters are made up of Unicode combining characters, so unicode text formatting such as strikethroughs and underlines will also be removed.
+- **Unescape Unicode Characters**: Converts unicode-escaped character notation back into raw characters. Supports the prefixes:\\u%uU+e.g. \\u03c3\\u03bf\\u03c5 becomes σου
+- **Convert to NATO alphabet**: Converts characters to their representation in the NATO phonetic alphabet.
+- **Convert Leet Speak**: Converts to and from Leet Speak.
+
+## Utils
+
+- **Diff**: Compares two inputs (separated by the specified delimiter) and highlights the differences between them.
+- **Remove whitespace**: Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data. This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.
+- **Remove null bytes**: Removes all null bytes (0x00) from the input.
+- **To Upper case**: Converts the input string to upper case, optionally limiting scope to only the first character in each word, sentence or paragraph.
+- **To Lower case**: Converts every character in the input to lower case.
+- **Swap case**: Converts uppercase letters to lowercase ones, and lowercase ones to uppercase ones.
+- **Alternating Caps**: Alternating caps, also known as studly caps, sticky caps, or spongecase is a form of text notation in which the capitalization of letters varies by some pattern, or arbitrarily. An example of this would be spelling 'alternative caps' as 'aLtErNaTiNg CaPs'.
+- **To Case Insensitive Regex**: Converts a case-sensitive regex string into a case-insensitive regex string in case the i flag is unavailable to you. e.g. Mozilla/[0-9].[0-9] .* becomes [mM][oO][zZ][iI][lL][lL][aA]/[0-9].[0-9] .*
+- **From Case Insensitive Regex**: Converts a case-insensitive regex string to a case sensitive regex string (no guarantee on it being the proper original casing) in case the i flag wasn't available at the time but now is, or you need it to be case-sensitive again. e.g. [mM][oO][zZ][iI][lL][lL][aA]/[0-9].[0-9] .* becomes Mozilla/[0-9].[0-9] .*
+- **Add line numbers**: Adds line numbers to the output.
+- **Remove line numbers**: Removes line numbers from the output if they can be trivially detected.
+- **Get All Casings**: Outputs all possible casing variations of a string.
+- **To Table**: Data can be split on different characters and rendered as an HTML, ASCII or Markdown table with an optional header row. Supports the CSV (Comma Separated Values) file format by default. Change the cell delimiter argument to \\t to support TSV (Tab Separated Values) or | for PSV (Pipe Separated Values). You can enter as many delimiters as you like. Each character will be treat as a separate possible delimiter.
+- **Reverse**: Reverses the input string.
+- **Sort**: Alphabetically sorts strings separated by the specified delimiter. The IP address option supports IPv4 only.
+- **Shuffle**: Randomly reorders input elements.
+- **Unique**: Removes duplicate strings from the input.
+- **Split**: Splits a string into sections around a given delimiter.
+- **Filter**: Splits up the input using the specified delimiter and then filters each branch based on a regular expression.
+- **Head**: Like the UNIX head utility. Gets the first n lines. You can select all but the last n lines by entering a negative value for n. The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.
+- **Tail**: Like the UNIX tail utility. Gets the last n lines. Optionally you can select all lines after line n by entering a negative value for n. The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.
+- **Count occurrences**: Counts the number of times the provided string occurs in the input.
+- **Expand alphabet range**: Expand an alphabet range string into a list of the characters in that range. e.g. a-z becomes abcdefghijklmnopqrstuvwxyz.
+- **Drop bytes**: Cuts a slice of the specified number of bytes out of the data. Negative values are allowed.
+- **Take bytes**: Takes a slice of the specified number of bytes from the data. Negative values are allowed.
+- **Pad lines**: Add the specified number of the specified character to the beginning or end of each line
+- **Find / Replace**: Replaces all occurrences of the first string with the second. Includes support for regular expressions (regex), simple strings and extended strings (which support \ , \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).
+- **Regular expression**: Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns. Supports extended regex syntax including the 'dot matches all' flag, named capture groups, full unicode coverage (including \\p{} categories and scripts as well as astral codes) and recursive matching.
+- **Fuzzy Match**: Conducts a fuzzy search to find a pattern within the input based on weighted criteria. e.g. A search for dpan will match on Don't Panic
+- **Offset checker**: Compares multiple inputs (separated by the specified delimiter) and highlights matching characters which appear at the same position in all samples.
+- **Hamming Distance**: In information theory, the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different. In other words, it measures the minimum number of substitutions required to change one string into the other, or the minimum number of errors that could have transformed one string into the other. In a more general context, the Hamming distance is one of several string metrics for measuring the edit distance between two sequences.
+- **Levenshtein Distance**: Levenshtein Distance (also known as Edit Distance) is a string metric to measure a difference between two strings that counts operations (insertions, deletions, and substitutions) on single character that are required to change one string to another.
+- **Convert distance**: Converts a unit of distance to another format.
+- **Convert area**: Converts a unit of area to another format.
+- **Convert mass**: Converts a unit of mass to another format.
+- **Convert speed**: Converts a unit of speed to another format.
+- **Convert data units**: Converts a unit of data to another format.
+- **Convert co-ordinate format**: Converts geographical coordinates between different formats. Supported formats:Degrees Minutes Seconds (DMS)Degrees Decimal Minutes (DDM)Decimal Degrees (DD)GeohashMilitary Grid Reference System (MGRS)Ordnance Survey National Grid (OSNG)Universal Transverse Mercator (UTM) The operation can try to detect the input co-ordinate format and delimiter automatically, but this may not always work correctly.
+- **Show on map**: Displays co-ordinates on a slippy map. Co-ordinates will be converted to decimal degrees before being shown on the map. Supported formats:Degrees Minutes Seconds (DMS)Degrees Decimal Minutes (DDM)Decimal Degrees (DD)GeohashMilitary Grid Reference System (MGRS)Ordnance Survey National Grid (OSNG)Universal Transverse Mercator (UTM) This operation will not work offline.
+- **Parse UNIX file permissions**: Given a UNIX/Linux file permission string in octal or textual format, this operation explains which permissions are granted to which user groups. Input should be in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.
+- **Parse ObjectID timestamp**: Parse timestamp from MongoDB/BSON ObjectID hex string.
+- **Swap endianness**: Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.
+- **Parse colour code**: Converts a colour code in a standard format to other standard formats and displays the colour itself. Example inputs#d9edf7rgba(217,237,247,1)hsla(200,65%,91%,1)cmyk(0.12, 0.04, 0.00, 0.03)
+- **Escape string**: Escapes special characters in a string so that they do not cause conflicts. For example, Don't stop me now becomes Don\\'t stop me now. Supports the following escape sequences:\ (Line feed/newline)\\r (Carriage return)\\t (Horizontal tab)\\b (Backspace)\\f (Form feed)\\xnn (Hex, where n is 0-f)\\\\ (Backslash)\\' (Single quote)\\&quot; (Double quote)\\unnnn (Unicode character)\\u{nnnnnn} (Unicode code point)
+- **Unescape string**: Unescapes characters in a string that have been escaped. For example, Don\\'t stop me now becomes Don't stop me now. Supports the following escape sequences:\ (Line feed/newline)\\r (Carriage return)\\t (Horizontal tab)\\b (Backspace)\\f (Form feed)\ nn (Octal, where n is 0-7)\\xnn (Hex, where n is 0-f)\\\\ (Backslash)\\' (Single quote)\\&quot; (Double quote)\\unnnn (Unicode character)\\u{nnnnnn} (Unicode code point)
+- **Pseudo-Random Number Generator**: A cryptographically-secure pseudo-random number generator (PRNG). This operation uses the browser's built-in crypto.getRandomValues() method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.
+- **Sleep**: Sleep causes the recipe to wait for a specified number of milliseconds before continuing execution.
+- **File Tree**: Creates a file tree from a list of file paths (similar to the tree command in Linux)
+- **Take nth bytes**: Takes every nth byte starting with a given byte.
+- **Drop nth bytes**: Drops every nth byte starting with a given byte.
+
+## Date / Time
+
+- **Parse DateTime**: Parses a DateTime string in your specified format and displays it in whichever timezone you choose with the following information:DateTimePeriod (AM/PM)TimezoneUTC offsetDaylight Saving TimeLeap yearDays in this monthDay of yearWeek numberQuarterRun with no input to see format string examples if required.
+- **Translate DateTime Format**: Parses a datetime string in one format and re-writes it in another. Run with no input to see the relevant format string examples.
+- **From UNIX Timestamp**: Converts a UNIX timestamp to a datetime string. e.g. 978346800 becomes Mon 1 January 2001 11:00:00 UTC A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).
+- **To UNIX Timestamp**: Parses a datetime string in UTC and returns the corresponding UNIX timestamp. e.g. Mon 1 January 2001 11:00:00 becomes 978346800 A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).
+- **Windows Filetime to UNIX Timestamp**: Converts a Windows Filetime value to a UNIX timestamp. A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC. A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch). This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.
+- **UNIX Timestamp to Windows Filetime**: Converts a UNIX timestamp to a Windows Filetime value. A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC. A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch). This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.
+- **DateTime Delta**: Calculates a new DateTime value given an input DateTime value and a time difference (delta) from the input DateTime value.
+- **Extract dates**: Extracts dates in the following formatsyyyy-mm-dddd/mm/yyyymm/dd/yyyyDividers can be any of /, -, . or space
+- **Get Time**: Generates a timestamp showing the amount of time since the UNIX epoch (1970-01-01 00:00:00 UTC). Uses the W3C High Resolution Time API.
+- **Sleep**: Sleep causes the recipe to wait for a specified number of milliseconds before continuing execution.
+
+## Extractors
+
+- **Strings**: Extracts all strings from the input.
+- **Extract IP addresses**: Extracts all IPv4 and IPv6 addresses. Warning: Given a string 1.2.3.4.5.6.7.8, this will match 1.2.3.4 and 5.6.7.8 so always check the original input!
+- **Extract email addresses**: Extracts all email addresses from the input.
+- **Extract MAC addresses**: Extracts all Media Access Control (MAC) addresses from the input.
+- **Extract URLs**: Extracts Uniform Resource Locators (URLs) from the input. The protocol (http, ftp etc.) is required otherwise there will be far too many false positives.
+- **Extract domains**: Extracts fully qualified domain names. Note that this will not include paths. Use Extract URLs to find entire URLs.
+- **Extract file paths**: Extracts anything that looks like a Windows or UNIX file path. Note that if UNIX is selected, there will likely be a lot of false positives.
+- **Extract dates**: Extracts dates in the following formatsyyyy-mm-dddd/mm/yyyymm/dd/yyyyDividers can be any of /, -, . or space
+- **Extract hashes**: Extracts potential hashes based on hash character length
+- **Regular expression**: Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns. Supports extended regex syntax including the 'dot matches all' flag, named capture groups, full unicode coverage (including \\p{} categories and scripts as well as astral codes) and recursive matching.
+- **XPath expression**: Extract information from an XML document with an XPath query
+- **JPath expression**: Extract information from a JSON object with a JPath query.
+- **Jsonata Query**: Query and transform JSON data with a jsonata query.
+- **CSS selector**: Extract information from an HTML document with a CSS selector
+- **Extract EXIF**: Operation description not available
+- **Extract ID3**: This operation extracts ID3 metadata from an MP3 file. ID3 is a metadata container most often used in conjunction with the MP3 audio file format. It allows information such as the title, artist, album, track number, and other information about the file to be stored in the file itself.
+- **Extract Files**: Operation description not available
+- **RAKE**: Operation description not available
+- **Template**: Render a template with Handlebars/Mustache substituting variables using JSON input. Templates will be rendered to plain-text only, to prevent XSS.
+
+## Compression
+
+- **Raw Deflate**: Compresses data using the deflate algorithm with no headers.
+- **Raw Inflate**: Decompresses data which has been compressed using the deflate algorithm with no headers.
+- **Zlib Deflate**: Compresses data using the deflate algorithm adding zlib headers.
+- **Zlib Inflate**: Decompresses data which has been compressed using the deflate algorithm with zlib headers.
+- **Gzip**: Compresses data using the deflate algorithm with gzip headers.
+- **Gunzip**: Decompresses data which has been compressed using the deflate algorithm with gzip headers.
+- **Zip**: Compresses data using the PKZIP algorithm with the given filename. No support for multiple files at this time.
+- **Unzip**: Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.
+- **Bzip2 Decompress**: Decompresses data using the Bzip2 algorithm.
+- **Bzip2 Compress**: Bzip2 is a compression library developed by Julian Seward (of GHC fame) that uses the Burrows-Wheeler algorithm. It only supports compressing single files and its compression is slow, however is more effective than Deflate (.gz & .zip).
+- **Tar**: Packs the input into a tarball. No support for multiple files at this time.
+- **Untar**: Unpacks a tarball and displays it per file.
+- **LZString Decompress**: Decompresses data that was compressed with lz-string.
+- **LZString Compress**: Compress the input with lz-string.
+- **LZMA Decompress**: Decompresses data using the Lempel-Ziv-Markov chain Algorithm.
+- **LZMA Compress**: Compresses data using the Lempel\u2013Ziv\u2013Markov chain algorithm. Compression mode determines the speed and effectiveness of the compression: 1 is fastest and less effective, 9 is slowest and most effective
+- **LZ4 Decompress**: LZ4 is a lossless data compression algorithm that is focused on compression and decompression speed. It belongs to the LZ77 family of byte-oriented compression schemes.
+- **LZ4 Compress**: LZ4 is a lossless data compression algorithm that is focused on compression and decompression speed. It belongs to the LZ77 family of byte-oriented compression schemes.
+- **LZNT1 Decompress**: Decompresses data using the LZNT1 algorithm. Similar to the Windows API RtlDecompressBuffer.
+
+## Hashing
+
+- **Analyse hash**: Tries to determine information about a given hash and suggests which algorithm may have been used to generate it based on its length.
+- **Generate all checksums**: Generates all available checksums for the input.
+- **Generate all hashes**: Generates all available hashes and checksums for the input.
+- **MD2**: The MD2 (Message-Digest 2) algorithm is a cryptographic hash function developed by Ronald Rivest in 1989. The algorithm is optimized for 8-bit computers. Although MD2 is no longer considered secure, even as of 2014, it remains in use in public key infrastructures as part of certificates generated with MD2 and RSA. The message digest algorithm consists, by default, of 18 rounds.
+- **MD4**: The MD4 (Message-Digest 4) algorithm is a cryptographic hash function developed by Ronald Rivest in 1990. The digest length is 128 bits. The algorithm has influenced later designs, such as the MD5, SHA-1 and RIPEMD algorithms. The security of MD4 has been severely compromised.
+- **MD5**: MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files. However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.
+- **MD6**: The MD6 (Message-Digest 6) algorithm is a cryptographic hash function. It uses a Merkle tree-like structure to allow for immense parallel computation of hashes for very long inputs.
+- **SHA0**: SHA-0 is a retronym applied to the original version of the 160-bit hash function published in 1993 under the name 'SHA'. It was withdrawn shortly after publication due to an undisclosed 'significant flaw' and replaced by the slightly revised version SHA-1. The message digest algorithm consists, by default, of 80 rounds.
+- **SHA1**: The SHA (Secure Hash Algorithm) hash functions were designed by the NSA. SHA-1 is the most established of the existing SHA hash functions and it is used in a variety of security applications and protocols. However, SHA-1's collision resistance has been weakening as new attacks are discovered or improved. The message digest algorithm consists, by default, of 80 rounds.
+- **SHA2**: The SHA-2 (Secure Hash Algorithm 2) hash functions were designed by the NSA. SHA-2 includes significant changes from its predecessor, SHA-1. The SHA-2 family consists of hash functions with digests (hash values) that are 224, 256, 384 or 512 bits: SHA224, SHA256, SHA384, SHA512. SHA-512 operates on 64-bit words.SHA-256 operates on 32-bit words.SHA-384 is largely identical to SHA-512 but is truncated to 384 bytes.SHA-224 is largely identical to SHA-256 but is truncated to 224 bytes.SHA-512/224 and SHA-512/256 are truncated versions of SHA-512, but the initial values are generated using the method described in Federal Information Processing Standards (FIPS) PUB 180-4. The message digest algorithm for SHA256 variants consists, by default, of 64 rounds, and for SHA512 variants, it is, by default, 160.
+- **SHA3**: The SHA-3 (Secure Hash Algorithm 3) hash functions were released by NIST on August 5, 2015. Although part of the same series of standards, SHA-3 is internally quite different from the MD5-like structure of SHA-1 and SHA-2. SHA-3 is a subset of the broader cryptographic primitive family Keccak designed by Guido Bertoni, Joan Daemen, Micha\xebl Peeters, and Gilles Van Assche, building upon RadioGat\xfan.
+- **SM3**: SM3 is a cryptographic hash function used in the Chinese National Standard. SM3 is mainly used in digital signatures, message authentication codes, and pseudorandom number generators. The message digest algorithm consists, by default, of 64 rounds and length of 256.
+- **Keccak**: The Keccak hash algorithm was designed by Guido Bertoni, Joan Daemen, Micha\xebl Peeters, and Gilles Van Assche, building upon RadioGat\xfan. It was selected as the winner of the SHA-3 design competition. This version of the algorithm is Keccak[c=2d] and differs from the SHA-3 specification.
+- **Shake**: Shake is an Extendable Output Function (XOF) of the SHA-3 hash algorithm, part of the Keccak family, allowing for variable output length/size.
+- **RIPEMD**: RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996. RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.
+- **HAS-160**: HAS-160 is a cryptographic hash function designed for use with the Korean KCDSA digital signature algorithm. It is derived from SHA-1, with assorted changes intended to increase its security. It produces a 160-bit output. HAS-160 is used in the same way as SHA-1. First it divides input in blocks of 512 bits each and pads the final block. A digest function updates the intermediate hash value by processing the input blocks in turn. The message digest algorithm consists, by default, of 80 rounds.
+- **Whirlpool**: Whirlpool is a cryptographic hash function designed by Vincent Rijmen (co-creator of AES) and Paulo S. L. M. Barreto, who first described it in 2000. Several variants exist:Whirlpool-0 is the original version released in 2000.Whirlpool-T is the first revision, released in 2001, improving the generation of the s-box.Whirlpool is the latest revision, released in 2003, fixing a flaw in the diffusion matrix.
+- **Snefru**: Snefru is a cryptographic hash function invented by Ralph Merkle in 1990 while working at Xerox PARC. The function supports 128-bit and 256-bit output. It was named after the Egyptian Pharaoh Sneferu, continuing the tradition of the Khufu and Khafre block ciphers. The original design of Snefru was shown to be insecure by Eli Biham and Adi Shamir who were able to use differential cryptanalysis to find hash collisions. The design was then modified by increasing the number of iterations of the main pass of the algorithm from two to eight.
+- **BLAKE2b**: Operation description not available
+- **BLAKE2s**: Operation description not available
+- **BLAKE3**: Hashes the input using BLAKE3 (UTF-8 encoded), with an optional key (also UTF-8), and outputs the result in hexadecimal format.
+- **GOST Hash**: The GOST hash function, defined in the standards GOST R 34.11-94 and GOST 34.311-95 is a 256-bit cryptographic hash function. It was initially defined in the Russian national standard GOST R 34.11-94 Information Technology – Cryptographic Information Security – Hash Function. The equivalent standard used by other member-states of the CIS is GOST 34.311-95. This function must not be confused with a different Streebog hash function, which is defined in the new revision of the standard GOST R 34.11-2012. The GOST hash function is based on the GOST block cipher.
+- **Streebog**: Streebog is a cryptographic hash function defined in the Russian national standard GOST R 34.11-2012 Information Technology \u2013 Cryptographic Information Security \u2013 Hash Function. It was created to replace an obsolete GOST hash function defined in the old standard GOST R 34.11-94, and as an asymmetric reply to SHA-3 competition by the US National Institute of Standards and Technology.
+- **SSDEEP**: SSDEEP is a program for computing context triggered piecewise hashes (CTPH). Also called fuzzy hashes, CTPH can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length. SSDEEP hashes are now widely used for simple identification purposes (e.g. the 'Basic Properties' section in VirusTotal). Although 'better' fuzzy hashes are available, SSDEEP is still one of the primary choices because of its speed and being a de facto standard. This operation is fundamentally the same as the CTPH operation, however their outputs differ in format.
+- **CTPH**: Context Triggered Piecewise Hashing, also called Fuzzy Hashing, can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length. CTPH was originally based on the work of Dr. Andrew Tridgell and a spam email detector called SpamSum. This method was adapted by Jesse Kornblum and published at the DFRWS conference in 2006 in a paper 'Identifying Almost Identical Files Using Context Triggered Piecewise Hashing'.
+- **Compare SSDEEP hashes**: Compares two SSDEEP fuzzy hashes to determine the similarity between them on a scale of 0 to 100.
+- **Compare CTPH hashes**: Compares two Context Triggered Piecewise Hashing (CTPH) fuzzy hashes to determine the similarity between them on a scale of 0 to 100.
+- **HMAC**: Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.
+- **CMAC**: CMAC is a block-cipher based message authentication code algorithm. RFC4493 defines AES-CMAC that uses AES encryption with a 128-bit key. NIST SP 800-38B suggests usages of AES with other key lengths and Triple DES.
+- **Bcrypt**: bcrypt is a password hashing function designed by Niels Provos and David Mazi\xe8res, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count (rounds) can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power. Enter the password in the input to generate its hash.
+- **Bcrypt compare**: Tests whether the input matches the given bcrypt hash. To test multiple possible passwords, use the 'Fork' operation.
+- **Bcrypt parse**: Parses a bcrypt hash to determine the number of rounds used, the salt, and the password hash.
+- **Argon2**: Argon2 is a key derivation function that was selected as the winner of the Password Hashing Competition in July 2015. It was designed by Alex Biryukov, Daniel Dinu, and Dmitry Khovratovich from the University of Luxembourg. Enter the password in the input to generate its hash.
+- **Argon2 compare**: Tests whether the input matches the given Argon2 hash. To test multiple possible passwords, use the 'Fork' operation.
+- **Scrypt**: scrypt is a password-based key derivation function (PBKDF) created by Colin Percival. The algorithm was specifically designed to make it costly to perform large-scale custom hardware attacks by requiring large amounts of memory. In 2016, the scrypt algorithm was published by IETF as RFC 7914. Enter the password in the input to generate its hash.
+- **NT Hash**: An NT Hash, sometimes referred to as an NTLM hash, is a method of storing passwords on Windows systems. It works by running MD4 on UTF-16LE encoded input. NTLM hashes are considered weak because they can be brute-forced very easily with modern hardware.
+- **LM Hash**: An LM Hash, or LAN Manager Hash, is a deprecated way of storing passwords on old Microsoft operating systems. It is particularly weak and can be cracked in seconds on modern hardware using rainbow tables.
+- **MurmurHash3**: Generates a MurmurHash v3 for a string input and an optional seed input
+- **Fletcher-8 Checksum**: The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s. The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.
+- **Fletcher-16 Checksum**: The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s. The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.
+- **Fletcher-32 Checksum**: The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s. The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.
+- **Fletcher-64 Checksum**: The Fletcher checksum is an algorithm for computing a position-dependent checksum devised by John Gould Fletcher at Lawrence Livermore Labs in the late 1970s. The objective of the Fletcher checksum was to provide error-detection properties approaching those of a cyclic redundancy check but with the lower computational effort associated with summation techniques.
+- **Adler-32 Checksum**: Adler-32 is a checksum algorithm which was invented by Mark Adler in 1995, and is a modification of the Fletcher checksum. Compared to a cyclic redundancy check of the same length, it trades reliability for speed (preferring the latter). Adler-32 is more reliable than Fletcher-16, and slightly less reliable than Fletcher-32.
+- **Luhn Checksum**: The Luhn mod N algorithm using the english alphabet. The Luhn mod N algorithm is an extension to the Luhn algorithm (also known as mod 10 algorithm) that allows it to work with sequences of values in any even-numbered base. This can be useful when a check digit is required to validate an identification string composed of letters, a combination of letters and digits or any arbitrary set of N characters where N is divisible by 2.
+- **CRC Checksum**: A Cyclic Redundancy Check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.
+- **TCP/IP Checksum**: Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.
+- **XOR Checksum**: XOR Checksum splits the input into blocks of a configurable size and performs the XOR operation on these blocks.
+
+## Code tidy
+
+- **Syntax highlighter**: Adds syntax highlighting to a range of source code languages. Note that this will not indent the code. Use one of the 'Beautify' operations for that.
+- **Generic Code Beautify**: Attempts to pretty print C-style languages such as C, C++, C#, Java, PHP, JavaScript etc. This will not do a perfect job, and the resulting code may not work any more. This operation is designed purely to make obfuscated or minified code more easy to read and understand. Things which will not work properly:For loop formattingDo-While loop formattingSwitch/Case indentationCertain bit shift operators
+- **JavaScript Parser**: Returns an Abstract Syntax Tree for valid JavaScript code.
+- **JavaScript Beautify**: Parses and pretty prints valid JavaScript code. Also works with JavaScript Object Notation (JSON).
+- **JavaScript Minify**: Compresses JavaScript code.
+- **JSON Beautify**: Indents and pretty prints JavaScript Object Notation (JSON) code. Tags: json viewer, prettify, syntax highlighting
+- **JSON Minify**: Compresses JavaScript Object Notation (JSON) code.
+- **XML Beautify**: Indents and prettifies eXtensible Markup Language (XML) code.
+- **XML Minify**: Compresses eXtensible Markup Language (XML) code.
+- **SQL Beautify**: Indents and prettifies Structured Query Language (SQL) code.
+- **SQL Minify**: Compresses Structured Query Language (SQL) code.
+- **CSS Beautify**: Indents and prettifies Cascading Style Sheets (CSS) code.
+- **CSS Minify**: Compresses Cascading Style Sheets (CSS) code.
+- **XPath expression**: Extract information from an XML document with an XPath query
+- **JPath expression**: Extract information from a JSON object with a JPath query.
+- **Jq**: jq is a lightweight and flexible command-line JSON processor.
+- **CSS selector**: Extract information from an HTML document with a CSS selector
+- **PHP Deserialize**: Deserializes PHP serialized data, outputting keyed arrays as JSON. This function does not support object tags. Example: a:2:{s:1:&quot;a&quot;;i:10;i:0;a:1:{s:2:&quot;ab&quot;;b:1;}} becomes {&quot;a&quot;: 10,0: {&quot;ab&quot;: true}} Output valid JSON: JSON doesn't support integers as keys, whereas PHP serialization does. Enabling this will cast these integers to strings. This will also escape backslashes.
+- **PHP Serialize**: Performs PHP serialization on JSON data. This function does not support object tags. Since PHP doesn't distinguish dicts and arrays, this operation is not always symmetric to PHP Deserialize. Example: [5,&quot;abc&quot;,true] becomes a:3:{i:0;i:5;i:1;s:3:&quot;abc&quot;;i:2;b:1;}
+- **Microsoft Script Decoder**: Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding. These are often VBS (Visual Basic Script) files that are encoded and renamed with a '.vbe' extention or JS (JScript) files renamed with a '.jse' extention. Sample Encoded: #@~^RQAAAA==-mD~sX|:/TP{~J:+dYbxL~@!F@*@!+@*@!&amp;@*eEI@#@&amp;@#@&amp;.jm.raY 214Wv:zms/obI0xEAAA==^#~@ Decoded: var my_msg = &#34;Testing !&#34;; VScript.Echo(my_msg);
+- **Strip HTML tags**: Removes all HTML tags from the input.
+- **Diff**: Compares two inputs (separated by the specified delimiter) and highlights the differences between them.
+- **To Snake case**: Converts the input string to snake case. Snake case is all lower case with underscores as word boundaries. e.g. this_is_snake_case 'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.
+- **To Camel case**: Converts the input string to camel case. Camel case is all lower case except letters after word boundaries which are uppercase. e.g. thisIsCamelCase 'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.
+- **To Kebab case**: Converts the input string to kebab case. Kebab case is all lower case with dashes as word boundaries. e.g. this-is-kebab-case 'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.
+- **BSON serialise**: BSON is a computer data interchange format used mainly as a data storage and network transfer format in the MongoDB database. It is a binary form for representing simple data structures, associative arrays (called objects or documents in MongoDB), and various data types of specific interest to MongoDB. The name 'BSON' is based on the term JSON and stands for 'Binary JSON'. Input data should be valid JSON.
+- **BSON deserialise**: BSON is a computer data interchange format used mainly as a data storage and network transfer format in the MongoDB database. It is a binary form for representing simple data structures, associative arrays (called objects or documents in MongoDB), and various data types of specific interest to MongoDB. The name 'BSON' is based on the term JSON and stands for 'Binary JSON'. Input data should be in a raw bytes format.
+- **To MessagePack**: Converts JSON to MessagePack encoded byte buffer. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.
+- **From MessagePack**: Converts MessagePack encoded data to JSON. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.
+- **Render Markdown**: Renders input Markdown as HTML. HTML rendering is disabled to avoid XSS.
+
+## Forensics
+
+- **Detect File Type**: Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'. Currently supports the following file types:
+- **Scan for Embedded Files**: Scans the data for potential embedded files by looking for magic bytes at all offsets. This operation is prone to false positives. WARNING: Files over about 100KB in size will take a VERY long time to process.
+- **Extract Files**: Operation description not available
+- **YARA Rules**: YARA is a tool developed at VirusTotal, primarily aimed at helping malware researchers to identify and classify malware samples. It matches based on rules specified by the user containing textual or binary patterns and a boolean expression. For help on writing rules, see the YARA documentation.
+- **Remove EXIF**: Operation description not available
+- **Extract EXIF**: Operation description not available
+- **Extract RGBA**: Extracts each pixel's RGBA value in an image. These are sometimes used in Steganography to hide text or data.
+- **View Bit Plane**: Extracts and displays a bit plane of any given image. These show only a single bit from each pixel, and can be used to hide messages in Steganography.
+- **Randomize Colour Palette**: Randomizes each colour in an image's colour palette. This can often reveal text or symbols that were previously a very similar colour to their surroundings, a technique sometimes used in Steganography.
+- **Extract LSB**: Extracts the Least Significant Bit data from each pixel in an image. This is a common way to hide data in Steganography.
+- **ELF Info**: Implements readelf-like functionality. This operation will extract the ELF Header, Program Headers, Section Headers and Symbol Table for an ELF file.
+
+## Multimedia
+
+- **Render Image**: Displays the input as an image. Supports the following formats: jpg/jpegpnggifwebpbmpico
+- **Play Media**: Plays the input as audio or video depending on the type. Tags: sound, movie, mp3, mp4, mov, webm, wav, ogg
+- **Generate Image**: Generates an image using the input as pixel values.
+- **Optical Character Recognition**: Optical character recognition or optical character reader (OCR) is the mechanical or electronic conversion of images of typed, handwritten or printed text into machine-encoded text. Supported image formats: png, jpg, bmp, pbm.
+- **Remove EXIF**: Operation description not available
+- **Extract EXIF**: Operation description not available
+- **Split Colour Channels**: Splits the given image into its red, green and blue colour channels.
+- **Rotate Image**: Rotates an image by the specified number of degrees.
+- **Resize Image**: Resizes an image to the specified width and height values.
+- **Blur Image**: Applies a blur effect to the image. Gaussian blur is much slower than fast blur, but produces better results.
+- **Dither Image**: Apply a dither effect to an image.
+- **Invert Image**: Invert the colours of an image.
+- **Flip Image**: Flips an image along its X or Y axis.
+- **Crop Image**: Crops an image to the specified region, or automatically crops edges. Autocrop Automatically crops same-colour borders from the image. Autocrop tolerance A percentage value for the tolerance of colour difference between pixels. Only autocrop frames Only crop real frames (all sides must have the same border) Symmetric autocrop Force autocrop to be symmetric (top/bottom and left/right are cropped by the same amount) Autocrop keep border The number of pixels of border to leave around the image.
+- **Image Brightness / Contrast**: Adjust the brightness or contrast of an image.
+- **Image Opacity**: Adjust the opacity of an image.
+- **Image Filter**: Applies a greyscale or sepia filter to an image.
+- **Contain Image**: Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.
+- **Cover Image**: Scales the image to the given width and height, keeping the aspect ratio. The image may be clipped.
+- **Image Hue/Saturation/Lightness**: Adjusts the hue / saturation / lightness (HSL) values of an image.
+- **Sharpen Image**: Sharpens an image (Unsharp mask)
+- **Normalise Image**: Normalise the image colours.
+- **Convert Image Format**: Converts an image between different formats. Supported formats: Joint Photographic Experts Group (JPEG)Portable Network Graphics (PNG)Bitmap (BMP)Tagged Image File Format (TIFF) Note: GIF files are supported for input, but cannot be outputted.
+- **Add Text To Image**: Adds text onto an image. Text can be horizontally or vertically aligned, or the position can be manually specified. Variants of the Roboto font face are available in any size or colour.
+- **Hex Density chart**: Hex density charts are used in a similar way to scatter charts, however rather than rendering tens of thousands of points, it groups the points into a few hundred hexagons to show the distribution.
+- **Scatter chart**: Plots two-variable data as single points on a graph.
+- **Series chart**: A time series graph is a line graph of repeated measurements taken over regular time intervals.
+- **Heatmap chart**: A heatmap is a graphical representation of data where the individual values contained in a matrix are represented as colors.
+
+## Other
+
+- **Entropy**: Shannon Entropy, in the context of information theory, is a measure of the rate at which information is produced by a source of data. It can be used, in a broad sense, to detect whether data is likely to be structured or unstructured. 8 is the maximum, representing highly unstructured, 'random' data. English language text usually falls somewhere between 3.5 and 5. Properly encrypted or compressed data should have an entropy of over 7.5.
+- **Frequency distribution**: Displays the distribution of bytes in the data as a graph.
+- **Index of Coincidence**: Index of Coincidence (IC) is the probability of two randomly selected characters being the same. This can be used to determine whether text is readable or random, with English text having an IC of around 0.066. IC can therefore be a sound method to automate frequency analysis.
+- **Chi Square**: Calculates the Chi Square distribution of values.
+- **P-list Viewer**: In the macOS, iOS, NeXTSTEP, and GNUstep programming frameworks, property list files are files that store serialized objects. Property list files use the filename extension .plist, and thus are often referred to as p-list files. This operation displays plist files in a human readable format.
+- **Disassemble x86**: Disassembly is the process of translating machine language into assembly language. This operation supports 64-bit, 32-bit and 16-bit code written for Intel or AMD x86 processors. It is particularly useful for reverse engineering shellcode. Input should be in hexadecimal.
+- **Pseudo-Random Number Generator**: A cryptographically-secure pseudo-random number generator (PRNG). This operation uses the browser's built-in crypto.getRandomValues() method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.
+- **Generate De Bruijn Sequence**: Generates rolling keycode combinations given a certain alphabet size and key length.
+- **Generate UUID**: Generates an RFC 9562 (formerly RFC 4122) compliant Universally Unique Identifier (UUID),
+- **Analyse UUID**: Tries to determine information about a given UUID and suggests which version may have been used to generate it
+- **Generate TOTP**: The Time-based One-Time Password algorithm (TOTP) is an algorithm that computes a one-time password from a shared secret key and the current time. It has been adopted as Internet Engineering Task Force standard RFC 6238, is the cornerstone of Initiative For Open Authentication (OAUTH), and is used in a number of two-factor authentication systems. A TOTP is an HOTP where the counter is the current time. Enter the secret as the input or leave it blank for a random secret to be generated. T0 and T1 are in seconds.
+- **Generate HOTP**: The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OAUTH), and is used in a number of two-factor authentication systems. Enter the secret as the input or leave it blank for a random secret to be generated.
+- **Generate QR Code**: Generates a Quick Response (QR) code from the input text. A QR code is a type of matrix barcode (or two-dimensional barcode) first designed in 1994 for the automotive industry in Japan. A barcode is a machine-readable optical label that contains information about the item to which it is attached.
+- **Parse QR Code**: Reads an image file and attempts to detect and read a Quick Response (QR) code from the image. Normalise Image Attempts to normalise the image before parsing it to improve detection of a QR code.
+- **Haversine distance**: Returns the distance between two pairs of GPS latitude and longitude co-ordinates in metres. e.g. 51.487263,-0.124323, 38.9517,-77.1467
+- **HTML To Text**: Converts an HTML output from an operation to a readable string instead of being rendered in the DOM.
+- **Generate Lorem Ipsum**: Generate varying length lorem ipsum placeholder text.
+- **Numberwang**: Based on the popular gameshow by Mitchell and Webb.
+- **XKCD Random Number**: RFC 1149.5 specifies 4 as the standard IEEE-vetted random number.
+
+## Flow control
+
+- **Magic**: The Magic operation attempts to detect various properties of the input data and suggests which operations could help to make more sense of it. Options Depth: If an operation appears to match the data, it will be run and the result will be analysed further. This argument controls the maximum number of levels of recursion. Intensive mode: When this is turned on, various operations like XOR, bit rotates, and character encodings are brute-forced to attempt to detect valid data underneath. To improve performance, only the first 100 bytes of the data is brute-forced. Extensive language support: At each stage, the relative byte frequencies of the data will be compared to average frequencies for a number of languages. The default set consists of ~40 of the most commonly used languages on the Internet. The extensive list consists of 284 languages and can result in many languages matching the data if their byte frequencies are similar. Optionally enter a regular expression to match a string you expect to find to filter results (crib).
+- **Fork**: Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately. For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.
+- **Subsection**: Select a part of the input data using a regular expression (regex), and run all subsequent operations on each match separately. You can use up to one capture group, where the recipe will only be run on the data in the capture group. If there's more than one capture group, only the first one will be operated on. Use the Merge operation to reset the effects of subsection.
+- **Merge**: Consolidate all branches back into a single trunk. The opposite of Fork. Unticking the Merge All checkbox will only consolidate all branches up to the nearest Fork/Subsection.
+- **Register**: Extract data from the input and store it in registers which can then be passed into subsequent operations as arguments. Regular expression capture groups are used to select the data to extract. To use registers in arguments, refer to them using the notation $Rn where n is the register number, starting at 0. For example: Input: Test Extractor: (.*) Argument: $R0 becomes Test Registers can be escaped in arguments using a backslash. e.g. \\$R0 would become $R0 rather than Test.
+- **Label**: Provides a location for conditional and fixed jumps to redirect execution to.
+- **Jump**: Jump forwards or backwards to the specified Label
+- **Conditional Jump**: Conditionally jump forwards or backwards to the specified Label based on whether the data matches the specified regular expression.
+- **Return**: End execution of operations at this point in the recipe.
+- **Comment**: Provides a place to write comments within the flow of the recipe. This operation has no computational effect.
+
