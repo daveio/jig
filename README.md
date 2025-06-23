@@ -363,7 +363,7 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 
 #### lsr
 
-**Description**: MIDI clock receiver for Broadlink IR device control.
+**Description**: 'Lightswitch Rave': MIDI clock receiver for Broadlink IR device control.
 
 **Arguments**: None (daemon-style)
 
@@ -397,41 +397,421 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 
 ---
 
-#### dev (from multipost)
+#### `ai-screenshot-renamer`
 
-**Description**: Development server startup script for Rails applications.
+**Description**: Rename screenshots based on AI-generated titles.
 
 **Arguments**: None
 
-**Options**: Environment variable `PORT` (default: 3000)
+**Options**: None
 
-**Returns**: Running development server
+**Returns**: None, renames files
 
-**Secrets**: Rails application secrets
+**Secrets**: None
 
-**Remote Dependencies**: None (local development)
+**Remote Dependencies**: Claude AI
 
-**Libraries**: foreman, Ruby/Rails
+**Libraries**: Python: `anthropic`
+
+**Scripts**: `ai-screenshot-renamer.py`
 
 ---
 
-#### sharecraft-tools
+### From Fish Functions (~/.config/fish/funcs.fish)
 
-**Description**: Build, bundle, deploy, and development scripts for Cloudflare Workers.
+#### nas-docker
 
-**Arguments**: None (npm/bun script execution)
+**Description**: Set up Docker to use the NAS.
 
-**Options**: Script-specific
+**Arguments**: None
 
-**Returns**: Built/deployed worker applications
+**Options**: None
 
-**Secrets**: Cloudflare API tokens
+**Returns**: Sets environment variables for Docker
 
-**Remote Dependencies**: Cloudflare Workers API
+**Secrets**: Docker TLS certificates
 
-**Libraries**: wrangler CLI, Bun
+**Remote Dependencies**: NAS Docker daemon (tcp://nas-7t54.manticore-minor.ts.net:2376)
 
-**Scripts**: `build.ts`, `bundle.ts`, `deploy.ts`, `dev.ts`
+**Libraries**: None (fish function)
+
+---
+
+#### le-fw
+
+**Description**: Set up Let's Encrypt certificates for the firewall with multiple domains.
+
+**Arguments**: None
+
+**Options**: Hardcoded lego options
+
+**Returns**: Generated certificates in PEM and PFX formats
+
+**Secrets**: DNS Simple API credentials
+
+**Remote Dependencies**: DNS Simple API, Let's Encrypt ACME
+
+**Libraries**: lego
+
+---
+
+#### cma/cmae
+
+**Description**: Add files to chezmoi configuration management (with optional encryption).
+
+**Arguments**: File paths
+
+**Options**: None
+
+**Returns**: Files added to chezmoi
+
+**Secrets**: chezmoi encryption key (for cmae)
+
+**Remote Dependencies**: None
+
+**Libraries**: chezmoi
+
+---
+
+#### github-auth
+
+**Description**: Authenticate with GitHub and set GITHUB_TOKEN environment variable.
+
+**Arguments**: None
+
+**Options**: None
+
+**Returns**: Sets GITHUB_TOKEN environment variable
+
+**Secrets**: GitHub authentication token
+
+**Remote Dependencies**: GitHub API
+
+**Libraries**: gh CLI
+
+---
+
+#### kill-oco
+
+**Description**: Kill hanging opencommit processes.
+
+**Arguments**: None
+
+**Options**: Interactive confirmation
+
+**Returns**: Terminates matching processes
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: None (fish function)
+
+---
+
+#### wipe-workflows
+
+**Description**: Delete all workflow runs for a GitHub repository.
+
+**Arguments**: Repository name (owner/repo)
+
+**Options**: None
+
+**Returns**: Deleted workflow runs
+
+**Secrets**: GitHub token
+
+**Remote Dependencies**: GitHub API
+
+**Libraries**: gh CLI, jq
+
+---
+
+#### delete-issues/delete-issue
+
+**Description**: Delete GitHub issues from repository (single or batch).
+
+**Arguments**: Issue number(s)
+
+**Options**: Parallelism level for batch deletion
+
+**Returns**: Deleted issues
+
+**Secrets**: GitHub token
+
+**Remote Dependencies**: GitHub API
+
+**Libraries**: gh CLI, jq, parallel
+
+---
+
+#### yank
+
+**Description**: Fetch and pull all git repositories in current directory.
+
+**Arguments**: None
+
+**Options**: None
+
+**Returns**: Updated repositories
+
+**Secrets**: Git credentials
+
+**Remote Dependencies**: Git remotes
+
+**Libraries**: git
+
+---
+
+#### js-clear-caches
+
+**Description**: Clear all JavaScript package manager caches.
+
+**Arguments**: None
+
+**Options**: None
+
+**Returns**: Cleared caches
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: deno
+
+---
+
+#### czkawka
+
+**Description**: Run czkawka or krokiet duplicate finder tools.
+
+**Arguments**: Pass-through to tool
+
+**Options**: Interactive choice between tools
+
+**Returns**: Tool output
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: czkawka/krokiet binaries
+
+---
+
+#### latest-commit
+
+**Description**: Get the latest commit hash on main for a GitHub repository.
+
+**Arguments**: Repository (owner/repo)
+
+**Options**: None
+
+**Returns**: Commit SHA
+
+**Secrets**: GitHub token
+
+**Remote Dependencies**: GitHub API
+
+**Libraries**: gh CLI
+
+---
+
+#### psclean
+
+**Description**: Clean up commonly hanging processes and restart 1Password.
+
+**Arguments**: None
+
+**Options**: None
+
+**Returns**: Killed processes
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: None (fish function)
+
+---
+
+#### quickcommit
+
+**Description**: Smart git commit with AI-generated messages and optional push.
+
+**Arguments**: None
+
+**Options**: `-p/--push`, `-m/--message`
+
+**Returns**: Git commit (and optional push)
+
+**Secrets**: None
+
+**Remote Dependencies**: Git remote (for push)
+
+**Libraries**: git, oco
+
+---
+
+#### trunkfix
+
+**Description**: Run trunk fmt and check commands in sequence.
+
+**Arguments**: None
+
+**Options**: `-f/--fix`
+
+**Returns**: Formatted and checked code
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: trunk
+
+---
+
+#### devsetup
+
+**Description**: Smart development environment setup detecting project type.
+
+**Arguments**: None
+
+**Options**: None
+
+**Returns**: Installed dependencies and starts dev server
+
+**Secrets**: Package registry tokens as needed
+
+**Remote Dependencies**: Package registries
+
+**Libraries**: bun, pnpm, npm, bundle, pip, cargo
+
+---
+
+#### gitclean
+
+**Description**: Comprehensive git repository cleanup and optimization.
+
+**Arguments**: None
+
+**Options**: None
+
+**Returns**: Cleaned git repository
+
+**Secrets**: None
+
+**Remote Dependencies**: Git remote
+
+**Libraries**: git
+
+---
+
+#### dockerclean
+
+**Description**: Clean up Docker containers, images, networks, and volumes.
+
+**Arguments**: None
+
+**Options**: `-a/--all`, `-f/--force`
+
+**Returns**: Freed disk space
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: docker
+
+---
+
+#### cc
+
+**Description**: Clear screen and optionally run command.
+
+**Arguments**: Optional command to run
+
+**Options**: None
+
+**Returns**: Cleared screen and command output
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: None (fish function)
+
+---
+
+#### up
+
+**Description**: Go up multiple directories.
+
+**Arguments**: Number of levels (default: 1)
+
+**Options**: None
+
+**Returns**: Changed directory path
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: None (fish function)
+
+---
+
+#### edit
+
+**Description**: Smart editor selection based on available editors.
+
+**Arguments**: Optional files to edit
+
+**Options**: None
+
+**Returns**: Opens editor
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: code, zed, nvim
+
+---
+
+#### extract
+
+**Description**: Extract various archive formats automatically.
+
+**Arguments**: Archive file path
+
+**Options**: None
+
+**Returns**: Extracted files
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: tar, bunzip2, unrar, gunzip, unzip, uncompress, 7z
+
+---
+
+#### findreplace
+
+**Description**: Find and replace text in files recursively.
+
+**Arguments**: Search term, replace term, optional directory
+
+**Options**: `-e/--ext` for file extension filter
+
+**Returns**: Modified files
+
+**Secrets**: None
+
+**Remote Dependencies**: None
+
+**Libraries**: find, sed
 
 ---
 
@@ -441,21 +821,36 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 
 1. **hubbit** - Repository and binary management
 2. **jig-bump** - Dependency updating across projects
-3. **clone-repos** - Parallel repository operations
+3. **clone-repos/yank** - Parallel repository operations
 4. **ws** - Workspace context switching
 5. **orphans** - File cleanup utilities
+6. **quickcommit** - Smart git commit workflow (most used: 1,721 times)
+7. **trunkfix** - Code formatting and checking
+8. **dockerclean** - Docker system cleanup
+9. **extract** - Universal archive extraction
 
 #### Medium Priority (Specialized Tools)
 
-6. **pull-ai** - AI model management
-7. **sixkcd** - Terminal entertainment/graphics
-8. **mastodon-maintenance** - Server maintenance
-9. **lsr** - MIDI/IR integration
+10. **pull-ai** - AI model management
+11. **sixkcd** - Terminal entertainment/graphics
+12. **mastodon-maintenance** - Server maintenance
+13. **lsr** - MIDI/IR integration
+14. **devsetup** - Smart project setup
+15. **gitclean** - Git repository optimization
+16. **github-auth** - GitHub token management
+17. **wipe-workflows/delete-issues** - GitHub cleanup
+18. **czkawka** - Duplicate file finder
+19. **findreplace** - Batch text replacement
 
 #### Low Priority (Project-Specific)
 
-10. **sharecraft-tools** - Cloudflare Workers tooling
-11. **dev** - Rails development server
+20. **le-fw** - Let's Encrypt for firewall
+21. **nas-docker** - NAS Docker configuration
+22. **cma/cmae** - Chezmoi integration
+23. **js-clear-caches** - JavaScript cache cleanup
+24. **kill-oco/psclean** - Process cleanup
+25. **latest-commit** - GitHub commit lookup
+26. **cc/up/edit** - Shell navigation helpers
 
 ### Common Patterns
 
