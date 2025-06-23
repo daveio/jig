@@ -84,6 +84,10 @@ graph LR
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
+## Commands
+
+[to be stubbed]
+
 ## Libraries
 
 - Base CLI framework with `clap`
