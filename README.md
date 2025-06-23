@@ -22,6 +22,13 @@
 - [Easter Egg](#easter-egg) with ludicrous effects
 - Encryption and decryption with `rage`
   - <https://github.com/str4d/rage>
+- Terminal image support with `viuer`
+  - <https://github.com/atanunq/viuer>
+- HTTP with `reqwest`
+- GitHub with `octocrab`
+- Async with `tokio`
+- Templating with `tera`
+- Git with `git2`
 
 ## Command Tree
 
@@ -32,23 +39,45 @@ config:
   layout: elk
 ---
 graph LR
-  A[jig] --> 1(init)
-  A --> 2(generate)
-    2 --> 2A(hex)
-    2 --> 2B(password)
-    2 --> 2C(key)
-      2C --> 2C1(crypt)
-      2C --> 2C2(wireguard)
-      2C --> 2C3(ssh)
-  A --> 3(crypt)
-  A --> 4(network)
-    4 --> 4A(dns)
-  A --> 5(format)
-  A --> 6(convert)
-  A --> 7(mcp)
-  A --> 8(dance)
+  jig[jig] --> init(init)
+  jig --> generate(generate)
+    generate --> generateHex(hex)
+    generate --> generatePassword(password)
+    generate --> generateKey(key)
+      generateKey --> generateKeyCrypt(crypt)
+      generateKey --> generateKeyWireguard(wireguard)
+    generate --> generateJwt(jwt)
+  jig --> crypt(crypt)
+  jig --> network(network)
+    network --> networkDns(dns)
+  jig --> format(format)
+  jig --> convert(convert)
+  jig --> api(api)
+  jig --> mcp(mcp)
+  jig --> dance(dance)
+  jig --> terminal(terminal)
+    terminal --> terminalXKCD(xkcd)
+  jig --> project(project)
+    project --> projectNew(new)
+    project --> projectUpdate(update)
+    project --> projectBump(bump)
+    project --> projectDependabot(dependabot)
+  jig --> git(git)
+    git --> gitClone(clone)
+    git --> gitBinary(binary)
+      gitBinary --> gitBinaryGet(get)
+      gitBinary --> gitBinaryUpdate(update)
+    git --> gitSecrets(secrets)
+    git --> gitCommit(commit)
+  jig --> workspace(workspace)
+    workspace --> workspaceSwitch(switch)
+    workspace --> workspaceList(list)
+  jig --> ai(ai)
+    ai --> aiImage(image)
+      aiImage --> aiImageRename(rename)
 
-  style 8 stroke-dasharray: 2 3,stroke-width: 5px
+  style mcp stroke-dasharray: 2 3,stroke-width: 5px
+  style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
 ## MCP Server
@@ -136,6 +165,8 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
     - Run a KDF on `[value]` to get data to actually use
     - Does BLAKE3 have a compute-hard or memory-hard construction?
     - Are there newer funkier KDFs? Post-quantum ones?
+- `init` sets up shell integration for `jig workspace`
+- Reimplement `oco` so we don't have to shell out to it as `jig git commit`
 
 ## Tool Migration Analysis
 
@@ -171,6 +202,7 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 - `crypt simple encrypt/decrypt`: Symmetric encryption
 - `crypt simple key`: Key management
 - `crypt wireguard`: Generate WireGuard keypairs
+- `generate jwt`: Generate JWT tokens with custom claims and expiration
 - `dns flush`: Flush DNS cache
 - `dns lookup <query> [type]`: DNS queries
 - `dns sec <domain>`: DNSSEC validation
@@ -179,337 +211,81 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 
 ---
 
-### From jig/old Branch
+#### JWT Token Generation
 
-#### jig (Project Management CLI)
+**Description**: Generic JWT token generation utility for authentication and API access.
 
-**Description**: Development environment manager for project setup, dependency management, and AI tool configuration.
-
-**Arguments**: Subcommand-based with optional repository paths
+**Arguments**: Subject, description, expiration time, optional custom claims
 
 **Options**:
 
-- Global: `--dry-run/-d`, `--info/-i`, `--verbose/-v`, `--ai/-a`, `--output/-o`
+- `--sub <subject>`: Token subject/scope (e.g., "ai:alt", "api:tokens")
+- `--description <text>`: Human-readable token description
+- `--expires-in <duration>`: Expiration time (e.g., "1h", "7d", "30m")
+- `--claim <key=value>`: Add custom claims to token
+- `--secret <secret>`: JWT signing secret (or use config/env)
+- `--algorithm <alg>`: Signing algorithm (default: HS256)
 
-**Returns**: Project scaffolding, dependency updates, configuration files
+**Returns**: Signed JWT token string
 
-**Secrets**: GitHub tokens for API access
+**Secrets**: JWT signing secret (configurable)
 
-**Remote Dependencies**:
-
-- Package registries (npm, PyPI, crates.io, rubygems)
-- GitHub API
-- Baseline repository (`/Users/dave/src/github.com/daveio/_baseline`)
+**Remote Dependencies**: None (local crypto operations)
 
 **Libraries**:
 
-- clap (CLI parsing)
-- git2 (Git operations)
-- tera (templating)
-- reqwest (HTTP)
-- octocrab (GitHub API)
-- tokio (async runtime)
+- JWT implementation (jsonwebtoken equivalent)
+- Crypto library for HMAC/RSA signing
+- Time/duration parsing
+- Base64 encoding
 
-**Subcommands**:
+**Usage Examples**:
 
-- `new [language]`: Create new project with templates
-- `update [repository]`: Update template files
-- `ai [tool]`: Configure AI tools (Claude, Cursor, Zed, Goose)
-- `bump [repository]`: Update dependencies across ecosystems
-- `dependabot [repository]`: Manage Dependabot configuration
+- `jig generate jwt --sub "ai:alt" --expires-in "1h"`
+- `jig generate jwt --sub "dashboard" --description "CLI access" --expires-in "7d"`
+- `jig generate jwt --sub "custom" --claim "role=admin" --claim "scope=read:write"`
 
 ---
 
-### From Other Repositories
+#### dave.io API integration
 
-#### sixkcd
+**Description**: HTTP client for personal API providing AI-powered operations, image optimization, token management, and dashboard data.
 
-**Description**: Displays XKCD comics using Sixel graphics as MOTD.
+**Arguments**: Subcommand-based with endpoint-specific parameters
 
-**Arguments**: Optional comic number
+**Options**:
 
-**Options**: None
+- Global: `--token <JWT>`, `--auth` (auto-generate token), `--local/--remote`, `--dry-run`, `--verbose`, `--quiet`, `--script`
+- Endpoint-specific quality settings, file paths, URLs
 
-**Returns**: Comic image and alt text displayed in terminal
+**Returns**: JSON responses with structured data, images, AI-generated content
 
-**Secrets**: None
+**Secrets**: JWT secret for token generation, API tokens for authentication
 
-**Remote Dependencies**: XKCD API
+**Remote Dependencies**: dave.io API (https://dave.io), AI services (Claude), Cloudflare Images
 
-**Libraries**: imagemagick, iTerm2's imgcat/img2sixel, curl/wget
+**Libraries**:
 
-**Source**: `/Users/dave/src/github.com/daveio/dotfiles-fish/tools/sixkcd`
+- HTTP client (reqwest equivalent)
+- JWT generation and validation
+- Base64 encoding for file uploads
+- JSON parsing
 
----
+**Endpoints**:
 
-#### hubbit
+- `api ai alt url/file <input>`: Generate alt-text from images
+- `api ai tickets title/description/enrich`: Linear ticket AI operations
+- `api images optimise url/file <input>`: Image optimization
+- `api tokens info/usage/revoke <uuid>`: Token management
+- `api dashboard <name>`: Dashboard data retrieval
+- `api ping`: System status and health check
 
-**Description**: Smart Git repository cloning and GitHub release binary management tool.
+**Authentication Scopes**:
 
-**Arguments**: Subcommand-based with repository specifications
-
-**Options**: None documented
-
-**Returns**: Cloned repositories, installed binaries in `~/.local/bin`
-
-**Secrets**: GitHub token (optional, for private repos)
-
-**Remote Dependencies**: GitHub API, Git repositories
-
-**Libraries**: Go standard library, GitHub API client
-
-**Commands**:
-
-- `clone [repo]`: Clone with minimal typing
-- `binary get [owner/repo]`: Download latest binary
-- `binary update [owner/repo]`: Update specific binary
-- `binary update`: Update all binaries
-
----
-
-#### jig-bump (from myriad/bump.ts)
-
-**Description**: Multi-language dependency updater that operates across multiple repositories.
-
-**Arguments**: None (operates on current directory or configured repositories)
-
-**Options**: Configurable via script
-
-**Returns**: Updated package files across projects
-
-**Secrets**: Package registry tokens as needed
-
-**Remote Dependencies**: npm, PyPI, RubyGems registries
-
-**Libraries**: axios, chalk, commander, semver (Node.js)
-
----
-
-#### clone-repos
-
-**Description**: Parallel Git repository cloning and updating utility.
-
-**Arguments**: Repository list via stdin
-
-**Options**: None
-
-**Returns**: Cloned/updated repositories in parallel
-
-**Secrets**: Git credentials
-
-**Remote Dependencies**: Git repositories
-
-**Libraries**: bash, xargs, git
-
-**Usage**: `./clone-repos.bash < repo-list.txt`
-
----
-
-#### ws
-
-**Description**: Shell workspace context switcher for managing environment variables and project contexts.
-
-**Arguments**: Workspace name for switch command
-
-**Options**: Subcommand-specific
-
-**Returns**: Modified shell environment
-
-**Secrets**: Workspace-specific environment variables
-
-**Remote Dependencies**: None
-
-**Libraries**: Go standard library
-
-**Commands**:
-
-- `switch [workspace]`: Switch to workspace
-- `install`: Set up shell integration
-- `list`: List available workspaces
-
----
-
-#### orphans
-
-**Description**: Find and optionally delete orphaned sidecar files without corresponding media files.
-
-**Arguments**: Directory path
-
-**Options**: `--dry-run`, `--delete`, `--extension`
-
-**Returns**: List of orphaned files, optional deletion
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: rich (Python)
-
----
-
-#### pull-ai
-
-**Description**: Parallel AI model downloader using tmux sessions.
-
-**Arguments**: None (hardcoded model list)
-
-**Options**: None
-
-**Returns**: Downloaded AI models via ollama
-
-**Secrets**: None
-
-**Remote Dependencies**: Ollama model registry
-
-**Libraries**: tmux, ollama
-
----
-
-#### lsr
-
-**Description**: 'Lightswitch Rave': MIDI clock receiver for Broadlink IR device control.
-
-**Arguments**: None (daemon-style)
-
-**Options**: BPM configuration via environment
-
-**Returns**: IR commands sent to devices
-
-**Secrets**: Broadlink device credentials
-
-**Remote Dependencies**: Network-connected IR devices
-
-**Libraries**: broadlink, python-rtmidi
-
----
-
-#### mastodon-maintenance
-
-**Description**: Automated Mastodon server maintenance tasks.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: Cleaned cache and removed orphaned media
-
-**Secrets**: Mastodon database credentials
-
-**Remote Dependencies**: Mastodon server
-
-**Libraries**: tootctl, Rails environment
-
----
-
-#### `ai-screenshot-renamer`
-
-**Description**: Rename screenshots based on AI-generated titles.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: None, renames files
-
-**Secrets**: None
-
-**Remote Dependencies**: Claude AI
-
-**Libraries**: Python: `anthropic`
-
-**Scripts**: `ai-screenshot-renamer.py`
-
----
-
-### From Fish Functions (~/.config/fish/funcs.fish)
-
-#### nas-docker
-
-**Description**: Set up Docker to use the NAS.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: Sets environment variables for Docker
-
-**Secrets**: Docker TLS certificates
-
-**Remote Dependencies**: NAS Docker daemon (tcp://nas-7t54.manticore-minor.ts.net:2376)
-
-**Libraries**: None (fish function)
-
----
-
-#### le-fw
-
-**Description**: Set up Let's Encrypt certificates for the firewall with multiple domains.
-
-**Arguments**: None
-
-**Options**: Hardcoded lego options
-
-**Returns**: Generated certificates in PEM and PFX formats
-
-**Secrets**: DNS Simple API credentials
-
-**Remote Dependencies**: DNS Simple API, Let's Encrypt ACME
-
-**Libraries**: lego
-
----
-
-#### cma/cmae
-
-**Description**: Add files to chezmoi configuration management (with optional encryption).
-
-**Arguments**: File paths
-
-**Options**: None
-
-**Returns**: Files added to chezmoi
-
-**Secrets**: chezmoi encryption key (for cmae)
-
-**Remote Dependencies**: None
-
-**Libraries**: chezmoi
-
----
-
-#### github-auth
-
-**Description**: Authenticate with GitHub and set GITHUB_TOKEN environment variable.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: Sets GITHUB_TOKEN environment variable
-
-**Secrets**: GitHub authentication token
-
-**Remote Dependencies**: GitHub API
-
-**Libraries**: gh CLI
-
----
-
-#### kill-oco
-
-**Description**: Kill hanging opencommit processes.
-
-**Arguments**: None
-
-**Options**: Interactive confirmation
-
-**Returns**: Terminates matching processes
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: None (fish function)
+- `ai:alt`: Alt-text generation
+- `api:tokens`: Token operations
+- `dashboard`: Dashboard access
+- Public endpoints: images, tickets, ping
 
 ---
 
@@ -531,24 +307,6 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 
 ---
 
-#### delete-issues/delete-issue
-
-**Description**: Delete GitHub issues from repository (single or batch).
-
-**Arguments**: Issue number(s)
-
-**Options**: Parallelism level for batch deletion
-
-**Returns**: Deleted issues
-
-**Secrets**: GitHub token
-
-**Remote Dependencies**: GitHub API
-
-**Libraries**: gh CLI, jq, parallel
-
----
-
 #### yank
 
 **Description**: Fetch and pull all git repositories in current directory.
@@ -564,42 +322,6 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 **Remote Dependencies**: Git remotes
 
 **Libraries**: git
-
----
-
-#### js-clear-caches
-
-**Description**: Clear all JavaScript package manager caches.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: Cleared caches
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: deno
-
----
-
-#### czkawka
-
-**Description**: Run czkawka or krokiet duplicate finder tools.
-
-**Arguments**: Pass-through to tool
-
-**Options**: Interactive choice between tools
-
-**Returns**: Tool output
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: czkawka/krokiet binaries
 
 ---
 
@@ -621,204 +343,6 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 
 ---
 
-#### psclean
-
-**Description**: Clean up commonly hanging processes and restart 1Password.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: Killed processes
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: None (fish function)
-
----
-
-#### quickcommit
-
-**Description**: Smart git commit with AI-generated messages and optional push.
-
-**Arguments**: None
-
-**Options**: `-p/--push`, `-m/--message`
-
-**Returns**: Git commit (and optional push)
-
-**Secrets**: None
-
-**Remote Dependencies**: Git remote (for push)
-
-**Libraries**: git, oco
-
----
-
-#### trunkfix
-
-**Description**: Run trunk fmt and check commands in sequence.
-
-**Arguments**: None
-
-**Options**: `-f/--fix`
-
-**Returns**: Formatted and checked code
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: trunk
-
----
-
-#### devsetup
-
-**Description**: Smart development environment setup detecting project type.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: Installed dependencies and starts dev server
-
-**Secrets**: Package registry tokens as needed
-
-**Remote Dependencies**: Package registries
-
-**Libraries**: bun, pnpm, npm, bundle, pip, cargo
-
----
-
-#### gitclean
-
-**Description**: Comprehensive git repository cleanup and optimization.
-
-**Arguments**: None
-
-**Options**: None
-
-**Returns**: Cleaned git repository
-
-**Secrets**: None
-
-**Remote Dependencies**: Git remote
-
-**Libraries**: git
-
----
-
-#### dockerclean
-
-**Description**: Clean up Docker containers, images, networks, and volumes.
-
-**Arguments**: None
-
-**Options**: `-a/--all`, `-f/--force`
-
-**Returns**: Freed disk space
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: docker
-
----
-
-#### cc
-
-**Description**: Clear screen and optionally run command.
-
-**Arguments**: Optional command to run
-
-**Options**: None
-
-**Returns**: Cleared screen and command output
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: None (fish function)
-
----
-
-#### up
-
-**Description**: Go up multiple directories.
-
-**Arguments**: Number of levels (default: 1)
-
-**Options**: None
-
-**Returns**: Changed directory path
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: None (fish function)
-
----
-
-#### edit
-
-**Description**: Smart editor selection based on available editors.
-
-**Arguments**: Optional files to edit
-
-**Options**: None
-
-**Returns**: Opens editor
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: code, zed, nvim
-
----
-
-#### extract
-
-**Description**: Extract various archive formats automatically.
-
-**Arguments**: Archive file path
-
-**Options**: None
-
-**Returns**: Extracted files
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: tar, bunzip2, unrar, gunzip, unzip, uncompress, 7z
-
----
-
-#### findreplace
-
-**Description**: Find and replace text in files recursively.
-
-**Arguments**: Search term, replace term, optional directory
-
-**Options**: `-e/--ext` for file extension filter
-
-**Returns**: Modified files
-
-**Secrets**: None
-
-**Remote Dependencies**: None
-
-**Libraries**: find, sed
-
----
-
 ### Migration Priority Assessment
 
 #### High Priority (Core Utilities)
@@ -832,29 +356,31 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 7. **trunkfix** - Code formatting and checking
 8. **dockerclean** - Docker system cleanup
 9. **extract** - Universal archive extraction
+10. **JWT token generation** - Generic JWT creation for API authentication
 
 #### Medium Priority (Specialized Tools)
 
-10. **pull-ai** - AI model management
-11. **sixkcd** - Terminal entertainment/graphics
-12. **mastodon-maintenance** - Server maintenance
-13. **lsr** - MIDI/IR integration
-14. **devsetup** - Smart project setup
-15. **gitclean** - Git repository optimization
-16. **github-auth** - GitHub token management
-17. **wipe-workflows/delete-issues** - GitHub cleanup
-18. **czkawka** - Duplicate file finder
-19. **findreplace** - Batch text replacement
+11. **dave.io API integration** - Personal API client for AI, images, tokens, and dashboard data
+12. **pull-ai** - AI model management
+13. **sixkcd** - Terminal entertainment/graphics
+14. **mastodon-maintenance** - Server maintenance
+15. **lsr** - MIDI/IR integration
+16. **devsetup** - Smart project setup
+17. **gitclean** - Git repository optimization
+18. **github-auth** - GitHub token management
+19. **wipe-workflows/delete-issues** - GitHub cleanup
+20. **czkawka** - Duplicate file finder
+21. **findreplace** - Batch text replacement
 
 #### Low Priority (Project-Specific)
 
-20. **le-fw** - Let's Encrypt for firewall
-21. **nas-docker** - NAS Docker configuration
-22. **cma/cmae** - Chezmoi integration
-23. **js-clear-caches** - JavaScript cache cleanup
-24. **kill-oco/psclean** - Process cleanup
-25. **latest-commit** - GitHub commit lookup
-26. **cc/up/edit** - Shell navigation helpers
+22. **le-fw** - Let's Encrypt for firewall
+23. **nas-docker** - NAS Docker configuration
+24. **cma/cmae** - Chezmoi integration
+25. **js-clear-caches** - JavaScript cache cleanup
+26. **kill-oco/psclean** - Process cleanup
+27. **latest-commit** - GitHub commit lookup
+28. **cc/up/edit** - Shell navigation helpers
 
 ### Common Patterns
 
