@@ -76,11 +76,11 @@ graph LR
   jig --> workspace(workspace)
     workspace --> workspaceSwitch(switch)
     workspace --> workspaceList(list)
+    workspace --> workspaceHook(hook)
   jig --> ai(ai)
     ai --> aiImage(image)
       aiImage --> aiImageRename(rename)
 
-  style mcp stroke-dasharray: 2 3,stroke-width: 5px
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
@@ -108,7 +108,8 @@ graph LR
 - Async with `tokio`
 - Templating with `tera`
 - Git with `git2`
-- JWT implementation (jsonwebtoken equivalent)
+- JWTs with `rust-jwt-simple`
+  - <https://github.com/jedisct1/rust-jwt-simple>
 - Crypto library for HMAC/RSA signing
 - Time/duration parsing
 - Base64 encoding
@@ -122,9 +123,9 @@ Derive API: `#[command(infer_subcommands = true)]`
 
 ### `jig init`
 
-Shell integration setup for workspace functionality.
+`-c` / `--clobber` : Overwrite existing config (with a new key!)
 
-`init` sets up shell integration for `jig workspace`
+Creates initial config file. Also sets up shell integration for `jig workspace`.
 
 ### `jig generate`
 
@@ -448,6 +449,12 @@ Switch between workspaces.
 #### `jig workspace list`
 
 List available workspaces.
+
+#### `jig workspace hook`
+
+`[SHELL]`: Shell; we support `bash`, `zsh`, and `fish`.
+
+Used to hook into the user's shell by executing whenever the prompt renders. Not generally called by a human.
 
 ### `jig ai`
 
