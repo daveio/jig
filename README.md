@@ -126,6 +126,12 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
   - Derive API: `#[command(infer_subcommands = true)]`
 - `jig fmt` is an alias for `jig format`
 - `tachyonfx` integrates nicely with `ratatui`
+- `generate` can be deterministic with `-k` / `--keyed` `[name]`
+  - Uses encryption key and `[name]` to generate deterministic output
+  - Use `-s` / `--seed` `[value]` to use custom value instead of encryption key
+    - Run a KDF on `[value]` to get data to actually use
+    - Does BLAKE3 have a compute-hard or memory-hard construction?
+    - Are there newer funkier KDFs? Post-quantum ones?
 
 ## Tool Migration Analysis
 
