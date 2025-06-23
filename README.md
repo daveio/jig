@@ -262,7 +262,7 @@ The MCP tool may be extended to a remote MCP in future, if I figure out how to c
 
 **Secrets**: JWT secret for token generation, API tokens for authentication
 
-**Remote Dependencies**: dave.io API (https://dave.io), AI services (Claude), Cloudflare Images
+**Remote Dependencies**: dave.io API (<https://dave.io>), AI services (Claude), Cloudflare Images
 
 **Libraries**:
 
