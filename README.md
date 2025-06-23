@@ -86,6 +86,8 @@ graph LR
 
 ## Libraries
 
+<https://crates.io> and <https://lib.rs> are good places to go hunting.
+
 - Base CLI framework with `clap`
   - <https://github.com/clap-rs/clap>
 - Terminal UI with `ratatui`
