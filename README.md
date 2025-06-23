@@ -1,5 +1,7 @@
 # `jig` - A CLI Toolbox
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/daveio/jig)
+
 ## Project
 
 `jig` is a utility which collects tools for various tasks into one place. It merges all my disparate tools into a single CLI toolbox, making it easier to manage and use them, and teaches me Rust.
