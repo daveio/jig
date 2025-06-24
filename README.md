@@ -20,7 +20,7 @@ graph LR
     generate --> generateHex(hex)
     generate --> generatePassword(password)
     generate --> generateKey(key)
-      generateKey --> generateKeyCrypt(crypt)
+      generateKey --> generateKeyCrypto(crypto)
       generateKey --> generateKeyWireguard(wireguard)
     generate --> generateJwt(jwt)
   jig --> crypto(crypto)
