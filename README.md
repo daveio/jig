@@ -16,6 +16,9 @@ config:
 ---
 graph LR
   jig[jig] --> init(init)
+  jig --> crypto(crypto)
+    crypto --> cryptoEncrypt(encrypt)
+    crypto --> cryptoDecrypt(decrypt)
   jig --> generate(generate)
     generate --> generateHex(hex)
     generate --> generatePassword(password)
@@ -23,9 +26,6 @@ graph LR
       generateKey --> generateKeyCrypto(crypto)
       generateKey --> generateKeyWireguard(wireguard)
     generate --> generateJwt(jwt)
-  jig --> crypto(crypto)
-    crypto --> cryptoEncrypt(encrypt)
-    crypto --> cryptoDecrypt(decrypt)
   jig --> network(network)
     network --> networkDns(dns)
       networkDns --> networkDnsFlush(flush)
@@ -145,7 +145,7 @@ Generate secure passwords.
 
 Generate cryptographic keys.
 
-##### `jig generate key crypt`
+##### `jig generate key crypto`
 
 Generate encryption keys.
 
@@ -454,10 +454,10 @@ Used to hook into the user's shell by executing whenever the prompt renders. Not
 
 AI-powered utilities.
 
-#### `jig ai image`
+#### `jig ai rename`
 
-AI image operations.
+AI renaming operations.
 
-##### `jig ai image rename`
+##### `jig ai rename image`
 
 AI-powered image renaming.
