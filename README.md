@@ -120,6 +120,22 @@ graph LR
   - Pure if `reqwest` is pure.
 - Image optimisation with [`image-webp`](https://lib.rs/crates/image-webp)
 
+### Spinners
+
+We like:
+
+- toggle4
+- bouncing_ball
+- earth
+- weather
+- fist_bump
+- noise
+- point
+- layer
+- pong
+- aesthetic
+- binary
+
 ### `Cargo.toml` for purity
 
 ```toml
