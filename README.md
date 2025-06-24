@@ -89,8 +89,13 @@ graph LR
 <https://crates.io> and <https://lib.rs> are good places to go hunting.
 
 - Base CLI framework with [`clap`](https://lib.rs/crates/clap)
-- Terminal UI with [`ratatui`](https://lib.rs/crates/ratatui)
-- Terminal spinners from [`spinoff`](https://lib.rs/crates/spinoff)
+- UI with [`ratatui`](https://lib.rs/crates/ratatui)
+- Spinners from [`spinoff`](https://lib.rs/crates/spinoff)
+- Terminal effects with [`tachyonfx`](https://lib.rs/crates/tachyonfx)
+- Rain effects with [`tui-rain`](https://lib.rs/crates/tui-rain)
+- Fireworks with [`firework-rs`](https://lib.rs/crates/firework-rs)
+- ASCII art with [`rascii_art`](https://lib.rs/crates/rascii_art)
+- Text effects with [`rusty-termcolor`](https://lib.rs/crates/rusty-termcolor)
 - MCP server with [`rust-mcp-sdk`](https://lib.rs/crates/rust-mcp-sdk) / [`rmcp`](https://lib.rs/crates/rmcp)
   - <https://hackmd.io/@Hamze/SytKkZP01l>
 - Encryption and decryption with [`rage`](https://lib.rs/crates/rage)
