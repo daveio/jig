@@ -78,8 +78,8 @@ graph LR
     workspace --> workspaceList(list)
     workspace --> workspaceHook(hook)
   jig --> ai(ai)
-    ai --> aiImage(image)
-      aiImage --> aiImageRename(rename)
+    ai --> aiRename(rename)
+      aiRename --> aiRenameImage(image)
 
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
@@ -88,32 +88,26 @@ graph LR
 
 <https://crates.io> and <https://lib.rs> are good places to go hunting.
 
-- Base CLI framework with `clap`
-  - <https://github.com/clap-rs/clap>
-- Terminal UI with `ratatui`
-  - <https://github.com/ratatui/ratatui>
-- Terminal spinners from `spinoff`
-  - <https://github.com/ad4mx/spinoff>
-- MCP server with `rust-mcp-sdk`
-  - <https://github.com/rust-mcp-stack/rust-mcp-sdk>
-  - Also `rmcp`
-    - <https://github.com/modelcontextprotocol/rust-sdk>
-    - <https://hackmd.io/@Hamze/SytKkZP01l>
-- Encryption and decryption with `rage`
-  - <https://github.com/str4d/rage>
-- Terminal image support with `viuer`
-  - <https://github.com/atanunq/viuer>
-- HTTP with `reqwest`
-- GitHub with `octocrab`
-- Async with `tokio`
-- Templating with `tera`
-- Git with `git2`
-- JWTs with `rust-jwt-simple`
-  - <https://github.com/jedisct1/rust-jwt-simple>
-- Crypto library for HMAC/RSA signing
-- Time/duration parsing
-- Base64 encoding
-- JSON, YAML, and TOML parsing and writing (`serde`?)
+- Base CLI framework with [`clap`](https://lib.rs/crates/clap)
+- Terminal UI with [`ratatui`](https://lib.rs/crates/ratatui)
+- Terminal spinners from [`spinoff`](https://lib.rs/crates/spinoff)
+- MCP server with [`rust-mcp-sdk`](https://lib.rs/crates/rust-mcp-sdk) / [`rmcp`](https://lib.rs/crates/rmcp)
+  - <https://hackmd.io/@Hamze/SytKkZP01l>
+- Encryption and decryption with [`rage`](https://lib.rs/crates/rage)
+- Terminal image support with [`viuer`](https://lib.rs/crates/viuer)
+- HTTP with [`reqwest`](https://lib.rs/crates/reqwest)
+- GitHub with [`octocrab`](https://lib.rs/crates/octocrab)
+- Async with [`tokio`](https://lib.rs/crates/tokio)
+- Templating with [`tera`](https://lib.rs/crates/tera)
+- Git with [`git2`](https://lib.rs/crates/git2)
+- JWTs with [`rust-jwt-simple`](https://lib.rs/crates/rust-jwt-simple)
+- Argon2 KDF with [`argon2`](https://lib.rs/crates/argon2)
+- Time/duration parsing with [`humantime`](https://lib.rs/crates/humantime)
+- Base64 with [`base64ct`](https://lib.rs/crates/base64ct)
+- Base58 with [`bs58`](https://lib.rs/crates/bs58)
+- File I/O with [`serde`](https://lib.rs/crates/serde)
+  - YAML: <https://lib.rs/crates/saphyr>
+  - Other formats: <https://serde.rs/#data-formats>
 
 ## Commands
 
