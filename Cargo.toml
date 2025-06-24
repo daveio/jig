@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+anthropic-ai-sdk = "0.2.25"
+argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
+base64ct = { version = "1.8.0", features = ["std"] }
+bs58 = { version = "0.5.1", features = ["std", "alloc", "check", "cb58"] }
 clap = { version = "4.5.40", features = [
   "derive",
   "cargo",
@@ -12,6 +16,29 @@ clap = { version = "4.5.40", features = [
   "wrap_help",
   "string",
 ] }
+firework-rs = "0.3.1"
+gix = { version = "0.72.1", features = [
+  "basic",
+  "extras",
+  "blocking-network-client",
+  "blocking-http-transport-reqwest-rust-tls",
+  "serde",
+] }
+image-webp = "0.2.3"
+jiff = { version = "0.2.15", features = [
+  "serde",
+  "logging",
+  "tzdb-bundle-always",
+  "js",
+] }
+jwt-simple = { version = "0.12.12", default-features = false, features = [
+  "pure-rust",
+  "cwt",
+  "wasi-abi2",
+] }
+octocrab = { version = "0.44.1", features = ["rustls", "stream"] }
+rage = { version = "0.11.1", features = ["ssh"], default-features = false }
+rascii_art = "0.4.5"
 ratatui = { version = "0.29.0", features = [
   "crossterm",
   "serde",
@@ -22,3 +49,55 @@ ratatui = { version = "0.29.0", features = [
   "document-features",
   "scrolling-regions",
 ] }
+reqwest = { version = "0.12.20", default-features = false, features = [
+  "json",
+  "rustls-tls",
+  "blocking",
+  "cookies",
+  "gzip",
+  "brotli",
+  "deflate",
+  "zstd",
+  "http2",
+  "socks",
+  "stream",
+  "hickory-dns",
+  "http3",
+  "multipart",
+] }
+rmcp = { version = "0.1.5", features = [
+  "client",
+  "transport-async-rw",
+  "transport-child-process",
+  "transport-io",
+] }
+rusty-termcolor = "0.1.62"
+saphyr = "0.0.6"
+serde = { version = "1.0.219", features = ["derive", "std", "alloc", "rc"] }
+spinoff = { version = "0.8.0", features = [
+  "toggle4",
+  "bouncing_ball",
+  "earth",
+  "weather",
+  "fist_bump",
+  "noise",
+  "point",
+  "layer",
+  "pong",
+  "aesthetic",
+  "binary",
+] }
+tachyonfx = { version = "0.15.0", features = ["sendable", "web-time"] }
+tera = { version = "1.20.0", features = [
+  "default",
+  "builtins",
+  "chrono",
+  "urlencode",
+  "humansize",
+  "slug",
+  "date-locale",
+  "preserve_order",
+] }
+tokio = { version = "1.45.1", features = ["full"] }
+tui-rain = "1.0.1"
+viuer = { version = "0.9.2", features = ["sixel", "print-file"] }

@@ -96,7 +96,7 @@ graph LR
 - Fireworks with [`firework-rs`](https://lib.rs/crates/firework-rs)
 - ASCII art with [`rascii_art`](https://lib.rs/crates/rascii_art)
 - Text effects with [`rusty-termcolor`](https://lib.rs/crates/rusty-termcolor)
-- MCP server with [`rust-mcp-sdk`](https://lib.rs/crates/rust-mcp-sdk) / [`rmcp`](https://lib.rs/crates/rmcp)
+- MCP server with [`rmcp`](https://lib.rs/crates/rmcp)
   - <https://hackmd.io/@Hamze/SytKkZP01l>
 - Encryption and decryption with [`rage`](https://lib.rs/crates/rage)
   - Disable `mount` feature for purity. `{ default-features = false, features = ["ssh"] }`
@@ -119,22 +119,6 @@ graph LR
 - Anthropic API with [`anthropic-ai-sdk`](https://lib.rs/crates/anthropic-ai-sdk)
   - Pure if `reqwest` is pure.
 - Image optimisation with [`image-webp`](https://lib.rs/crates/image-webp)
-
-### Spinners
-
-We like:
-
-- toggle4
-- bouncing_ball
-- earth
-- weather
-- fist_bump
-- noise
-- point
-- layer
-- pong
-- aesthetic
-- binary
 
 ### `Cargo.toml` for purity
 
