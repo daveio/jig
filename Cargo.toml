@@ -24,6 +24,18 @@ gix = { version = "0.72.1", features = [
   "blocking-http-transport-reqwest-rust-tls",
   "serde",
 ] }
+image = { version = "0.25.6", default-features = false, features = [
+  "gif",
+  "hdr",
+  "ico",
+  "jpeg",
+  "png",
+  "tiff",
+  "webp",
+  "rayon",
+  "color_quant",
+  "serde",
+] }
 image-webp = "0.2.3"
 jiff = { version = "0.2.15", features = [
   "serde",

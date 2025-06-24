@@ -84,80 +84,13 @@ graph LR
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
-## Libraries
+## Library Notes
 
-<https://crates.io> and <https://lib.rs> are good places to go hunting.
-
-- Base CLI framework with [`clap`](https://lib.rs/crates/clap)
-- UI with [`ratatui`](https://lib.rs/crates/ratatui)
-- Spinners from [`spinoff`](https://lib.rs/crates/spinoff)
-- Terminal effects with [`tachyonfx`](https://lib.rs/crates/tachyonfx)
-- Rain effects with [`tui-rain`](https://lib.rs/crates/tui-rain)
-- Fireworks with [`firework-rs`](https://lib.rs/crates/firework-rs)
-- ASCII art with [`rascii_art`](https://lib.rs/crates/rascii_art)
-- Text effects with [`rusty-termcolor`](https://lib.rs/crates/rusty-termcolor)
-- MCP server with [`rmcp`](https://lib.rs/crates/rmcp)
+- `rmcp`
   - <https://hackmd.io/@Hamze/SytKkZP01l>
-- Encryption and decryption with [`rage`](https://lib.rs/crates/rage)
-  - Disable `mount` feature for purity. `{ default-features = false, features = ["ssh"] }`
-- Terminal image support with [`viuer`](https://lib.rs/crates/viuer)
-- HTTP with [`reqwest`](https://lib.rs/crates/reqwest)
-  - `{ default-features = false, features = ["json", "rustls-tls"] }` for Rust purity
-- GitHub with [`octocrab`](https://lib.rs/crates/octocrab)
-  - `{ features = ["rustls"] }` for Rust purity
-- Async with [`tokio`](https://lib.rs/crates/tokio)
-- Templating with [`tera`](https://lib.rs/crates/tera)
-- Git with [`gix`](https://lib.rs/crates/gix)
-- JWTs with [`rust-jwt-simple`](https://lib.rs/crates/rust-jwt-simple)
-- Argon2 KDF with [`argon2`](https://lib.rs/crates/argon2)
-- Time/duration parsing with [`jiff`](https://lib.rs/crates/jiff)
-- Base64 with [`base64ct`](https://lib.rs/crates/base64ct)
-- Base58 with [`bs58`](https://lib.rs/crates/bs58)
-- File I/O with [`serde`](https://lib.rs/crates/serde)
+- `serde`
   - YAML: <https://lib.rs/crates/saphyr>
   - Other formats: <https://serde.rs/#data-formats>
-- Anthropic API with [`anthropic-ai-sdk`](https://lib.rs/crates/anthropic-ai-sdk)
-  - Pure if `reqwest` is pure.
-- Image optimisation with [`image-webp`](https://lib.rs/crates/image-webp)
-
-### `Cargo.toml` for purity
-
-```toml
-[dependencies]
-
-# --- Pure by default; no special configuration needed ---
-clap = { version = "4.5", features = ["derive"] }
-ratatui = { version = "0.29", features = ["crossterm"] } # Or "termion", "termwiz"
-spinoff = "0.8"
-tachyonfx = "0.10"
-tui-rain = "1.0"
-firework-rs = "0.3"
-rascii_art = "0.4"
-rust-mcp-sdk = "0.2" # Use appropriate version
-tokio = { version = "1.39", features = ["full"] }
-tera = "1.20"
-rust-jwt-simple = "0.12"
-argon2 = "0.5" # From RustCrypto
-jiff = "0.2" # Alternative to humantime for full datetime needs
-base64ct = "1.8"
-bs58 = "0.5"
-serde = { version = "1.0", features = ["derive"] }
-saphyr = "0.2" # Or another pure YAML crate like yaml-rust2
-image-webp = "0.2"
-viuer = "0.9"
-
-# --- Recommended pure alternative to a non-pure crate ---
-gix = "0.62" # Pure Rust replacement for git2
-
-# --- Requires specific feature configuration for purity ---
-reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
-octocrab = { version = "0.38", default-features = false, features = ["rustls"] }
-anthropic-ai-sdk = "0.2" # Purity is inherited from the reqwest config above
-
-# --- Conditionally pure; ensure non-pure features are not used ---
-rage = { version = "0.11", default-features = false, features = ["ssh"] } # Ensures 'mount' feature is disabled
-image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] } # Ensures 'avif-native' is disabled
-```
 
 ## Commands
 
