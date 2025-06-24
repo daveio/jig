@@ -114,6 +114,9 @@ graph LR
 - File I/O with [`serde`](https://lib.rs/crates/serde)
   - YAML: <https://lib.rs/crates/saphyr>
   - Other formats: <https://serde.rs/#data-formats>
+- Anthropic API with [`anthropic-ai-sdk`](https://lib.rs/crates/anthropic-ai-sdk)
+- Image optimisation with [`rimage`](https://lib.rs/crates/rimage)
+  - I think this shells out. [`image-webp`](https://lib.rs/crates/image-webp) is pure Rust.
 
 ## Commands
 
@@ -467,3 +470,5 @@ AI renaming operations.
 ##### `jig ai rename image`
 
 AI-powered image renaming.
+
+We need to get the image below 5 MB for Claude. Use `-a` / `--api` to use the API with a fresh JWT, or internal image optimisation otherwise.
