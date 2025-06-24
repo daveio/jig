@@ -108,6 +108,7 @@ graph LR
 - JWTs with [`rust-jwt-simple`](https://lib.rs/crates/rust-jwt-simple)
 - Argon2 KDF with [`argon2`](https://lib.rs/crates/argon2)
 - Time/duration parsing with [`humantime`](https://lib.rs/crates/humantime)
+  - Or maybe [`jiff`](https://github.com/BurntSushi/jiff/blob/master/COMPARE.md)?
 - Base64 with [`base64ct`](https://lib.rs/crates/base64ct)
 - Base58 with [`bs58`](https://lib.rs/crates/bs58)
 - File I/O with [`serde`](https://lib.rs/crates/serde)
