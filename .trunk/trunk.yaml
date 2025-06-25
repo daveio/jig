@@ -23,6 +23,7 @@ lint:
         - target/**
         - tmp/**
   enabled:
+    - trunk-toolbox@0.5.4
     - checkov@3.2.446
     - yamllint@1.37.1
     - clippy@1.87.0

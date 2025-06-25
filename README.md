@@ -14,7 +14,7 @@ config:
   theme: dark
   layout: elk
 ---
-graph TD
+graph LR
   jig[jig] --> init(init)
   jig --> crypto(crypto)
     crypto --> cryptoEncrypt(encrypt)
@@ -134,7 +134,7 @@ secret:
 
 Shrinks images to under 5 MB for Claude compatibility.
 
-- If image is over 2048px on the long edge, resize to 2048px on the long edge.
+- If image is over `2048px` on the long edge, resize to `2048px` on the long edge.
 - Convert to WebP format with `image-webp`.
   - Start with lossless compression.
   - If still over 5 MB, use lossy compression with a quality of 90.
@@ -227,6 +227,8 @@ Ticket management operations.
 Generate ticket descriptions from a title.
 
 - `[TITLE]`: Title of the ticket to generate a description for. Required.
+- `-i` / `--input`: File containing the title. Optional.
+- `-s` / `--stdin`: Read title from `stdin`. Optional.
 
 Flow:
 
@@ -238,7 +240,15 @@ Enrich ticket information.
 
 ##### `jig api ticket title`
 
-Generate ticket titles.
+Generate ticket title from a description.
+
+- `[DESCRIPTION]`: Description of the ticket to generate a title for. Required.
+- `-i` / `--input`: File containing the description. Optional.
+- `-s` / `--stdin`: Read description from `stdin`. Optional.
+
+Flow:
+
+- Calls `/api/tickets/title` with the description.
 
 #### `jig api token`
 
@@ -248,13 +258,31 @@ Token management operations.
 
 Get token information.
 
+- `[UUID]`: Token UUID to get information for. Required.
+
+Flow:
+
+- Calls `/api/tokens/$UUID` with the UUID.
+
 ##### `jig api token revoke`
 
 Revoke tokens.
 
+- `[UUID]`: Token UUID to revoke. Required.
+
+Flow:
+
+- Calls `/api/tokens/$UUID/revoke` with the UUID.
+
 ##### `jig api token usage`
 
 Check token usage.
+
+- `[UUID]`: Token UUID to get usage information for. Required.
+
+Flow:
+
+- Calls `/api/tokens/$UUID/usage` with the UUID.
 
 ### `jig convert`
 
