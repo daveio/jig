@@ -217,7 +217,7 @@ Encryption and decryption operations.
 `-o` / `--output`: File of ciphertext to write.
 `-k` / `--key` `[KEY]`: Override key from configuration or env.
 
-Encrypt data using `rage` encryption.
+Encrypt data using `age` encryption.
 
 Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via `stderr`.
 
@@ -227,7 +227,7 @@ Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via 
 `-o` / `--output`: File of plaintext to write. May be binary.
 `-k` / `--key` `[KEY]`: Override key from configuration or env.
 
-Decrypt data using `rage` encryption.
+Decrypt data using `age` encryption.
 
 Default: ciphertext in via `stdin`, plaintext out via `stdout`, information via `stderr`.
 
