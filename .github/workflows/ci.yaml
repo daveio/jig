@@ -40,9 +40,17 @@ jobs:
       - name: test
         run: cargo test --verbose
       - name: cleanup:deps
+        if: matrix.os != 'windows-2025'
         run: rm -rf target/debug/deps/jig-*
+      - name: cleanup:deps:windows
+        if: matrix.os == 'windows-2025'
+        run: rmdir /s /q target/debug/deps/jig-*
       - name: cleanup:fingerprint
+        if: matrix.os != 'windows-2025'
         run: rm -rf target/debug/.fingerprint/jig-*
+      - name: cleanup:fingerprint:windows
+        if: matrix.os == 'windows-2025'
+        run: rmdir /s /q target/debug/.fingerprint/jig-*
       - name: artifact
         if: success()
         uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
