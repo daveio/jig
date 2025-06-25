@@ -12,15 +12,10 @@ jobs:
       - name: cache cargo dependencies
         uses: actions/cache@640a1c2554105b57832a23eea0b4672fc7a790d5
         with:
-          path: |
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-            target/debug/deps
-            target/release/deps
-          key: ${{ runner.os }}-cargo-deps-${{ hashFiles('**/Cargo.lock') }}
+          path: target
+          key: ${{ runner.os }}-target-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
-            ${{ runner.os }}-cargo-deps-
+            ${{ runner.os }}-target-
       - name: build
         run: cargo build
       - name: trunk
