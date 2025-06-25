@@ -1,5 +1,8 @@
 name: ci
-permissions: read-all
+permissions:
+  id-token: write
+  contents: read
+  attestations: write
 on:
   push: null
   pull_request: null
