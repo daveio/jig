@@ -40,8 +40,6 @@ graph LR
   jig --> tls(tls)
     tls --> tlsCert(cert)
     tls --> tlsCiphers(ciphers)
-  jig --> format(format)
-  jig --> convert(convert)
   jig --> api(api)
     api --> apiTicket(ticket)
       apiTicket --> apiTicketTitle(title)
@@ -54,7 +52,6 @@ graph LR
       apiToken --> apiTokenInfo(info)
       apiToken --> apiTokenRevoke(revoke)
       apiToken --> apiTokenUsage(usage)
-    api --> apiDashboard(dashboard)
     api --> apiPing(ping)
   jig --> mcp(mcp)
   jig --> dance(dance)
@@ -283,10 +280,6 @@ Check token usage.
 Flow:
 
 - Calls `/api/tokens/$UUID/usage` with the UUID.
-
-### `jig convert`
-
-Data conversion utilities.
 
 ### `jig crypto`
 
