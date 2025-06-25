@@ -535,3 +535,15 @@ AI renaming operations.
 AI-powered image renaming.
 
 We need to get the image below 5 MB for Claude. Use `-a` / `--api` to use the API with a fresh JWT, or internal image optimisation otherwise.
+
+## Vendoring
+
+Vendoring has been disabled. To re-enable, create `.config/cargo.toml`:
+
+```toml
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
+```
