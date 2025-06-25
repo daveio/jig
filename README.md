@@ -120,9 +120,13 @@ Generation utilities for various data types.
 
 #### `jig generate hex`
 
+- `[LENGTH]`: hex length to generate. Defaults to 16 bytes / 32 chars.
+
 Generate cryptographically secure random hexadecimal values.
 
 #### `jig generate password`
+
+- `[LENGTH]`: password length to generate. Defaults to 16.
 
 Generate cryptographically secure random passwords.
 
@@ -159,11 +163,11 @@ Encryption and decryption operations.
 
 #### `jig crypto encrypt`
 
-Encrypt data using rage encryption.
+Encrypt data using `rage` encryption.
 
 #### `jig crypto decrypt`
 
-Decrypt data using rage encryption.
+Decrypt data using `rage` encryption.
 
 #### `jig crypto public`
 
@@ -179,15 +183,26 @@ DNS operations and utilities.
 
 ##### `jig network dns flush`
 
-Flush DNS cache.
+Flush DNS cache. Detects operating system and runs commands accordingly.
 
 ##### `jig network dns lookup`
+
+- `[TYPE]`: Record type, `A`, `MX`, `TXT`, etc.
+- `[QUERY]`: Domain to query.
+- `--root`: Use root servers.
+- `--server`: Use specific nameserver.
+
+Uses system resolver unless `--root` or `--server` are specified.
+
+`--root` and `--server` cannot be specified together.
 
 Perform DNS lookups.
 
 ##### `jig network dns sec`
 
-DNS security operations.
+- `[DOMAIN]`: domain to check.
+
+Check DNSSEC configuration for `[DOMAIN]`.
 
 ### `jig domain`
 
