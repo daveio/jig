@@ -89,17 +89,32 @@ graph LR
 
 Config is in `yaml` format. We use `saphyr` with `serde` for YAML operations.
 
+### Full Config
+
 ```yaml
-dns: # DNS configuration. optional.
-  nameserver: 8.8.8.8 # we use the system resolver if unset. optional.
-secret: # we use a secret in many places. required.
-  env: JIG_SECRET_KEY # env var containing key. optional.
-  file: ~/.jig.key # file containing key. optional.
-  key: AGE-SECRET-KEY-[...] # key itself, unencrypted. optional.
-  order: # if unset: env, file, key. optional.
-    - env # top priority
-    - file # next priority
-    - key # final priority
+dns: #                          DNS configuration. optional.
+  nameserver: 8.8.8.8 #           def: system resolver. optional.
+jwt: #                          JWT configuration. optional.
+  env: JIG_JWT_SECRET #           def: JIG_JWT_SECRET. optional.
+  key: JWTSECRETVALUE #           def: main key. secret for JWTs. optional.
+  order: #                        def: env, key. first wins. optional.
+    - env #                         top priority
+    - key #                         final priority
+secret: #                       we use a secret in many places. required.
+  env: JIG_SECRET_KEY #           def: JIG_SECRET_KEY. optional.
+  file: ~/.jig.key #              def: none. file containing key. optional.
+  key: AGE-SECRET-KEY-[...] #     def: generated. unencrypted key. required.
+  order: #                        def: env, file, key. first wins. optional.
+    - env #                         top priority
+    - file #                        second priority
+    - key #                         final priority
+```
+
+### Minimal Config
+
+```yaml
+secret:
+  key: AGE-SECRET-KEY-[...]
 ```
 
 ## Library Notes
@@ -123,11 +138,11 @@ Derive API: `#[command(infer_subcommands = true)]`
 
 `-c` / `--clobber` : Overwrite existing config (with a new key!)
 
-Creates initial config file. Also sets up shell integration for `jig workspace`.
+Creates initial config file. Also sets up / ensures shell integration for `jig workspace`.
 
 ### `jig generate`
 
-Generation utilities for various data types.
+Generation utilities.
 
 `generate` can be deterministic with `-k` / `--keyed` `[name]`
 
@@ -143,17 +158,29 @@ Generate cryptographically secure random hexadecimal values.
 
 #### `jig generate password`
 
-- `[LENGTH]`: password length to generate. Defaults to 16.
+- `-e` / `--emoji`: Include emoji. Experimental. Uses a subset of non-ZWJ emoji from the RGI list. Warns user to be able to reset their password if the site doesn't use Unicode for passwords. Emoji count as one character.
+- `-x` / `--xkcd`: Use `correct horse battery staple` format from [xkcd](https://xkcd.com/936). Uses `chbs`.
+- `[LENGTH]`: password length to generate. Defaults to 16. In `--xkcd` mode, the number of words, defaulting to 4.
 
-Generate cryptographically secure random passwords.
+Generate cryptographically secure random passwords with a safe alphabet.
+
+Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is above `2`, telling the user what is going on.
+
+A minimum of one item from each of the four (five if emoji is enabled) character sets.
 
 Alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
+
+With `--emoji`: Also single-width non-ZWJ, RGI emoji
+
+😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, 🙃, 😉, 😌, 😍, 🥰, 😘, 😗, 😙, 😚, 😋, 😛, 😜, 🤪, 😝, 🤑, 🤗, 🤭, 🤫, 🤔, 🤐, 🤨, 😐, 😑, 😶, 😏, 😒, 🙄, 😬, 🤥, 😌, 😔, 😪, 🤤, 😴, 😷, 🤒, 🤕, 🤢, 🤮, 🤧, 🥵, 🥶, 🥴, 😵, 🤯, 🤠, 🥳, 😎, 🤓, 🧐, 😕, 😟, 🙁, ☹️, 😮, 😯, 😲, 😳, 🥺, 😦, 😧, 😨, 😰, 😥, 😢, 😭, 😱, 😖, 😣, 😞, 😓, 😩, 😫, 🥱, 😤, 😡, 😠, 🤬, 😈, 👿, 💀, ☠️, 💩, 🤡, 👹, 👺, 👻
 
 #### `jig generate key`
 
 Generate cryptographic keys.
 
 ##### `jig generate key crypto`
+
+`-s` / `--set`: Sets key in configuration.
 
 Generate encryption keys for native `age`-based encryption.
 
@@ -165,16 +192,20 @@ Generate WireGuard private and public keys.
 
 Generate JSON Web Tokens.
 
-Applies random UUID as token ID.
+Applies random UUID as token ID using `uuid`.
 
-- `--subject [subject]`: Token subject/scope (e.g., "ai:alt", "api:tokens")
-- `--description [text]`: Human-readable token description
-- `--expiry [duration]`: Expiration time (e.g., "1h", "7d", "30m")
-- `--claim [key=value]`: Add custom claims to token
+- `--subject [subject]`: Token subject (e.g., "ai:alt", "api:tokens", required)
+- `--description [text]`: Human-readable token desc (default: generated)
+- `--expiry [duration]`: Expiration time (e.g., "1h", "7d", "30m", default: 1h)
+- `--claim [key=value]`: Add custom claims, can be specified multiple times
 - `--secret [secret]`: JWT signing secret (or use config/env)
 - `--algorithm [alg]`: Signing algorithm (default: HS256)
 
-Will read the secret from the env as `$JIG_JWT_SECRET`, or use the configured encryption key.
+Secret priority:
+
+- `--secret`
+- JWT secret resolution from config
+- Return an error
 
 ### `jig crypto`
 
