@@ -36,9 +36,9 @@ jobs:
           rustup update ${{ matrix.toolchain }}
           rustup default ${{ matrix.toolchain }}
       - name: build
-        run: cargo build --verbose
+        run: cargo build
       - name: test
-        run: cargo test --verbose
+        run: cargo test
       - name: cleanup
         if: matrix.os != 'windows-2025'
         run: |
@@ -47,8 +47,8 @@ jobs:
       - name: cleanup:windows
         if: matrix.os == 'windows-2025'
         run: |
-          del /s target/debug/deps/jig-*
-          del /s target/debug/.fingerprint/jig-*
+          Remove-Item -Recurse -Force target\debug\deps\jig-*
+          Remove-Item -Recurse -Force target\debug\.fingerprint\jig-*
       - name: artifact
         if: success()
         uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
