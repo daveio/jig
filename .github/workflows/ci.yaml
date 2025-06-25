@@ -50,11 +50,27 @@ jobs:
           Remove-Item -Recurse -Force target\debug\deps\jig-*
           Remove-Item -Recurse -Force target\debug\.fingerprint\jig-*
       - name: artifact
-        if: success()
+        if: success() && matrix.os != 'windows-2025'
         uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
         with:
           path: target/debug/jig
           name: jig-${{ matrix.os }}-${{ matrix.toolchain }}
+      - name: artifact:windows
+        if: success() && matrix.os == 'windows-2025'
+        uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
+        with:
+          path: target/debug/jig.exe
+          name: jig-${{ matrix.os }}-${{ matrix.toolchain }}.exe
+      - name: attestation
+        if: success() && matrix.os != 'windows-2025'
+        uses: actions/attest-build-provenance@0e115cf485910f93daeddbda6d514da773493f27
+        with:
+          subject-path: target/debug/jig
+      - name: attestation:windows
+        if: success() && matrix.os == 'windows-2025'
+        uses: actions/attest-build-provenance@0e115cf485910f93daeddbda6d514da773493f27
+        with:
+          subject-path: target/debug/jig.exe
   trunk:
     runs-on: ubuntu-latest
     steps:
