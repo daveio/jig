@@ -14,7 +14,7 @@ config:
   theme: dark
   layout: elk
 ---
-graph LR
+graph TD
   jig[jig] --> init(init)
   jig --> crypto(crypto)
     crypto --> cryptoEncrypt(encrypt)
@@ -196,6 +196,8 @@ Image processing operations.
 
 Generate alt text for images.
 
+Flow:
+
 - Puts the image through `prepare_image_for_claude`.
 - Sends it to `/api/ai/alt` via POST.
 
@@ -203,11 +205,15 @@ Generate alt text for images.
 
 Optimise image files.
 
+Flow:
+
 - Sends image to `/api/images/optimise` via POST.
 
 #### `jig api ping`
 
 API health checks.
+
+Flow:
 
 - Dead simple. Fetches `/api/ping` and shows the data from the response.
   - The API returns JSON.
@@ -218,7 +224,13 @@ Ticket management operations.
 
 ##### `jig api ticket description`
 
-Generate ticket descriptions.
+Generate ticket descriptions from a title.
+
+- `[TITLE]`: Title of the ticket to generate a description for. Required.
+
+Flow:
+
+- Calls `/api/tickets/description` with the title.
 
 ##### `jig api ticket enrich`
 
