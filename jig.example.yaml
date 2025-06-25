@@ -1,0 +1,10 @@
+dns: # DNS configuration. optional.
+  nameserver: 8.8.8.8 # we use the system resolver if unset. optional.
+secret: # we use a secret in many places. required.
+  env: JIG_SECRET_KEY # env var containing key. optional.
+  file: ~/.jig.key # file containing key. optional.
+  key: AGE-SECRET-KEY-[...] # key itself, unencrypted. optional.
+  order: # if unset: env, file, key. optional.
+    - env # top priority
+    - file # next priority
+    - key # final priority
