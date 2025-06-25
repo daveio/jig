@@ -538,7 +538,7 @@ We need to get the image below 5 MB for Claude. Use `-a` / `--api` to use the AP
 
 ## Vendoring
 
-Vendoring has been disabled. To re-enable, create `.config/cargo.toml`:
+Vendoring has been disabled. To re-enable, create `.cargo/config.toml`:
 
 ```toml
 [source.crates-io]
