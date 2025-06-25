@@ -19,6 +19,7 @@ graph LR
   jig --> crypto(crypto)
     crypto --> cryptoEncrypt(encrypt)
     crypto --> cryptoDecrypt(decrypt)
+    crypto --> cryptoPublic(public)
   jig --> generate(generate)
     generate --> generateHex(hex)
     generate --> generatePassword(password)
@@ -91,6 +92,9 @@ graph LR
 - `serde`
   - YAML: <https://lib.rs/crates/saphyr>
   - Other formats: <https://serde.rs/#data-formats>
+- `spinoff`
+  - `noise`: single character fade spinner
+  - `aesthetic`: multi character spinner
 
 ## Commands
 
@@ -112,17 +116,17 @@ Generation utilities for various data types.
 
 - Uses encryption key and `[name]` to generate deterministic output
 - Use `-s` / `--seed` `[value]` to use custom value instead of encryption key
-  - Run a KDF on `[value]` to get data to actually use
-  - Does BLAKE3 have a compute-hard or memory-hard construction?
-  - Are there newer funkier KDFs? Post-quantum ones?
+  - Run `argon2` on `[value]` to get data to actually use
 
 #### `jig generate hex`
 
-Generate hexadecimal values.
+Generate cryptographically secure random hexadecimal values.
 
 #### `jig generate password`
 
-Generate secure passwords.
+Generate cryptographically secure random passwords.
+
+Alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
 
 #### `jig generate key`
 
@@ -130,22 +134,24 @@ Generate cryptographic keys.
 
 ##### `jig generate key crypto`
 
-Generate encryption keys.
+Generate encryption keys for native `age`-based encryption.
 
 ##### `jig generate key wireguard`
 
-Generate WireGuard keys.
+Generate WireGuard private and public keys.
 
 #### `jig generate jwt`
 
 Generate JSON Web Tokens.
 
-- `--sub <subject>`: Token subject/scope (e.g., "ai:alt", "api:tokens")
-- `--description <text>`: Human-readable token description
-- `--expires-in <duration>`: Expiration time (e.g., "1h", "7d", "30m")
-- `--claim <key=value>`: Add custom claims to token
-- `--secret <secret>`: JWT signing secret (or use config/env)
-- `--algorithm <alg>`: Signing algorithm (default: HS256)
+Applies random UUID as token ID.
+
+- `--subject [subject]`: Token subject/scope (e.g., "ai:alt", "api:tokens")
+- `--description [text]`: Human-readable token description
+- `--expiry [duration]`: Expiration time (e.g., "1h", "7d", "30m")
+- `--claim [key=value]`: Add custom claims to token
+- `--secret [secret]`: JWT signing secret (or use config/env)
+- `--algorithm [alg]`: Signing algorithm (default: HS256)
 
 ### `jig crypto`
 
@@ -158,6 +164,10 @@ Encrypt data using rage encryption.
 #### `jig crypto decrypt`
 
 Decrypt data using rage encryption.
+
+#### `jig crypto public`
+
+Prints the public key associated with your configured private key.
 
 ### `jig network`
 
