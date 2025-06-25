@@ -85,6 +85,23 @@ graph LR
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
+## Config
+
+Config is in `yaml` format. We use `saphyr` with `serde` for YAML operations.
+
+```yaml
+dns: # DNS configuration. optional.
+  nameserver: 8.8.8.8 # we use the system resolver if unset. optional.
+secret: # we use a secret in many places. required.
+  env: JIG_SECRET_KEY # env var containing key. optional.
+  file: ~/.jig.key # file containing key. optional.
+  key: AGE-SECRET-KEY-[...] # key itself, unencrypted. optional.
+  order: # if unset: env, file, key. optional.
+    - env # top priority
+    - file # next priority
+    - key # final priority
+```
+
 ## Library Notes
 
 - `rmcp`
@@ -157,21 +174,37 @@ Applies random UUID as token ID.
 - `--secret [secret]`: JWT signing secret (or use config/env)
 - `--algorithm [alg]`: Signing algorithm (default: HS256)
 
+Will read the secret from the env as `$JIG_JWT_SECRET`, or use the configured encryption key.
+
 ### `jig crypto`
 
 Encryption and decryption operations.
 
 #### `jig crypto encrypt`
 
+`-i` / `--input`: File of plaintext to read. May be binary.
+`-o` / `--output`: File of ciphertext to write.
+`-k` / `--key` `[KEY]`: Override key from configuration or env.
+
 Encrypt data using `rage` encryption.
+
+Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via `stderr`.
 
 #### `jig crypto decrypt`
 
+`-i` / `--input`: File of ciphertext to read.
+`-o` / `--output`: File of plaintext to write. May be binary.
+`-k` / `--key` `[KEY]`: Override key from configuration or env.
+
 Decrypt data using `rage` encryption.
+
+Default: ciphertext in via `stdin`, plaintext out via `stdout`, information via `stderr`.
 
 #### `jig crypto public`
 
-Prints the public key associated with your configured private key.
+`-k` / `--key` `[KEY]`: Private key to process
+
+Prints the public key associated with a private key. Uses the configured private key by default.
 
 ### `jig network`
 
