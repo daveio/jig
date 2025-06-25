@@ -12,7 +12,7 @@ impl fmt::Display for JigError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             JigError::Config(msg) => write!(f, "Configuration error: {}", msg),
-            JigError::Io(err) => write!(f, "IO error: {}", err),
+            JigError::Io(err) => write!(f, "I/O error: {}", err),
             JigError::NotImplemented(cmd) => write!(f, "Command not implemented: {}", cmd),
             JigError::Other(msg) => write!(f, "Error: {}", msg),
         }
