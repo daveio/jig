@@ -134,11 +134,197 @@ secret:
 
 Derive API: `#[command(infer_subcommands = true)]`
 
-### `jig init`
+### `jig ai`
 
-`-c` / `--clobber` : Overwrite existing config (with a new key!)
+AI-powered utilities.
 
-Creates initial config file. Also sets up / ensures shell integration for `jig workspace`.
+#### `jig ai rename`
+
+AI renaming operations.
+
+##### `jig ai rename image`
+
+AI-powered image renaming.
+
+We need to get the image below 5 MB for Claude. Use `-a` / `--api` to use the API with a fresh JWT, or internal image optimisation otherwise.
+
+### `jig api`
+
+API operations and utilities.
+
+#### `jig api dashboard`
+
+Dashboard operations.
+
+#### `jig api image`
+
+Image processing operations.
+
+##### `jig api image alt`
+
+Generate alt text for images.
+
+##### `jig api image optimise`
+
+Optimize image files.
+
+#### `jig api ping`
+
+API health checks.
+
+#### `jig api ticket`
+
+Ticket management operations.
+
+##### `jig api ticket description`
+
+Generate ticket descriptions.
+
+##### `jig api ticket enrich`
+
+Enrich ticket information.
+
+##### `jig api ticket title`
+
+Generate ticket titles.
+
+#### `jig api token`
+
+Token management operations.
+
+##### `jig api token info`
+
+Get token information.
+
+##### `jig api token revoke`
+
+Revoke tokens.
+
+##### `jig api token usage`
+
+Check token usage.
+
+### `jig convert`
+
+Data conversion utilities.
+
+### `jig crypto`
+
+Encryption and decryption operations.
+
+#### `jig crypto decrypt`
+
+`-i` / `--input`: File of ciphertext to read.
+`-o` / `--output`: File of plaintext to write. May be binary.
+`-k` / `--key` `[KEY]`: Override key from configuration or env.
+
+Decrypt data using `age` encryption.
+
+Default: ciphertext in via `stdin`, plaintext out via `stdout`, information via `stderr`.
+
+#### `jig crypto encrypt`
+
+`-i` / `--input`: File of plaintext to read. May be binary.
+`-o` / `--output`: File of ciphertext to write.
+`-k` / `--key` `[KEY]`: Override key from configuration or env.
+
+Encrypt data using `age` encryption.
+
+Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via `stderr`.
+
+#### `jig crypto public`
+
+`-k` / `--key` `[KEY]`: Private key to process
+
+Prints the public key associated with a private key. Uses the configured private key by default.
+
+### `jig dance`
+
+Easter egg command with terminal effects.
+
+- Not present in `--help`.
+- Not exposed via MCP.
+- Use TachyonFX as the primary effects engine.
+- Use TUI-Rain for atmospheric background effects.
+- Layer in Firework-RS for explosive moments.
+- Use RASCII to convert a photo of yourself into animated ASCII art.
+- Add Rusty TermColor typewriter effects for text reveals.
+- Finish with Spinoff spinners for loading sequences.
+- `tachyonfx` integrates nicely with `ratatui`.
+
+#### Effects
+
+##### ASCII Art Generation
+
+`rascii_art`
+
+- <https://github.com/UTFeight/RASCII>
+- Advanced image to ASCII art converter
+- An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
+
+##### Atmospheric Effects
+
+`tui-rain`
+
+- <https://github.com/levilutz/tui-rain>
+- Rain and atmospheric effects widget
+- A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
+
+##### Core Effects Engine
+
+`tachyonfx`
+
+- <https://github.com/junkdog/tachyonfx>
+- The primary shader-like effects engine for ratatui applications
+- A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
+
+##### Explosive Visual Effects
+
+`firework-rs`
+
+- <https://github.com/Wayoung7/firework-rs>
+- ASCII art firework simulator
+- A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
+
+##### Progress Indicators
+
+`spinoff`
+
+- <https://github.com/ad4mx/spinoff>
+- Terminal spinner library
+- An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
+
+##### Text Effects
+
+`rusty-termcolor`
+
+- <https://github.com/rusty-libraries/rusty-termcolor>
+- Terminal text formatting and effects
+- A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
+
+### `jig domain`
+
+Domain management and information tools.
+
+#### `jig domain available`
+
+Check domain availability.
+
+#### `jig domain expiry`
+
+Check domain expiration dates.
+
+#### `jig domain ns`
+
+Check nameserver information.
+
+#### `jig domain whois`
+
+Perform WHOIS lookups.
+
+### `jig format`
+
+Data formatting operations. (Alias: `jig fmt`)
 
 ### `jig generate`
 
@@ -155,38 +341,6 @@ Generation utilities.
 - `[LENGTH]`: hex length to generate. Defaults to 16 bytes / 32 chars.
 
 Generate cryptographically secure random hexadecimal values.
-
-#### `jig generate password`
-
-- `-e` / `--emoji`: Include emoji. Experimental. Uses a subset of non-ZWJ emoji from the RGI list. Warns user to be able to reset their password if the site doesn't use Unicode for passwords. Emoji count as one character.
-- `-x` / `--xkcd`: Use `correct horse battery staple` format from [xkcd](https://xkcd.com/936). Uses `chbs`.
-- `[LENGTH]`: password length to generate. Defaults to 16. In `--xkcd` mode, the number of words, defaulting to 4.
-
-Generate cryptographically secure random passwords with a safe alphabet.
-
-Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is above `2`, telling the user what is going on.
-
-A minimum of one item from each of the four (five if emoji is enabled) character sets.
-
-Alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
-
-With `--emoji`: Also include single-width non-ZWJ, RGI emoji
-
-Emoji list: 😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, 🙃, 😉, 😌, 😍, 🥰, 😘, 😗, 😙, 😚, 😋, 😛, 😜, 🤪, 😝, 🤑, 🤗, 🤭, 🤫, 🤔, 🤐, 🤨, 😐, 😑, 😶, 😏, 😒, 🙄, 😬, 🤥, 😌, 😔, 😪, 🤤, 😴, 😷, 🤒, 🤕, 🤢, 🤮, 🤧, 🥵, 🥶, 🥴, 😵, 🤯, 🤠, 🥳, 😎, 🤓, 🧐, 😕, 😟, 🙁, ☹️, 😮, 😯, 😲, 😳, 🥺, 😦, 😧, 😨, 😰, 😥, 😢, 😭, 😱, 😖, 😣, 😞, 😓, 😩, 😫, 🥱, 😤, 😡, 😠, 🤬, 😈, 👿, 💀, ☠️, 💩, 🤡, 👹, 👺, 👻
-
-#### `jig generate key`
-
-Generate cryptographic keys.
-
-##### `jig generate key crypto`
-
-`-s` / `--set`: Sets key in configuration file after generation.
-
-Generate encryption keys for native `age`-based encryption.
-
-##### `jig generate key wireguard`
-
-Generate WireGuard private and public keys.
 
 #### `jig generate jwt`
 
@@ -207,35 +361,91 @@ Secret priority:
 - JWT secret resolution from config
 - Return an error
 
-### `jig crypto`
+#### `jig generate key`
 
-Encryption and decryption operations.
+Generate cryptographic keys.
 
-#### `jig crypto encrypt`
+##### `jig generate key crypto`
 
-`-i` / `--input`: File of plaintext to read. May be binary.
-`-o` / `--output`: File of ciphertext to write.
-`-k` / `--key` `[KEY]`: Override key from configuration or env.
+`-s` / `--set`: Sets key in configuration file after generation.
 
-Encrypt data using `age` encryption.
+Generate encryption keys for native `age`-based encryption.
 
-Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via `stderr`.
+##### `jig generate key wireguard`
 
-#### `jig crypto decrypt`
+Generate WireGuard private and public keys.
 
-`-i` / `--input`: File of ciphertext to read.
-`-o` / `--output`: File of plaintext to write. May be binary.
-`-k` / `--key` `[KEY]`: Override key from configuration or env.
+#### `jig generate password`
 
-Decrypt data using `age` encryption.
+- `-e` / `--emoji`: Include emoji. Experimental. Uses a subset of non-ZWJ emoji from the RGI list. Warns user to be able to reset their password if the site doesn't use Unicode for passwords. Emoji count as one character.
+- `-x` / `--xkcd`: Use `correct horse battery staple` format from [xkcd](https://xkcd.com/936). Uses `chbs`.
+- `[LENGTH]`: password length to generate. Defaults to 16. In `--xkcd` mode, the number of words, defaulting to 4.
 
-Default: ciphertext in via `stdin`, plaintext out via `stdout`, information via `stderr`.
+Generate cryptographically secure random passwords with a safe alphabet.
 
-#### `jig crypto public`
+Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is above `2`, telling the user what is going on.
 
-`-k` / `--key` `[KEY]`: Private key to process
+A minimum of one item from each of the four (five if emoji is enabled) character sets.
 
-Prints the public key associated with a private key. Uses the configured private key by default.
+Alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
+
+With `--emoji`: Also include single-width non-ZWJ, RGI emoji
+
+Emoji list: 😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, 🙃, 😉, 😌, 😍, 🥰, 😘, 😗, 😙, 😚, 😋, 😛, 😜, 🤪, 😝, 🤑, 🤗, 🤭, 🤫, 🤔, 🤐, 🤨, 😐, 😑, 😶, 😏, 😒, 🙄, 😬, 🤥, 😌, 😔, 😪, 🤤, 😴, 😷, 🤒, 🤕, 🤢, 🤮, 🤧, 🥵, 🥶, 🥴, 😵, 🤯, 🤠, 🥳, 😎, 🤓, 🧐, 😕, 😟, 🙁, ☹️, 😮, 😯, 😲, 😳, 🥺, 😦, 😧, 😨, 😰, 😥, 😢, 😭, 😱, 😖, 😣, 😞, 😓, 😩, 😫, 🥱, 😤, 😡, 😠, 🤬, 😈, 👿, 💀, ☠️, 💩, 🤡, 👹, 👺, 👻
+
+### `jig git`
+
+Git utilities and enhancements.
+
+#### `jig git binary`
+
+Binary file management.
+
+##### `jig git binary get`
+
+Retrieve binary files.
+
+##### `jig git binary update`
+
+Update binary files.
+
+#### `jig git clone`
+
+Enhanced git cloning.
+
+#### `jig git commit`
+
+AI-assisted commit messages.
+
+Reimplement `oco` so we don't have to shell out to it.
+
+#### `jig git latest`
+
+Get latest repository information.
+
+#### `jig git secrets`
+
+Secret scanning and management.
+
+#### `jig git yank`
+
+Yank/remove commits.
+
+### `jig init`
+
+`-c` / `--clobber` : Overwrite existing config (with a new key!)
+
+Creates initial config file. Also sets up / ensures shell integration for `jig workspace`.
+
+### `jig mcp`
+
+Model Context Protocol server functionality.
+
+`jig` will offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
+
+This will be implemented 'eventually'.
+
+The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too.
 
 ### `jig network`
 
@@ -268,25 +478,33 @@ Perform DNS lookups.
 
 Check DNSSEC configuration for `[DOMAIN]`.
 
-### `jig domain`
+### `jig project`
 
-Domain management and information tools.
+Project management utilities.
 
-#### `jig domain expiry`
+#### `jig project bump`
 
-Check domain expiration dates.
+Bump project versions.
 
-#### `jig domain whois`
+#### `jig project dependabot`
 
-Perform WHOIS lookups.
+Dependabot configuration.
 
-#### `jig domain ns`
+#### `jig project new`
 
-Check nameserver information.
+Create new projects.
 
-#### `jig domain available`
+#### `jig project update`
 
-Check domain availability.
+Update project dependencies.
+
+### `jig terminal`
+
+Terminal utilities and enhancements.
+
+#### `jig terminal xkcd`
+
+Display XKCD comics in terminal.
 
 ### `jig tls`
 
@@ -300,221 +518,9 @@ Certificate operations and analysis.
 
 Cipher suite analysis.
 
-### `jig format`
-
-Data formatting operations. (Alias: `jig fmt`)
-
-### `jig convert`
-
-Data conversion utilities.
-
-### `jig api`
-
-API operations and utilities.
-
-#### `jig api ticket`
-
-Ticket management operations.
-
-##### `jig api ticket title`
-
-Generate ticket titles.
-
-##### `jig api ticket description`
-
-Generate ticket descriptions.
-
-##### `jig api ticket enrich`
-
-Enrich ticket information.
-
-#### `jig api image`
-
-Image processing operations.
-
-##### `jig api image alt`
-
-Generate alt text for images.
-
-##### `jig api image optimise`
-
-Optimize image files.
-
-#### `jig api token`
-
-Token management operations.
-
-##### `jig api token info`
-
-Get token information.
-
-##### `jig api token revoke`
-
-Revoke tokens.
-
-##### `jig api token usage`
-
-Check token usage.
-
-#### `jig api dashboard`
-
-Dashboard operations.
-
-#### `jig api ping`
-
-API health checks.
-
-### `jig mcp`
-
-Model Context Protocol server functionality.
-
-`jig` will offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
-
-This will be implemented 'eventually'.
-
-The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too.
-
-### `jig dance`
-
-Easter egg command with terminal effects.
-
-- Not present in `--help`.
-- Not exposed via MCP.
-- Use TachyonFX as the primary effects engine.
-- Use TUI-Rain for atmospheric background effects.
-- Layer in Firework-RS for explosive moments.
-- Use RASCII to convert a photo of yourself into animated ASCII art.
-- Add Rusty TermColor typewriter effects for text reveals.
-- Finish with Spinoff spinners for loading sequences.
-- `tachyonfx` integrates nicely with `ratatui`.
-
-#### Effects
-
-##### Core Effects Engine
-
-`tachyonfx`
-
-- <https://github.com/junkdog/tachyonfx>
-- The primary shader-like effects engine for ratatui applications
-- A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
-
-##### Atmospheric Effects
-
-`tui-rain`
-
-- <https://github.com/levilutz/tui-rain>
-- Rain and atmospheric effects widget
-- A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
-
-##### Explosive Visual Effects
-
-`firework-rs`
-
-- <https://github.com/Wayoung7/firework-rs>
-- ASCII art firework simulator
-- A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
-
-##### ASCII Art Generation
-
-`rascii_art`
-
-- <https://github.com/UTFeight/RASCII>
-- Advanced image to ASCII art converter
-- An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
-
-##### Text Effects
-
-`rusty-termcolor`
-
-- <https://github.com/rusty-libraries/rusty-termcolor>
-- Terminal text formatting and effects
-- A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
-
-##### Progress Indicators
-
-`spinoff`
-
-- <https://github.com/ad4mx/spinoff>
-- Terminal spinner library
-- An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
-
-### `jig terminal`
-
-Terminal utilities and enhancements.
-
-#### `jig terminal xkcd`
-
-Display XKCD comics in terminal.
-
-### `jig project`
-
-Project management utilities.
-
-#### `jig project new`
-
-Create new projects.
-
-#### `jig project update`
-
-Update project dependencies.
-
-#### `jig project bump`
-
-Bump project versions.
-
-#### `jig project dependabot`
-
-Dependabot configuration.
-
-### `jig git`
-
-Git utilities and enhancements.
-
-#### `jig git clone`
-
-Enhanced git cloning.
-
-#### `jig git binary`
-
-Binary file management.
-
-##### `jig git binary get`
-
-Retrieve binary files.
-
-##### `jig git binary update`
-
-Update binary files.
-
-#### `jig git secrets`
-
-Secret scanning and management.
-
-#### `jig git commit`
-
-AI-assisted commit messages.
-
-Reimplement `oco` so we don't have to shell out to it.
-
-#### `jig git yank`
-
-Yank/remove commits.
-
-#### `jig git latest`
-
-Get latest repository information.
-
 ### `jig workspace`
 
 Workspace management and switching.
-
-#### `jig workspace switch`
-
-Switch between workspaces.
-
-#### `jig workspace list`
-
-List available workspaces.
 
 #### `jig workspace hook`
 
@@ -522,19 +528,13 @@ List available workspaces.
 
 Used to hook into the user's shell by executing whenever the prompt renders. Not generally called by a human.
 
-### `jig ai`
+#### `jig workspace list`
 
-AI-powered utilities.
+List available workspaces.
 
-#### `jig ai rename`
+#### `jig workspace switch`
 
-AI renaming operations.
-
-##### `jig ai rename image`
-
-AI-powered image renaming.
-
-We need to get the image below 5 MB for Claude. Use `-a` / `--api` to use the API with a fresh JWT, or internal image optimisation otherwise.
+Switch between workspaces.
 
 ## Vendoring
 
