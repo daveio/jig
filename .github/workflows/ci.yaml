@@ -3,9 +3,21 @@ permissions: read-all
 on:
   push: null
   pull_request: null
+env:
+  CARGO_TERM_COLOR: always
 jobs:
-  lint:
-    runs-on: ubuntu-latest
+  cargo:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04
+          - macos-15
+          - windows-2025
+        toolchain:
+          - stable
+          - beta
+          - nightly
     steps:
       - name: checkout
         uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
@@ -19,14 +31,25 @@ jobs:
           key: ${{ runner.os }}-target-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-target-
+      - name: rustup
+        run: |
+          rustup update ${{ matrix.toolchain }}
+          rustup default ${{ matrix.toolchain }}
       - name: build
-        run: cargo build
+        run: cargo build --verbose
+      - name: test
+        run: cargo test --verbose
+      - name: cleanup:deps
+        run: rm -rf target/debug/deps/jig-*
+      - name: cleanup:fingerprint
+        run: rm -rf target/debug/.fingerprint/jig-*
+  trunk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
       - name: trunk
         uses: trunk-io/trunk-action@1c401dfb3626be3d242d50537e2f020e12424329
         with:
           # trunk-ignore(trunk-toolbox)
           arguments: --filter=-trunk-toolbox/todo
-      - name: cleanup:deps
-        run: rm -rf target/debug/deps/jig-*
-      - name: cleanup:fingerprint
-        run: rm -rf target/debug/.fingerprint/jig-*
