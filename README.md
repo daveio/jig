@@ -244,63 +244,8 @@ Easter egg command with terminal effects.
 
 - Not present in `--help`.
 - Not exposed via MCP.
-- Use TachyonFX as the primary effects engine.
-- Use TUI-Rain for atmospheric background effects.
-- Layer in Firework-RS for explosive moments.
-- Use RASCII to convert a photo of yourself into animated ASCII art.
-- Add Rusty TermColor typewriter effects for text reveals.
-- Finish with Spinoff spinners for loading sequences.
-- `tachyonfx` integrates nicely with `ratatui`.
 
-#### Effects
-
-##### ASCII Art Generation
-
-`rascii_art`
-
-- <https://github.com/UTFeight/RASCII>
-- Advanced image to ASCII art converter
-- An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
-
-##### Atmospheric Effects
-
-`tui-rain`
-
-- <https://github.com/levilutz/tui-rain>
-- Rain and atmospheric effects widget
-- A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
-
-##### Core Effects Engine
-
-`tachyonfx`
-
-- <https://github.com/junkdog/tachyonfx>
-- The primary shader-like effects engine for ratatui applications
-- A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
-
-##### Explosive Visual Effects
-
-`firework-rs`
-
-- <https://github.com/Wayoung7/firework-rs>
-- ASCII art firework simulator
-- A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
-
-##### Progress Indicators
-
-`spinoff`
-
-- <https://github.com/ad4mx/spinoff>
-- Terminal spinner library
-- An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
-
-##### Text Effects
-
-`rusty-termcolor`
-
-- <https://github.com/rusty-libraries/rusty-termcolor>
-- Terminal text formatting and effects
-- A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
+See [Easter Egg Nonsense](#easter-egg-nonsense) for more details.
 
 ### `jig domain`
 
@@ -547,3 +492,61 @@ replace-with = "vendored-sources"
 [source.vendored-sources]
 directory = "vendor"
 ```
+
+## Easter Egg Nonsense
+
+- `tachyonfx` as the primary effects engine.
+  - `tachyonfx` integrates nicely with `ratatui`.
+- `tui-rain` for atmospheric background effects.
+- `firework-rs` for explosive moments.
+- `rascii_art` to convert a profile photo into animated ASCII art.
+- `rusty-termcolor` typewriter effects for text reveals.
+- `spinoff` spinners for loading sequences.
+
+### ASCII Art Generation
+
+`rascii_art`
+
+- <https://github.com/UTFeight/RASCII>
+- Advanced image to ASCII art converter
+- An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
+
+### Atmospheric Effects
+
+`tui-rain`
+
+- <https://github.com/levilutz/tui-rain>
+- Rain and atmospheric effects widget
+- A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
+
+### Core Effects Engine
+
+`tachyonfx`
+
+- <https://github.com/junkdog/tachyonfx>
+- The primary shader-like effects engine for ratatui applications
+- A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
+
+### Explosive Visual Effects
+
+`firework-rs`
+
+- <https://github.com/Wayoung7/firework-rs>
+- ASCII art firework simulator
+- A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
+
+### Progress Indicators
+
+`spinoff`
+
+- <https://github.com/ad4mx/spinoff>
+- Terminal spinner library
+- An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
+
+### Text Effects
+
+`rusty-termcolor`
+
+- <https://github.com/rusty-libraries/rusty-termcolor>
+- Terminal text formatting and effects
+- A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
