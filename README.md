@@ -128,11 +128,38 @@ secret:
   - `noise`: single character fade spinner
   - `aesthetic`: multi character spinner
 
+## Shared Utilities
+
+### `prepare_image_for_claude`
+
+Shrinks images to under 5 MB for Claude compatibility.
+
+- If image is over 2048px on the long edge, resize to 2048px on the long edge.
+- Convert to WebP format with `image-webp`.
+  - Start with lossless compression.
+  - If still over 5 MB, use lossy compression with a quality of 90.
+  - If still over 5 MB, use lossy compression with a quality of 75.
+  - If still over 5 MB, use lossy compression with a quality of 50.
+  - If still over 5 MB, use lossy compression with a quality of 25.
+  - Abort with an error.
+- If successful, return WebP image data as struct or bytes.
+
+### `ask_claude`
+
+- `PROMPT` - Prompt to send to Claude.
+- `ASSOCIATED_DATA` - Associated data to send to Claude. Optional.
+- `IMAGE` | `FILENAME` - Image data to send to Claude. Optional.
+
+Calls `prepare_image_for_claude` to ensure the image is compatible, then sends the prompt, associated data, and any image to Claude.
+
 ## Commands
 
 `clap` supports command shortening to the point of disambiguation.
 
-Derive API: `#[command(infer_subcommands = true)]`
+```rust
+// Clap Derive API
+#[command(infer_subcommands = true)]
+```
 
 ### `jig ai`
 
@@ -146,15 +173,20 @@ AI renaming operations.
 
 AI-powered image renaming.
 
-We need to get the image below 5 MB for Claude. Use `-a` / `--api` to use the API with a fresh JWT, or internal image optimisation otherwise.
+- `[FILENAME_OR_GLOB]`: File or glob pattern to rename images. Defaults to all `*.jpg`, `*.jpeg`, `*.png`, `*.webp` in the current directory. Multiple filenames/globs can be specified.
+
+Flow:
+
+- Use the `ask_claude` utility to send an image to Claude for filename generation.
+  - Syntax: `a_few_words-YYYYMMDD-HHMMss.ext`
+- Rename the image.
+- Throw away any temp files.
 
 ### `jig api`
 
-API operations and utilities.
+Call the `dave.io` API.
 
-#### `jig api dashboard`
-
-Dashboard operations.
+Base URL: `https://dave.io/`
 
 #### `jig api image`
 
@@ -164,13 +196,21 @@ Image processing operations.
 
 Generate alt text for images.
 
+- Puts the image through `prepare_image_for_claude`.
+- Sends it to `/api/ai/alt` via POST.
+
 ##### `jig api image optimise`
 
-Optimize image files.
+Optimise image files.
+
+- Sends image to `/api/images/optimise` via POST.
 
 #### `jig api ping`
 
 API health checks.
+
+- Dead simple. Fetches `/api/ping` and shows the data from the response.
+  - The API returns JSON.
 
 #### `jig api ticket`
 
