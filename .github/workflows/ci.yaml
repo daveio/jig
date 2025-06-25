@@ -28,9 +28,9 @@ jobs:
             target/debug/deps
             target/debug/build
             target/debug/.fingerprint
-          key: ${{ runner.os }}-target-${{ hashFiles('**/Cargo.lock') }}
+          key: cargo-${{ matrix.os }}-${{ matrix.toolchain }}-${{ hashFiles('Cargo.lock') }}
           restore-keys: |
-            ${{ runner.os }}-target-
+            cargo-${{ matrix.os }}-${{ matrix.toolchain }}-
       - name: rustup
         run: |
           rustup update ${{ matrix.toolchain }}
@@ -43,6 +43,12 @@ jobs:
         run: rm -rf target/debug/deps/jig-*
       - name: cleanup:fingerprint
         run: rm -rf target/debug/.fingerprint/jig-*
+      - name: artifact
+        if: success()
+        uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
+        with:
+          path: target/debug/jig
+          name: jig-${{ matrix.os }}-${{ matrix.toolchain }}
   trunk:
     runs-on: ubuntu-latest
     steps:
