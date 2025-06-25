@@ -1,4 +1,4 @@
-name: Claude Code
+name: claude-code
 
 # trunk-ignore-all(checkov/CKV2_GHA_1)
 on:
@@ -25,12 +25,12 @@ jobs:
       issues: read
       id-token: write
     steps:
-      - name: Checkout repository
+      - name: checkout
         uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
         with:
           fetch-depth: 1
 
-      - name: Run Claude Code
+      - name: claude
         id: claude
         uses: anthropics/claude-code-action@b0d9b8c4cd71465a10fe023bc17f1b3a8c9a9921
         with:
