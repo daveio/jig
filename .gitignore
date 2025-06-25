@@ -1,6 +1,7 @@
 target/
 !target/.keep
-
+vendor/
+!vendor/.keep
 .env*
 !.env.example
 .dev.vars*
