@@ -146,7 +146,7 @@ project: #                      Project management configuration. optional.
       all-dependencies:
         patterns:
           - "*"
-secret: #                       we use a secret in many places. required.
+secret: #                       We use a secret in many places. required.
   env: JIG_SECRET_KEY #           def: JIG_SECRET_KEY. optional.
   file: ~/.jig.secret.key #       def: none. file containing key. optional.
   key: AGE-SECRET-KEY-[...] #     def: generated. unencrypted key. required.
@@ -154,6 +154,9 @@ secret: #                       we use a secret in many places. required.
     - env #                         top priority
     - file #                        second priority
     - key #                         final priority
+template: #                     Template configuration. optional.
+  branch: template #              def: main. branch to use for templates. optional.
+  repository: daveio/jig #        def: daveio/jig. repository for templates. optional.
 ```
 
 ### Minimal Config
@@ -205,6 +208,10 @@ Gets the current user's GitHub username.
 - If `git.user` is set in the config, returns that.
 - If not, tries to run `gh api user --jq .login` to get the username.
 - If that fails, returns an error.
+
+### Git abstraction
+
+We want an abstraction over Git, so we can call the same code whether we're using the `git` CLI or the [`gix`](https://lib.rs/crates/gix) library, and have the abstraction decide what to do.
 
 ## Commands
 
@@ -613,7 +620,18 @@ Notes:
 
 `-c` / `--clobber` : Overwrite existing config (with a new key!) without confirmation
 
-- Creates `~/.local/share/jig` and `~/.local/share/jig/bin` directories if they don't exist.
+- Creates directories if they don't exist.
+  - `~/.local/share/jig`
+  - `~/.local/share/jig/bin`
+  - `~/.local/share/jig/templates`
+- Fetches stock templates.
+- Defaults to the `templates` branch of the `jig` repository.'
+  - Can be overridden in config as `template.repository` and `template.branch`.
+- Uses `git` to clone the templates into `~/.local/share/jig/templates/username/repo`.
+  - If the templates already exist and we're on the correct branch, they will be pulled and updated.
+  - Will then check out `branch` if non-default and not checked out already.
+  - Will use the `git` CLI if `git.internal` is set to `false` in the config, otherwise uses [`gix`](https://lib.rs/crates/gix).
+  - Includes special `_shared` template for files common to all templates.
 - Creates initial config file.
   - If config file exists, asks for confirmation to overwrite it unless `--clobber` is specified.
   - Generates a new private key in the configuration file.
@@ -690,11 +708,29 @@ Flow:
 
 #### `jig project new`
 
-Create new projects.
+`[TEMPLATE]`: Which template to use for the new project.
+
+Templates are defined using [`tera`](https://lib.rs/crates/tera) templates in `~/.local/share/jig/templates`.
 
 #### `jig project update`
 
 Update project dependencies.
+
+#### `jig project template`
+
+Project template management.
+
+##### `jig project template update`
+
+Fetch and pull templates from the configured repository.
+
+##### `jig project template list`
+
+List installed templates.
+
+##### `jig project template new`
+
+Initialise a new template.
 
 ### `jig terminal`
 
