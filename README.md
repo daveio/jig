@@ -309,7 +309,7 @@ Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via 
 
 `-k` / `--key` `[KEY]`: Private key to process
 
-Prints the public key associated with a private key. Uses the configured private key by default.
+Prints the public key ('recipient' in `age` terms) associated with a private key. Uses the configured private key by default.
 
 ### `jig dance`
 
@@ -327,6 +327,10 @@ Domain management and information tools.
 #### `jig domain available`
 
 Check domain availability.
+
+- Use the DNSimple API to start.
+- Exclude TLDs on the 'Not via Cloudflare' list.
+- Check TLDs on the 'Not via DNSimple' list with RDAP using `icann-rdap-client`.
 
 #### `jig domain expiry`
 

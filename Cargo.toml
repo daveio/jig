@@ -22,6 +22,7 @@ gix = { version = "0.72.1", features = [
   "blocking-http-transport-reqwest-rust-tls",
   "serde",
 ] }
+icann-rdap-client = "0.0.22"
 image = { version = "0.25.6", default-features = false, features = [
   "gif",
   "hdr",
