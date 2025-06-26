@@ -108,15 +108,33 @@ api: #                          API key configuration. optional.
   domainr: DOMAINR_API_KEY #      def: none. optional.
 dns: #                          DNS configuration. optional.
   nameserver: 8.8.8.8 #           def: system resolver. optional.
+git: #                          Git configuration. optional.
+  commit: #                       Git commit configuration. optional.
+    after: null #                   def: null. a custom commit message suffix.
+    before: null #                  def: null. a custom commit message prefix.
+    prefixes: #                     def: stated. conventional commit prefixes. optional.
+      - docs
+      - feat
+      - fix
+      - perf
+      - refactor
+      - style
+      - test
+    internal: true #              def: true. use gix for git. optional.
+    user: daveio #                def: none. GitHub username. optional.
+  internal: true #                def: true. use gix for git. optional.
+  user: daveio #                  def: none. GitHub username. optional.
 jwt: #                          JWT configuration. optional.
   env: JIG_JWT_SECRET #           def: JIG_JWT_SECRET. optional.
-  key: JWT_SECRET_VALUE #         def: main key. secret for JWTs. optional.
-  order: #                        def: env, key. first wins. optional.
+  file: ~/.jig.jwt.key #          def: none. file containing key. optional.
+  key: JWT_SECRET_VALUE #         def: resolved secret from below. optional.
+  order: #                        def: env, file, key. first wins. optional.
     - env #                         top priority
+    - file #                        second priority
     - key #                         final priority
 secret: #                       we use a secret in many places. required.
   env: JIG_SECRET_KEY #           def: JIG_SECRET_KEY. optional.
-  file: ~/.jig.key #              def: none. file containing key. optional.
+  file: ~/.jig.secret.key #       def: none. file containing key. optional.
   key: AGE-SECRET-KEY-[...] #     def: generated. unencrypted key. required.
   order: #                        def: env, file, key. first wins. optional.
     - env #                         top priority
@@ -165,6 +183,14 @@ Shrinks images to under 5 MB for Claude compatibility.
 - `IMAGE` | `FILENAME` - Image data to send to Claude. Optional.
 
 Calls `prepare_image_for_claude` to ensure the image is compatible, then sends the prompt, associated data, and any image to Claude.
+
+### `resolve_github_username`
+
+Gets the current user's GitHub username.
+
+- If `git.user` is set in the config, returns that.
+- If not, tries to run `gh api user --jq .login` to get the username.
+- If that fails, returns an error.
 
 ## Commands
 
@@ -454,7 +480,7 @@ Git and GitHub utilities.
 
 #### `jig git binary`
 
-Information about binaries is kept in `~/.local/share/jig/binaries.ron` for use by the subcommands. Data format is [`ron` (Rusty Object Notation)](https://github.com/ron-rs/ron).
+Information about binaries is kept in `~/.local/share/jig/binaries.yaml` for use by the subcommands. Data format is [`yaml` using `saphypr`](https://lib.rs/crates/saphypr).
 
 `~/.local/share/jig/bin` is added/ensured to the user's `$PATH` as part of the shell integration hook in `jig workspace hook`.
 
@@ -471,7 +497,7 @@ Install binary files. Prints path to installed binary.
 - Fetches the latest release for the user's operating environment.
 - Installs it to `~/.local/share/jig/bin`.
 
-Saves information about the binary (with hashes) to `~/.local/share/jig/binaries.ron`.
+Saves information about the binary (with hashes) to `~/.local/share/jig/binaries.yaml`.
 
 ##### `jig git binary remove`
 
@@ -482,7 +508,7 @@ Saves information about the binary (with hashes) to `~/.local/share/jig/binaries
 
 Remove installed binary files.
 
-Also removes entries from `~/.local/share/jig/binaries.ron` if removal succeeds.
+Also removes entries from `~/.local/share/jig/binaries.yaml` if removal succeeds.
 
 ##### `jig git binary show`
 
@@ -496,22 +522,46 @@ Remove installed binary files.
 
 ##### `jig git binary update`
 
-- `-a` / `--all`: Update all binary files.
+- `-a` / `--all`: Attempt to update all installed binaries.
 
 - `[USERNAME]/[REPO]`: GitHub username and repository name.
 - `[BINARY_NAME]`: Alternative to username/repo, update binary by name.
 
-Update binary files to the latest version. If we can get hashes, use them to prevent unnecessary downloads. Reads and writes `~/.local/share/jig/binaries.ron`.
+Update binary files to the latest version. If we can get hashes, use them to prevent unnecessary downloads. Reads and writes `~/.local/share/jig/binaries.yaml`.
 
 #### `jig git clone`
 
-Enhanced git cloning.
+Allows cloning GitHub repositories by `username/repo`. If just `repo` is given, it will use `resolve_github_username` to get the current user's GitHub username, throwing an error if `resolve_github_username` fails.
+
+- `[USERNAME]/[REPO]` | `[REPO]`: GitHub username and repository name.
+- `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
+- `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to clone the repository.
+
+- By default, uses [`gix`](https://lib.rs/crates/gix) to clone the repository.
+  - This may not play well with things like SSH agents if you're cloning via SSH.
+- To use the `git` CLI, either:
+  - Set `git.internal` to `false` in your config.
+  - Use the `--cli` flag.
 
 #### `jig git commit`
 
 AI-assisted commit messages.
 
-Reimplement `oco` so we don't have to shell out to it.
+Reimplements `oco` so we don't have to shell out to it.
+
+- `[PARAMETERS]`: Parameters to pass to `git`. If we're using `gix`, we should figure out what to do with them. If we're using the `git` CLI, we can just pass them through.
+
+Flow:
+
+- Generates a diff of the current changes.
+- Does some mangling to reduce them to a manageable level if necessary - we don't want to pass massive changesets to the AI.
+- Uses the `ask_claude` utility to send the diff to Claude as `ASSOCIATED_DATA`.
+  - Claude is instructed to generate a multiline commit message with emoji, matching the `oco --fgm` format.
+  - Claude is also instructed to generate a short title, including conventional commit prefixes (configurable in `git.commit.prefixes`) and starting with an emoji.
+- We add the user's custom content to the commit message:
+  - If `git.commit.before` is not null, it is prepended to the commit message.
+  - If `git.commit.after` is not null, it is appended to the commit message.
+- We use the short title and full description to make the commit, respecting the parameters passed to the command.
 
 #### `jig git latest`
 
