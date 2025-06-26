@@ -76,6 +76,10 @@ graph LR
       project --> projectUpdate(update)
       project --> projectBump(bump)
       project --> projectDependabot(dependabot)
+      project --> projectTemplate(template)
+        projectTemplate --> projectTemplateList(list)
+        projectTemplate --> projectTemplateNew(new)
+        projectTemplate --> projectTemplateUpdate(update)
     jig --> git(git)
       git --> gitClone(clone)
       git --> gitBinary(binary)
@@ -720,10 +724,6 @@ Update project dependencies.
 
 Project template management.
 
-##### `jig project template update`
-
-Fetch and pull templates from the configured repository.
-
 ##### `jig project template list`
 
 List installed templates.
@@ -731,6 +731,10 @@ List installed templates.
 ##### `jig project template new`
 
 Initialise a new template.
+
+##### `jig project template update`
+
+Fetch and pull templates from the configured repository.
 
 ### `jig terminal`
 
