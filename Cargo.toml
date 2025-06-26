@@ -3,6 +3,7 @@ age = { version = "0.11.1", features = ["armor", "async", "ssh", "plugin"] }
 anthropic-ai-sdk = "0.2.25"
 argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
 base64ct = { version = "1.8.0", features = ["std"] }
+blake3 = { version = "1.8.2", features = ["rayon", "zeroize"] }
 bs58 = { version = "0.5.1", features = ["std", "alloc", "check", "cb58"] }
 chbs = "0.1.1"
 clap = { version = "4.5.40", features = [
@@ -80,6 +81,7 @@ rmcp = { version = "0.1.5", features = [
   "transport-child-process",
   "transport-io",
 ] }
+ron = "0.10.1"
 rusty-termcolor = "0.1.62"
 saphyr = "0.0.6"
 serde = { version = "1.0.219", features = ["derive", "std", "alloc", "rc"] }

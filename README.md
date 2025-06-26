@@ -6,6 +6,20 @@
 
 `jig` is a utility which collects tools for various tasks into one place. It merges all my disparate tools into a single CLI toolbox, making it easier to manage and use them, and teaches me Rust.
 
+Will also include shell plugins. Support for **standalone installation**, or using:
+
+- `fish`: `fisher`, `oh-my-fish`, `fundle`, `fisherman`
+- `zsh`: `antigen`, `antidote`, `antibody`, `zplug`, `zplugin`, `oh-my-zsh`
+- `bash`: `bash-it`, `oh-my-bash`
+
+Shell plugin features:
+
+- Directory creation / ensuring
+- `jig workspace hook` integration
+- `$PATH` / `$fish_user_paths` setup
+- Keeping any supporting artifacts in `~/.local/share/jig` (wordlists?) up to date
+- Completion (do we get this for free with `clap`?)
+
 ## Command Tree
 
 ```mermaid
@@ -34,7 +48,7 @@ graph LR
       networkDns --> networkDnsSec(sec)
   jig --> domain(domain)
     domain --> domainCheck(check)
-    domain --> domainExpiry(expiry))
+    domain --> domainExpiry(expiry)
     domain --> domainNs(ns)
   jig --> tls(tls)
     tls --> tlsCert(cert)
@@ -66,6 +80,8 @@ graph LR
     git --> gitBinary(binary)
       gitBinary --> gitBinaryGet(get)
       gitBinary --> gitBinaryUpdate(update)
+      gitBinary --> gitBinaryShow(show)
+      gitBinary --> gitBinaryRemove(remove)
     git --> gitSecrets(secrets)
     git --> gitCommit(commit)
     git --> gitYank(yank)
@@ -385,7 +401,7 @@ Generate cryptographically secure random hexadecimal values.
 
 Generate JSON Web Tokens.
 
-Applies random UUID as token ID using `uuid`.
+Applies random UUID as token ID using [`uuid`](https://lib.rs/crates/uuid).
 
 - `--subject [subject]`: Token subject (e.g., "ai:alt", "api:tokens", required)
 - `--description [text]`: Human-readable token desc (default: generated)
@@ -434,19 +450,58 @@ Emoji list: 😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, �
 
 ### `jig git`
 
-Git utilities and enhancements.
+Git and GitHub utilities.
 
 #### `jig git binary`
+
+Information about binaries is kept in `~/.local/share/jig/binaries.ron` for use by the subcommands. Data format is [`ron` (Rusty Object Notation)](https://github.com/ron-rs/ron).
+
+`~/.local/share/jig/bin` is added/ensured to the user's `$PATH` as part of the shell integration hook in `jig workspace hook`.
 
 Binary file management.
 
 ##### `jig git binary get`
 
-Retrieve binary files.
+**Alias:** `jig git binary install`, `jig git binary add`
+
+Install binary files. Prints path to installed binary.
+
+- Uses the GitHub API to find releases for the specified repository.
+  - If no releases are found, returns an error.
+- Fetches the latest release for the user's operating environment.
+- Installs it to `~/.local/share/jig/bin`.
+
+Saves information about the binary (with hashes) to `~/.local/share/jig/binaries.ron`.
+
+##### `jig git binary remove`
+
+**Alias:** `jig git binary rm`
+
+- `[USERNAME]/[REPO]`: GitHub username and repository name.
+- `[BINARY_NAME]`: Alternative to username/repo, remove binary by name.
+
+Remove installed binary files.
+
+Also removes entries from `~/.local/share/jig/binaries.ron` if removal succeeds.
+
+##### `jig git binary show`
+
+- `-H` / `--hashes`: Show hashes of installed binaries as well as path.
+
+- `[USERNAME]/[REPO]`: GitHub username and repository name.
+
+Prints path to installed binary for `username/repo`.
+
+Remove installed binary files.
 
 ##### `jig git binary update`
 
-Update binary files.
+- `-a` / `--all`: Update all binary files.
+
+- `[USERNAME]/[REPO]`: GitHub username and repository name.
+- `[BINARY_NAME]`: Alternative to username/repo, update binary by name.
+
+Update binary files to the latest version. If we can get hashes, use them to prevent unnecessary downloads. Reads and writes `~/.local/share/jig/binaries.ron`.
 
 #### `jig git clone`
 
@@ -472,9 +527,12 @@ Yank/remove commits.
 
 ### `jig init`
 
-`-c` / `--clobber` : Overwrite existing config (with a new key!)
+`-c` / `--clobber` : Overwrite existing config (with a new key!) without confirmation
 
-Creates initial config file. Also sets up / ensures shell integration for `jig workspace`.
+- Creates initial config file.
+  - If config file exists, asks for confirmation to overwrite it unless `--clobber` is specified.
+- Sets up / ensures shell integration for `jig workspace hook`.
+- Creates `~/.local/share/jig` and `~/.local/share/jig/bin` directories if they don't exist.
 
 ### `jig mcp`
 
@@ -574,6 +632,10 @@ List available workspaces.
 #### `jig workspace switch`
 
 Switch between workspaces.
+
+## Notes
+
+- All data hashes are `BLAKE3` using the [`blake3`](https://lib.rs/crate/blake3) crate.
 
 ## Vendoring
 
