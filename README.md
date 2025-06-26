@@ -685,7 +685,9 @@ Switch between workspaces.
 
 ## Notes
 
-- All data hashes are `BLAKE3` using the [`blake3`](https://lib.rs/crate/blake3) crate.
+- Native hashes are `BLAKE3`: [`blake3`](https://lib.rs/crate/blake3) crate.
+  - We also need `SHA256`: [`sha2`](https://lib.rs/crates/sha2) crate.
+  - We don't generate our own `SHA256` hashes, but we need an implementation for comparisons.
 
 ## Vendoring
 
