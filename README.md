@@ -29,70 +29,71 @@ config:
   layout: elk
 ---
 graph LR
-  jig[jig] --> init(init)
-  jig --> crypto(crypto)
-    crypto --> cryptoEncrypt(encrypt)
-    crypto --> cryptoDecrypt(decrypt)
-    crypto --> cryptoPublic(public)
-  jig --> generate(generate)
-    generate --> generateHex(hex)
-    generate --> generatePassword(password)
-    generate --> generateKey(key)
+  jig[jig]
+    jig --> init(init)
+    jig --> crypto(crypto)
+      crypto --> cryptoEncrypt(encrypt)
+      crypto --> cryptoDecrypt(decrypt)
+      crypto --> cryptoPublic(public)
+    jig --> generate(generate)
+      generate --> generateHex(hex)
+      generate --> generatePassword(password)
+      generate --> generateKey(key)
       generateKey --> generateKeyCrypto(crypto)
       generateKey --> generateKeyWireguard(wireguard)
-    generate --> generateJwt(jwt)
-  jig --> network(network)
-    network --> networkDns(dns)
-      networkDns --> networkDnsFlush(flush)
-      networkDns --> networkDnsLookup(lookup)
-      networkDns --> networkDnsSec(sec)
-  jig --> domain(domain)
-    domain --> domainCheck(check)
-    domain --> domainExpiry(expiry)
-    domain --> domainNs(ns)
-  jig --> tls(tls)
-    tls --> tlsCert(cert)
-    tls --> tlsCiphers(ciphers)
-  jig --> api(api)
-    api --> apiTicket(ticket)
-      apiTicket --> apiTicketTitle(title)
-      apiTicket --> apiTicketDescription(description)
-      apiTicket --> apiTicketEnrich(enrich)
-    api --> apiImage(image)
-      apiImage --> apiImageAlt(alt)
-      apiImage --> apiImageOptimise(optimise)
-    api --> apiToken(token)
-      apiToken --> apiTokenInfo(info)
-      apiToken --> apiTokenRevoke(revoke)
-      apiToken --> apiTokenUsage(usage)
-    api --> apiPing(ping)
-  jig --> mcp(mcp)
-  jig --> dance(dance)
-  jig --> terminal(terminal)
-    terminal --> terminalXKCD(xkcd)
-  jig --> project(project)
-    project --> projectNew(new)
-    project --> projectUpdate(update)
-    project --> projectBump(bump)
-    project --> projectDependabot(dependabot)
-  jig --> git(git)
-    git --> gitClone(clone)
-    git --> gitBinary(binary)
-      gitBinary --> gitBinaryGet(get)
-      gitBinary --> gitBinaryUpdate(update)
-      gitBinary --> gitBinaryShow(show)
-      gitBinary --> gitBinaryRemove(remove)
-    git --> gitSecrets(secrets)
-    git --> gitCommit(commit)
-    git --> gitYank(yank)
-    git --> gitLatest(latest)
-  jig --> workspace(workspace)
-    workspace --> workspaceSwitch(switch)
-    workspace --> workspaceList(list)
-    workspace --> workspaceHook(hook)
-  jig --> ai(ai)
-    ai --> aiRename(rename)
-      aiRename --> aiRenameImage(image)
+      generate --> generateJwt(jwt)
+    jig --> network(network)
+      network --> networkDns(dns)
+        networkDns --> networkDnsFlush(flush)
+        networkDns --> networkDnsLookup(lookup)
+        networkDns --> networkDnsSec(sec)
+    jig --> domain(domain)
+      domain --> domainCheck(check)
+      domain --> domainExpiry(expiry)
+      domain --> domainNs(ns)
+    jig --> tls(tls)
+      tls --> tlsCert(cert)
+      tls --> tlsCiphers(ciphers)
+    jig --> api(api)
+      api --> apiTicket(ticket)
+        apiTicket --> apiTicketTitle(title)
+        apiTicket --> apiTicketDescription(description)
+        apiTicket --> apiTicketEnrich(enrich)
+      api --> apiImage(image)
+        apiImage --> apiImageAlt(alt)
+        apiImage --> apiImageOptimise(optimise)
+      api --> apiToken(token)
+        apiToken --> apiTokenInfo(info)
+        apiToken --> apiTokenRevoke(revoke)
+        apiToken --> apiTokenUsage(usage)
+      api --> apiPing(ping)
+    jig --> mcp(mcp)
+    jig --> dance(dance)
+    jig --> terminal(terminal)
+      terminal --> terminalXKCD(xkcd)
+    jig --> project(project)
+      project --> projectNew(new)
+      project --> projectUpdate(update)
+      project --> projectBump(bump)
+      project --> projectDependabot(dependabot)
+    jig --> git(git)
+      git --> gitClone(clone)
+      git --> gitBinary(binary)
+        gitBinary --> gitBinaryGet(get)
+        gitBinary --> gitBinaryUpdate(update)
+        gitBinary --> gitBinaryShow(show)
+        gitBinary --> gitBinaryRemove(remove)
+      git --> gitSecrets(secrets)
+      git --> gitCommit(commit)
+      git --> gitYank(yank)
+      git --> gitLatest(latest)
+    jig --> workspace(workspace)
+      workspace --> workspaceSwitch(switch)
+      workspace --> workspaceList(list)
+      workspace --> workspaceHook(hook)
+    jig --> ai(ai)
+      ai --> aiRename(rename)
+        aiRename --> aiRenameImage(image)
 
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
@@ -533,9 +534,9 @@ Update binary files to the latest version. If we can get hashes, use them to pre
 
 Allows cloning GitHub repositories by `username/repo`. If just `repo` is given, it will use `resolve_github_username` to get the current user's GitHub username, throwing an error if `resolve_github_username` fails.
 
-- `[USERNAME]/[REPO]` | `[REPO]`: GitHub username and repository name.
 - `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
 - `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to clone the repository.
+- `[USERNAME]/[REPO]` | `[REPO]`: GitHub username and repository name.
 
 - By default, uses [`gix`](https://lib.rs/crates/gix) to clone the repository.
   - This may not play well with things like SSH agents if you're cloning via SSH.
@@ -559,30 +560,52 @@ Flow:
   - Claude is instructed to generate a multiline commit message with emoji, matching the `oco --fgm` format.
   - Claude is also instructed to generate a short title, including conventional commit prefixes (configurable in `git.commit.prefixes`) and starting with an emoji.
 - We add the user's custom content to the commit message:
-  - If `git.commit.before` is not null, it is prepended to the commit message.
-  - If `git.commit.after` is not null, it is appended to the commit message.
+  - If `git.commit.before` is a string, it is prepended to the commit message.
+  - If `git.commit.after` is a string, it is appended to the commit message.
 - We use the short title and full description to make the commit, respecting the parameters passed to the command.
 
 #### `jig git latest`
 
-Get latest repository information.
+Get the latest commit hash on a branch.
 
-#### `jig git secrets`
+- `[USERNAME]/[REPO]`: GitHub username and repository name.
+- `[BRANCH]`: Branch to get the latest commit from. Defaults to the default branch of the repository if omitted.
 
-Secret scanning and management.
+#### `jig git secret`
+
+Put a secret to a Git repository. Uses `resolve_github_username` to get the current user's GitHub username if no username is specified.
+
+- `[USERNAME]/[REPO]` | `[REPO]`: GitHub username and repository name.
+- `[SECRET_NAME]`: Name of the secret to put.
+- `[SECRET_VALUE]`: Value of the secret to put. If omitted, reads from `stdin`.
 
 #### `jig git yank`
 
-Yank/remove commits.
+Fetch and pull all repositories under the current directory, or a specific directory.
+
+- `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
+- `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to fetch and pull the repository.
+- `[DIRECTORY]`: Directory to yank repositories in. Defaults to the current directory if omitted.
+
+Notes:
+
+- By default, uses [`gix`](https://lib.rs/crates/gix) to fetch and pull the repository.
+  - This may not play well with things like SSH agents if you're cloning via SSH.
+- To use the `git` CLI, either:
+  - Set `git.internal` to `false` in your config.
+  - Use the `--cli` flag.
 
 ### `jig init`
 
 `-c` / `--clobber` : Overwrite existing config (with a new key!) without confirmation
 
+- Creates `~/.local/share/jig` and `~/.local/share/jig/bin` directories if they don't exist.
 - Creates initial config file.
   - If config file exists, asks for confirmation to overwrite it unless `--clobber` is specified.
-- Sets up / ensures shell integration for `jig workspace hook`.
-- Creates `~/.local/share/jig` and `~/.local/share/jig/bin` directories if they don't exist.
+  - Generates a new private key in the configuration file.
+- Detects shell integration with `jig workspace hook`:
+  - If active, no-op.
+  - If inactive, tells user how to set up shell integration.
 
 ### `jig mcp`
 
@@ -590,9 +613,9 @@ Model Context Protocol server functionality.
 
 `jig` will offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
 
-This will be implemented 'eventually'.
+This will be implemented after the initial release.
 
-The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too.
+The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too, but that all remains to be seen.
 
 ### `jig network`
 
@@ -631,7 +654,14 @@ Project management utilities.
 
 #### `jig project bump`
 
-Bump project versions.
+Detects package manager files, such as `Cargo.toml`, `package.json`, GitHub Actions, etc. Bumps the versions of all packages to latest.
+
+GitHub Actions are a special case; they are pinned to the most recent commit hash on the default branch of the repository.
+
+> [!CAUTION]
+> Packages are bumped to latest. This might mean major version bumps, which could break your project. Use with caution until more fine-grained control is implemented.
+>
+> Further, GitHub Actions are pinned to the most recent commit hash on the default branch of the repository. This may not be the branch you intend to use.
 
 #### `jig project dependabot`
 
