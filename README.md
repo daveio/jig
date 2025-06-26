@@ -25,8 +25,8 @@ Shell plugin features:
 ```mermaid
 ---
 config:
-  theme: dark
   layout: elk
+  theme: dark
 ---
 graph LR
   jig[jig]
@@ -96,6 +96,7 @@ graph LR
         aiRename --> aiRenameImage(image)
 
   style dance stroke-dasharray: 2 3,stroke-width: 5px
+
 ```
 
 ## Config
@@ -133,6 +134,18 @@ jwt: #                          JWT configuration. optional.
     - env #                         top priority
     - file #                        second priority
     - key #                         final priority
+project: #                      Project management configuration. optional.
+  dependabot: #                   def: stated. Template for each ecosystem. optional.
+    #                               note: `ecosystem` and `directory` are generated.
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 100
+    assignees:
+      - daveio
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 secret: #                       we use a secret in many places. required.
   env: JIG_SECRET_KEY #           def: JIG_SECRET_KEY. optional.
   file: ~/.jig.secret.key #       def: none. file containing key. optional.
@@ -200,6 +213,7 @@ Gets the current user's GitHub username.
 ```rust
 // Clap Derive API
 #[command(infer_subcommands = true)]
+struct Cli {}
 ```
 
 ### `jig ai`
@@ -654,7 +668,7 @@ Project management utilities.
 
 #### `jig project bump`
 
-Detects package manager files, such as `Cargo.toml`, `package.json`, GitHub Actions, etc. Bumps the versions of all packages to latest.
+Detects package manager files, such as `Cargo.toml`, `package.json`, `.github/workflows/*.ya?ml`, etc. Bumps the versions of all packages to latest.
 
 GitHub Actions are a special case; they are pinned to the most recent commit hash on the default branch of the repository.
 
@@ -666,6 +680,13 @@ GitHub Actions are a special case; they are pinned to the most recent commit has
 #### `jig project dependabot`
 
 Dependabot configuration.
+
+Flow:
+
+- Scans for language-specific package manager files, such as `Cargo.toml`, `package.json`, etc.
+- Generates a Dependabot configuration file in `.github/dependabot.yml`.
+  - Uses YAML template from config `project.dependabot`.
+  - For each, generates `ecosystem` and `directory` fields per discovered files.
 
 #### `jig project new`
 
