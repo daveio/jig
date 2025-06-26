@@ -29,7 +29,7 @@ jobs:
 
       - name: review
         id: review
-        uses: anthropics/claude-code-action@b0d9b8c4cd71465a10fe023bc17f1b3a8c9a9921
+        uses: anthropics/claude-code-action@1e006bf2d00ba53d35d0abf2196a09249788b1cc
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
