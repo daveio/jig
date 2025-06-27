@@ -2,25 +2,63 @@
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/daveio/jig)
 
-## Project
+## Overview
 
-`jig` is a utility which collects tools for various tasks into one place. It merges all my disparate tools into a single CLI toolbox, making it easier to manage and use them, and teaches me Rust.
+`jig` is a comprehensive CLI toolbox that consolidates various utilities into a single, unified command-line interface. Built with Rust, it provides a consistent experience for common development, security, and administrative tasks.
 
-Will also include shell plugins. Support for **standalone installation**, or using:
+## Installation
 
-- `fish`: `fisher`, `oh-my-fish`, `fundle`, `fisherman`
-- `zsh`: `antigen`, `antidote`, `antibody`, `zplug`, `zplugin`, `oh-my-zsh`
-- `bash`: `bash-it`, `oh-my-bash`
+### Standalone Installation
 
-Shell plugin features:
+`jig` can be installed as a standalone binary.
 
-- Directory creation / ensuring
-- `jig workspace hook` integration
-- `$PATH` / `$fish_user_paths` setup
-- Keeping any supporting artifacts in `~/.local/share/jig` (wordlists?) up to date
-- Completion (do we get this for free with `clap`?)
+### Shell Plugin Installation
 
-## Command Tree
+Alternatively, install as a shell plugin using your preferred package manager:
+
+**Fish Shell:**
+
+- `fisher`
+- `oh-my-fish`
+- `fundle`
+- `fisherman`
+
+**Zsh:**
+
+- `antigen`
+- `antidote`
+- `antibody`
+- `zplug`
+- `zplugin`
+- `oh-my-zsh`
+
+**Bash:**
+
+- `bash-it`
+- `oh-my-bash`
+
+### Shell Plugin Features
+
+- Automatic directory creation and management
+- Seamless `jig workspace hook` integration
+- Automatic `$PATH` / `$fish_user_paths` configuration
+- Maintains supporting artifacts in `~/.local/share/jig`
+- Shell completion support (via `clap`)
+
+## Quick Start
+
+```bash
+# Install jig
+cargo install jig
+
+# Initialize configuration
+jig init
+
+# View help
+jig --help
+```
+
+## Command Structure
 
 ```mermaid
 ---
@@ -103,11 +141,25 @@ graph LR
   style dance stroke-dasharray: 2 3,stroke-width: 5px
 ```
 
-## Config
+## Configuration
 
-Config is in `yaml` format. We use `saphyr` with `serde` for YAML operations.
+`jig` uses YAML configuration files for customization. The configuration system is built with `saphyr` and `serde` for robust YAML operations.
 
-### Full Config
+### Configuration File Location
+
+- Primary: `~/.jig.yaml`
+- Secrets (optional): `~/.jig.secrets`
+
+### Minimal Configuration
+
+The bare minimum configuration requires only an encryption key:
+
+```yaml
+secret:
+  key: AGE-SECRET-KEY-[...]
+```
+
+### Complete Configuration Reference
 
 ```yaml
 api: #                          API key configuration. optional.
@@ -205,241 +257,363 @@ yank: #                         Yank configuration. optional.
   #                                                              `gix` will try to respect these.
 ```
 
-### Minimal Config
+### Minimal Configuration Example
+
+For a quick start, use this minimal configuration:
 
 ```yaml
 secret:
   key: AGE-SECRET-KEY-[...]
 ```
 
-## Library Notes
+## Global Command Options
 
-- `rmcp`
-  - <https://hackmd.io/@Hamze/SytKkZP01l>
-- `serde`
-  - YAML: <https://lib.rs/crates/saphyr>
-  - Other formats: <https://serde.rs/#data-formats>
-- `spinoff`
-  - `noise`: single character fade spinner
-  - `aesthetic`: multi character spinner
+All `jig` commands support these universal options:
 
-## Shared Utilities
+| Option      | Short | Description                                                |
+| ----------- | ----- | ---------------------------------------------------------- |
+| `--version` | `-V`  | Display version information                                |
+| `--help`    | `-h`  | Show help for a command                                    |
+| `--yes`     | `-y`  | Skip all confirmations                                     |
+| `--json`    | `-j`  | Output structured JSON (formatted with `stringify_pretty`) |
+| `--verbose` | `-v`  | Detailed output to STDERR (incompatible with `--json`)     |
+| `--quiet`   | `-q`  | Minimal output to STDERR (incompatible with `--json`)      |
+| `--silent`  | `-s`  | No output to STDOUT/STDERR (incompatible with `--json`)    |
 
-### `prepare_image_for_claude`
+> **Note:** Commands support abbreviation to the point of disambiguation via `clap`.
 
-Shrinks images to under 5 MB for Claude compatibility.
+## Command Reference
 
-- If image is over `2048px` on the long edge, resize to `2048px` on the long edge.
-- Convert to WebP format with `image-webp`.
-  - Start with lossless compression.
-  - If still over 5 MB, use lossy compression with a quality of 90.
-  - If still over 5 MB, use lossy compression with a quality of 75.
-  - If still over 5 MB, use lossy compression with a quality of 50.
-  - If still over 5 MB, use lossy compression with a quality of 25.
-  - Abort with an error.
-- If successful, return WebP image data as struct or bytes.
+### `jig init`
 
-### `ask_claude`
+Initialize jig configuration and set up the environment.
 
-- `PROMPT` - Prompt to send to Claude.
-- `ASSOCIATED_DATA` - Associated data to send to Claude. Optional.
-- `IMAGE` | `FILENAME` - Image data to send to Claude. Optional.
+**Summary:** Creates necessary directories, fetches templates, generates configuration with encryption keys, and sets up shell integration.
 
-Calls `prepare_image_for_claude` to ensure the image is compatible, then sends the prompt, associated data, and any image to Claude.
+**Parameters:**
 
-### `resolve_github_username`
+- `-c`, `--clobber`: Overwrite existing configuration without confirmation
 
-Gets the current user's GitHub username.
+**Configuration:** None.
 
-- If `git.user` is set in the config, returns that.
-- If not, tries to run `gh api user --jq .login` to get the username.
-- If that fails, returns an error.
+**Flow:**
 
-### Git abstraction
+1. Create required directories:
+   - `~/.local/share/jig`
+   - `~/.local/share/jig/bin`
+   - `~/.local/share/jig/templates`
+2. Clone template repository from GitHub
+3. Generate new encryption key if creating config
+4. Create configuration file (prompts if exists unless `--clobber`)
+5. Check shell integration status
+6. Provide setup instructions if integration inactive
 
-We want an abstraction over Git, so we can call the same code whether we're using the `git` CLI or the [`gix`](https://lib.rs/crates/gix) library, and have the abstraction decide what to do.
+**Notes:**
 
-## Universal Arguments
-
-- `-V` / `--version`: Get `jig` version.
-- `-h` / `--help`: Get help about a command.
-- `-y` / `--yes`: Skip any and all confirmations, assuming yes.
-- `-j` / `--json`: Write structured output, for use in scripts. Formats output with `stringify_pretty` of [`json`](https://lib.rs/crates/json).
-- `-v` / `--verbose`: Print more detailed output to `STDERR`. Invalid with `--json`.
-- `-q` / `--quiet`: Print less detailed output to `STDERR`. Invalid with `--json`.
-- `-s` / `--silent`: Print nothing to `STDOUT` or `STDERR`, even in case of failures (return code is still emitted). Invalid with `--json`.
-
-## Commands
-
-`clap` supports command shortening to the point of disambiguation.
-
-```rust
-// Clap Derive API
-#[command(infer_subcommands = true)]
-struct Cli {}
-```
+- Uses `git` CLI or `gix` based on `git.internal` config
+- Templates default to `templates` branch of `jig` repository
+- Can be customized via `template.repository` and `template.branch`
 
 ### `jig ai`
 
-AI-powered utilities.
+AI-powered utilities for various automation tasks.
 
 #### `jig ai rename`
 
-AI renaming operations.
+AI-powered renaming operations.
 
 ##### `jig ai rename image`
 
-AI-powered image renaming.
+Automatically rename image files using AI-generated descriptive names.
 
-- `[FILENAME_OR_GLOB]`: File or glob pattern to rename images. Defaults to all `*.jpg`, `*.jpeg`, `*.png`, `*.webp` in the current directory. Multiple filenames/globs can be specified.
+**Summary:** Analyzes image content and generates descriptive filenames following a standardized format.
 
-Flow:
+**Parameters:**
 
-- Use the `ask_claude` utility to send an image to Claude for filename generation.
-  - Syntax: `a_few_words-YYYYMMDD-HHMMss.ext`
-- Rename the image.
-- Throw away any temp files.
+- `[FILENAME_OR_GLOB]`: File or glob pattern to rename (defaults to all `*.jpg`, `*.jpeg`, `*.png`, `*.webp` in current directory)
+- Multiple filenames/globs can be specified
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Process each image file through `prepare_image_for_claude` utility
+2. Send image to Claude for content analysis
+3. Generate filename using format: `descriptive_words-YYYYMMDD-HHMMss.ext`
+4. Rename file with generated name
+5. Clean up temporary files
+
+**Notes:** Uses internal `ask_claude` utility for AI processing.
 
 ### `jig api`
 
-Call the `dave.io` API.
+Interact with the dave.io API services.
 
-Base URL: `https://dave.io/`
-
-#### `jig api image`
-
-Image processing operations.
-
-##### `jig api image alt`
-
-Generate alt text for images.
-
-Flow:
-
-- Puts the image through `prepare_image_for_claude`.
-- Sends it to `/api/ai/alt` via POST.
-
-##### `jig api image optimise`
-
-Optimise image files.
-
-Flow:
-
-- Sends image to `/api/images/optimise` via POST.
+**Base URL:** `https://dave.io/`
 
 #### `jig api ping`
 
-API health checks.
+Check API health and connectivity.
 
-Flow:
+**Summary:** Performs a simple health check against the API endpoint.
 
-- Dead simple. Fetches `/api/ping` and shows the data from the response.
-  - The API returns JSON.
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Send GET request to `/api/ping`
+2. Display JSON response data
+
+#### `jig api image`
+
+Image processing and AI operations.
+
+##### `jig api image alt`
+
+Generate AI-powered alt text for accessibility.
+
+**Summary:** Analyzes images and generates descriptive alt text for web accessibility.
+
+**Parameters:**
+
+- `[FILENAME]`: Image file to process
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Process image through `prepare_image_for_claude` utility
+2. Send processed image to `/api/ai/alt` via POST
+3. Return generated alt text
+
+##### `jig api image optimise`
+
+Optimize images for web delivery.
+
+**Summary:** Reduces image file size while maintaining quality.
+
+**Parameters:**
+
+- `[FILENAME]`: Image file to optimize
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Send image to `/api/images/optimise` via POST
+2. Receive and save optimized image
 
 #### `jig api ticket`
 
-Ticket management operations.
-
-##### `jig api ticket description`
-
-Generate ticket descriptions from a title.
-
-- `[TITLE]`: Title of the ticket to generate a description for. Required.
-- `-i` / `--input`: File containing the title. Optional.
-- `-s` / `--stdin`: Read title from `stdin`. Optional.
-
-Flow:
-
-- Calls `/api/tickets/description` with the title.
-
-##### `jig api ticket enrich`
-
-Enrich ticket information.
+AI-powered ticket management utilities.
 
 ##### `jig api ticket title`
 
-Generate ticket title from a description.
+Generate concise ticket titles from descriptions.
 
-- `[DESCRIPTION]`: Description of the ticket to generate a title for. Required.
-- `-i` / `--input`: File containing the description. Optional.
-- `-s` / `--stdin`: Read description from `stdin`. Optional.
+**Summary:** Creates well-formatted ticket titles from detailed descriptions.
 
-Flow:
+**Parameters:**
 
-- Calls `/api/tickets/title` with the description.
+- `[DESCRIPTION]`: Ticket description text (required)
+- `-i`, `--input`: Read description from file
+- `-S`, `--stdin`: Read description from stdin
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Send description to `/api/tickets/title`
+2. Return generated title
+
+##### `jig api ticket description`
+
+Generate detailed descriptions from titles.
+
+**Summary:** Expands ticket titles into comprehensive descriptions.
+
+**Parameters:**
+
+- `[TITLE]`: Ticket title text (required)
+- `-i`, `--input`: Read title from file
+- `-S`, `--stdin`: Read title from stdin
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Send title to `/api/tickets/description`
+2. Return generated description
+
+##### `jig api ticket enrich`
+
+Enhance ticket information with additional context.
+
+**Summary:** Adds metadata and context to existing tickets.
+
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:** None.
 
 #### `jig api token`
 
-Token management operations.
+API token management operations.
 
 ##### `jig api token info`
 
-Get token information.
+Retrieve token details and metadata.
 
-- `[UUID]`: Token UUID to get information for. Required.
+**Summary:** Displays information about a specific API token.
 
-Flow:
+**Parameters:**
 
-- Calls `/api/tokens/$UUID` with the UUID.
+- `[UUID]`: Token UUID (required)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Send GET request to `/api/tokens/$UUID`
+2. Display token information
 
 ##### `jig api token revoke`
 
-Revoke tokens.
+Revoke an active API token.
 
-- `[UUID]`: Token UUID to revoke. Required.
+**Summary:** Permanently invalidates a token.
 
-Flow:
+**Parameters:**
 
-- Calls `/api/tokens/$UUID/revoke` with the UUID.
+- `[UUID]`: Token UUID to revoke (required)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Send POST request to `/api/tokens/$UUID/revoke`
+2. Confirm revocation
 
 ##### `jig api token usage`
 
-Check token usage.
+View token usage statistics.
 
-- `[UUID]`: Token UUID to get usage information for. Required.
+**Summary:** Shows usage metrics and limits for a token.
 
-Flow:
+**Parameters:**
 
-- Calls `/api/tokens/$UUID/usage` with the UUID.
+- `[UUID]`: Token UUID (required)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Send GET request to `/api/tokens/$UUID/usage`
+2. Display usage statistics
 
 ### `jig crypto`
 
-Encryption and decryption operations.
-
-#### `jig crypto decrypt`
-
-`-i` / `--input`: File of ciphertext to read.
-`-o` / `--output`: File of plaintext to write. May be binary.
-`-k` / `--key` `[KEY]`: Override key from configuration or env.
-
-Decrypt data using `age` encryption.
-
-Default: ciphertext in via `stdin`, plaintext out via `stdout`, information via `stderr`.
+Encryption and decryption operations using age encryption.
 
 #### `jig crypto encrypt`
 
-`-i` / `--input`: File of plaintext to read. May be binary.
-`-o` / `--output`: File of ciphertext to write.
-`-k` / `--key` `[KEY]`: Override key from configuration or env.
+Encrypt data using age encryption.
 
-Encrypt data using `age` encryption.
+**Summary:** Encrypts files or stdin data using the age encryption standard.
 
-Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via `stderr`.
+**Parameters:**
+
+- `-i`, `--input`: Input file to encrypt (reads stdin if omitted)
+- `-o`, `--output`: Output file for ciphertext (writes to stdout if omitted)
+- `-k`, `--key [KEY]`: Override default encryption key
+
+**Configuration:**
+
+- `secret.main.key`: Default encryption key
+- `secret.main.env`: Environment variable for key
+- `secret.main.file`: File containing key
+
+**Flow:**
+
+1. Read input data from file or stdin
+2. Load encryption key (parameter > env > file > config)
+3. Encrypt using age encryption
+4. Write ciphertext to file or stdout
+
+**Notes:** Supports binary input. Information messages sent to stderr.
+
+#### `jig crypto decrypt`
+
+Decrypt age-encrypted data.
+
+**Summary:** Decrypts files or stdin data encrypted with age.
+
+**Parameters:**
+
+- `-i`, `--input`: Input file to decrypt (reads stdin if omitted)
+- `-o`, `--output`: Output file for plaintext (writes to stdout if omitted)
+- `-k`, `--key [KEY]`: Override default decryption key
+
+**Configuration:**
+
+- `secret.main.key`: Default decryption key
+- `secret.main.env`: Environment variable for key
+- `secret.main.file`: File containing key
+
+**Flow:**
+
+1. Read ciphertext from file or stdin
+2. Load decryption key (parameter > env > file > config)
+3. Decrypt using age
+4. Write plaintext to file or stdout
+
+**Notes:** Supports binary output. Information messages sent to stderr.
 
 #### `jig crypto public`
 
-`-k` / `--key` `[KEY]`: Private key to process
+Display public key for encryption.
 
-Prints the public key ('recipient' in `age` terms) associated with a private key. Uses the configured private key by default.
+**Summary:** Shows the public key (recipient) associated with a private key.
+
+**Parameters:**
+
+- `-k`, `--key [KEY]`: Private key to process (uses configured key if omitted)
+
+**Configuration:**
+
+- `secret.main.key`: Default private key
+
+**Flow:**
+
+1. Load private key
+2. Derive and display public recipient key
+
+**Notes:** Public key is used as recipient in age encryption.
 
 ### `jig dance`
 
-Easter egg command with terminal effects.
+Easter egg command with animated terminal effects.
 
-- Not present in `--help`.
-- Not exposed via MCP.
+**Summary:** Hidden command that displays animated terminal effects and ASCII art.
 
-See [Easter Egg Nonsense](#easter-egg-nonsense) for more details.
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Initialize terminal effects engine
+2. Display animated sequences
+3. Clean up and restore terminal
+
+**Notes:**
+
+- Not shown in `--help` output
+- Not exposed via MCP
+- See "Easter Egg Nonsense" section for implementation details
 
 ### `jig domain`
 
@@ -447,275 +621,463 @@ Domain management and information tools.
 
 #### `jig domain check`
 
-- `-d` / `--domaincheck`: Shell out to `domaincheck`. Must be installed and on `$PATH`.
-- `[QUERY]`: Domain query. Required.
+Check domain name availability across TLDs.
 
-Check domain availability.
+**Summary:** Searches for available domain names using the Domainr API, filtered to Cloudflare-supported TLDs.
 
-Flow:
+**Parameters:**
 
-- Use the Domainr API with RapidAPI credentials.
-- Consider only TLDs on the 'Cloudflare TLDs' list.
+- `[QUERY]`: Domain name to check (required)
+- `-d`, `--domaincheck`: Use external `domaincheck` tool instead
 
-Improvements:
+**Configuration:**
 
-- Extract logic from `domaincheck` CLI crate.
+- `api.domainr`: Domainr API key
 
-**Cloudflare TLDs:**
+**Flow:**
 
-> `ac` `academy` `accountant` `accountants` `actor` `adult` `agency` `ai` `airforce` `apartments` `app` `army` `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz` `black` `blog` `blue` `boo` `boston` `boutique` `broker` `build` `builders` `business` `cab` `cafe` `cam` `camera` `camp` `capital` `cards` `care` `careers` `casa` `cash` `casino` `catering` `cc` `center` `ceo` `chat` `cheap` `christmas` `church` `city` `claims` `cleaning` `clinic` `clothing` `cloud` `club` `co` `co.uk` `coach` `codes` `coffee` `college` `com` `com.ai` `com.co` `community` `company` `compare` `computer` `condos` `construction` `consulting` `contact` `contractors` `cooking` `cool` `coupons` `credit` `creditcard` `cricket` `cruises` `dad` `dance` `date` `dating` `day` `dealer` `deals` `degree` `delivery` `democrat` `dental` `dentist` `design` `dev` `diamonds` `diet` `digital` `direct` `directory` `discount` `doctor` `dog` `domains` `download` `education` `email` `energy` `engineer` `engineering` `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed` `express` `fail` `faith` `family` `fan` `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing` `fit` `fitness` `flights` `florist` `flowers` `fm` `foo` `football` `forex` `forsale` `forum` `foundation` `fun` `fund` `furniture` `futbol` `fyi` `gallery` `game` `games` `garden` `gifts` `gives` `glass` `global` `gmbh` `gold` `golf` `graphics` `gratis` `green` `gripe` `group` `guide` `guitars` `guru` `haus` `health` `healthcare` `help` `hockey` `holdings` `holiday` `horse` `hospital` `host` `hosting` `house` `how` `icu` `immo` `immobilien` `inc` `industries` `info` `ink` `institute` `insure` `international` `investments` `io` `irish` `jetzt` `jewelry` `kaufen` `kim` `kitchen` `land` `lawyer` `lease` `legal` `lgbt` `life` `lighting` `limited` `limo` `link` `live` `loan` `loans` `lol` `love` `ltd` `luxe` `maison` `management` `market` `marketing` `markets` `mba` `me` `me.uk` `media` `memorial` `men` `miami` `mobi` `moda` `mom` `money` `monster` `mortgage` `mov` `movie` `navy` `net` `net.ai` `net.co` `net.uk` `network` `new` `news` `nexus` `ngo` `ninja` `nom.co` `observer` `off.ai` `ong` `online` `org` `org.ai` `org.uk` `organic` `page` `partners` `parts` `party` `pet` `phd` `photography` `photos` `pics` `pictures` `pink` `pizza` `place` `plumbing` `plus` `porn` `press` `pro` `productions` `prof` `promo` `properties` `protection` `pub` `racing` `realty` `recipes` `red` `rehab` `reise` `reisen` `rent` `rentals` `repair` `report` `republican` `rest` `restaurant` `review` `reviews` `rip` `rocks` `rodeo` `rsvp` `run` `sale` `salon` `sarl` `school` `schule` `science` `security` `select` `services` `sex` `sh` `shoes` `shop` `shopping` `show` `singles` `site` `ski` `soccer` `social` `software` `solar` `solutions` `soy` `space` `storage` `store` `stream` `studio` `style` `supplies` `supply` `support` `surf` `surgery` `systems` `tax` `taxi` `team` `tech` `technology` `tennis` `theater` `theatre` `tienda` `tips` `tires` `today` `tools` `tours` `town` `toys` `trade` `trading` `training` `travel` `tv` `uk` `university` `uno` `us` `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision` `vodka` `voyage` `watch` `webcam` `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz` `yoga` `zone`
+1. Query Domainr API with search term
+2. Filter results to Cloudflare TLD list
+3. Display availability status for each TLD
+
+**Notes:**
+
+- Requires Domainr API key in configuration
+- Limited to Cloudflare-supported TLDs:
+  `ac` `academy` `accountant` `accountants` `actor` `adult` `agency` `ai` `airforce` `apartments` `app` `army` `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz` `black` `blog` `blue` `boo` `boston` `boutique` `broker` `build` `builders` `business` `cab` `cafe` `cam` `camera` `camp` `capital` `cards` `care` `careers` `casa` `cash` `casino` `catering` `cc` `center` `ceo` `chat` `cheap` `christmas` `church` `city` `claims` `cleaning` `clinic` `clothing` `cloud` `club` `co` `co.uk` `coach` `codes` `coffee` `college` `com` `com.ai` `com.co` `community` `company` `compare` `computer` `condos` `construction` `consulting` `contact` `contractors` `cooking` `cool` `coupons` `credit` `creditcard` `cricket` `cruises` `dad` `dance` `date` `dating` `day` `dealer` `deals` `degree` `delivery` `democrat` `dental` `dentist` `design` `dev` `diamonds` `diet` `digital` `direct` `directory` `discount` `doctor` `dog` `domains` `download` `education` `email` `energy` `engineer` `engineering` `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed` `express` `fail` `faith` `family` `fan` `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing` `fit` `fitness` `flights` `florist` `flowers` `fm` `foo` `football` `forex` `forsale` `forum` `foundation` `fun` `fund` `furniture` `futbol` `fyi` `gallery` `game` `games` `garden` `gifts` `gives` `glass` `global` `gmbh` `gold` `golf` `graphics` `gratis` `green` `gripe` `group` `guide` `guitars` `guru` `haus` `health` `healthcare` `help` `hockey` `holdings` `holiday` `horse` `hospital` `host` `hosting` `house` `how` `icu` `immo` `immobilien` `inc` `industries` `info` `ink` `institute` `insure` `international` `investments` `io` `irish` `jetzt` `jewelry` `kaufen` `kim` `kitchen` `land` `lawyer` `lease` `legal` `lgbt` `life` `lighting` `limited` `limo` `link` `live` `loan` `loans` `lol` `love` `ltd` `luxe` `maison` `management` `market` `marketing` `markets` `mba` `me` `me.uk` `media` `memorial` `men` `miami` `mobi` `moda` `mom` `money` `monster` `mortgage` `mov` `movie` `navy` `net` `net.ai` `net.co` `net.uk` `network` `new` `news` `nexus` `ngo` `ninja` `nom.co` `observer` `off.ai` `ong` `online` `org` `org.ai` `org.uk` `organic` `page` `partners` `parts` `party` `pet` `phd` `photography` `photos` `pics` `pictures` `pink` `pizza` `place` `plumbing` `plus` `porn` `press` `pro` `productions` `prof` `promo` `properties` `protection` `pub` `racing` `realty` `recipes` `red` `rehab` `reise` `reisen` `rent` `rentals` `repair` `report` `republican` `rest` `restaurant` `review` `reviews` `rip` `rocks` `rodeo` `rsvp` `run` `sale` `salon` `sarl` `school` `schule` `science` `security` `select` `services` `sex` `sh` `shoes` `shop` `shopping` `show` `singles` `site` `ski` `soccer` `social` `software` `solar` `solutions` `soy` `space` `storage` `store` `stream` `studio` `style` `supplies` `supply` `support` `surf` `surgery` `systems` `tax` `taxi` `team` `tech` `technology` `tennis` `theater` `theatre` `tienda` `tips` `tires` `today` `tools` `tours` `town` `toys` `trade` `trading` `training` `travel` `tv` `uk` `university` `uno` `us` `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision` `vodka` `voyage` `watch` `webcam` `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz` `yoga` `zone`
 
 #### `jig domain expiry`
 
 Check domain expiration dates.
 
-- `[DOMAIN]`: Domain to check. Required.
+**Summary:** Retrieves domain registration expiry information via RDAP.
 
-Use RDAP with `rdap-icann-client`.
+**Parameters:**
 
-If RDAP fails, provide a clickable URL for WHOIS.
+- `[DOMAIN]`: Domain name to check (required)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Query RDAP server for domain info
+2. Extract expiration date from response
+3. Display days until expiry
+4. If RDAP fails, provide WHOIS lookup URL
+
+**Notes:** Uses `rdap-icann-client` for RDAP queries.
 
 #### `jig domain ns`
 
-Check nameserver information.
+Retrieve nameserver information.
 
-- `[DOMAIN]`: Domain to check. Required.
+**Summary:** Displays authoritative nameservers for a domain.
 
-Use RDAP with `rdap-icann-client`.
+**Parameters:**
 
-If RDAP fails, do a NS lookup.
+- `[DOMAIN]`: Domain name to check (required)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Query RDAP for nameserver data
+2. If RDAP fails, perform DNS NS record lookup
+3. Display nameserver list
+
+**Notes:** Falls back to DNS lookup if RDAP unavailable.
 
 ### `jig generate`
 
-Generation utilities.
+Cryptographically secure generation utilities.
 
-`generate` can be deterministic with `-k` / `--keyed` `[name]`
+**Global Options for Deterministic Generation:**
 
-- Uses encryption key and `[name]` to generate deterministic output
-- Use `-s` / `--seed` `[value]` to use custom value instead of encryption key
-  - Run `argon2` on `[value]` to get data to actually use
+- `-k`, `--keyed [name]`: Generate deterministic output using encryption key + name
+- `-d`, `--seed [value]`: Use custom seed instead of encryption key (processed with argon2)
 
 #### `jig generate hex`
 
-- `[LENGTH]`: hex length to generate. Defaults to 16 bytes / 32 chars.
+Generate random hexadecimal strings.
 
-Generate cryptographically secure random hexadecimal values.
+**Summary:** Creates cryptographically secure random hex values for IDs, tokens, or secrets.
 
-#### `jig generate jwt`
+**Parameters:**
 
-Generate JSON Web Tokens.
+- `[LENGTH]`: Number of bytes (default: 16 bytes = 32 hex chars)
 
-Applies random UUID as token ID using [`uuid`](https://lib.rs/crates/uuid).
+**Configuration:** None.
 
-- `--subject [subject]`: Token subject (e.g., "ai:alt", "api:tokens", required)
-- `--description [text]`: Human-readable token desc (default: generated)
-- `--expiry [duration]`: Expiration time (e.g., "1h", "7d", "30m", default: 1h)
-- `--claim [key=value]`: Add custom claims, can be specified multiple times
-- `--secret [secret]`: JWT signing secret (or use config/env)
-- `--algorithm [alg]`: Signing algorithm (default: HS256)
+**Flow:**
 
-Secret priority:
-
-- `--secret`
-- JWT secret resolution from config
-- Return an error
-
-#### `jig generate key`
-
-Generate cryptographic keys.
-
-##### `jig generate key crypto`
-
-`-s` / `--set`: Sets key in configuration file after generation.
-
-Generate encryption keys for native `age`-based encryption.
-
-##### `jig generate key wireguard`
-
-Generate WireGuard private and public keys.
+1. Generate random bytes
+2. Convert to hexadecimal string
+3. Output lowercase hex
 
 #### `jig generate password`
 
-- `-e` / `--emoji`: Include emoji. Experimental. Uses a subset of non-ZWJ emoji from the RGI list. Warns user to be able to reset their password if the site doesn't use Unicode for passwords. Emoji count as one character.
-- `-x` / `--xkcd`: Use `correct horse battery staple` format from [xkcd](https://xkcd.com/936). Uses `chbs`.
-- `[LENGTH]`: password length to generate. Defaults to 16. In `--xkcd` mode, the number of words, defaulting to 4.
+Generate secure passwords with customizable complexity.
 
-Generate cryptographically secure random passwords with a safe alphabet.
+**Summary:** Creates strong passwords with entropy validation and character set requirements.
 
-Config:
+**Parameters:**
 
-`generate.password.emoji`: Whether to include emoji in generated passwords. Defaults to `false`.
+- `[LENGTH]`: Password length (default: 16, or word count in xkcd mode)
+- `-e`, `--emoji`: Include emoji characters
+- `-x`, `--xkcd`: Generate passphrase using word list
 
-Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is above `2`, telling the user what is going on.
+**Configuration:**
 
-A minimum of one item from each of the four (five if emoji is enabled) character sets.
+- `generate.password.emoji`: Enable emoji by default
 
-Alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
+**Flow:**
 
-With `--emoji`: Also include single-width non-ZWJ, RGI emoji
+1. Select character sets based on options
+2. Generate password ensuring one char from each set
+3. Check entropy with `zxcvbn` (minimum score: 3)
+4. Regenerate if entropy too low
+5. Display password with security metrics
 
-Emoji list: 😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, 🙃, 😉, 😌, 😍, 🥰, 😘, 😗, 😙, 😚, 😋, 😛, 😜, 🤪, 😝, 🤑, 🤗, 🤭, 🤫, 🤔, 🤐, 🤨, 😐, 😑, 😶, 😏, 😒, 🙄, 😬, 🤥, 😌, 😔, 😪, 🤤, 😴, 😷, 🤒, 🤕, 🤢, 🤮, 🤧, 🥵, 🥶, 🥴, 😵, 🤯, 🤠, 🥳, 😎, 🤓, 🧐, 😕, 😟, 🙁, ☹️, 😮, 😯, 😲, 😳, 🥺, 😦, 😧, 😨, 😰, 😥, 😢, 😭, 😱, 😖, 😣, 😞, 😓, 😩, 😫, 🥱, 😤, 😡, 😠, 🤬, 😈, 👿, 💀, ☠️, 💩, 🤡, 👹, 👺, 👻
+**Notes:**
+
+- Base alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
+- Emoji alphabet: 😀😃😄😁😆😅😂🤣😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯🤠🥳😎🤓🧐😕😟🙁☹️😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬😈👿💀☠️💩🤡👹👺👻
+
+#### `jig generate key`
+
+Generate various types of cryptographic keys.
+
+##### `jig generate key crypto`
+
+Generate age encryption keys.
+
+**Summary:** Creates private keys for age-based encryption.
+
+**Parameters:**
+
+- `-w`, `--write`: Save key to configuration file
+
+**Configuration:**
+
+- `secret.main.key`: Where to store the key
+
+**Flow:**
+
+1. Generate age private key
+2. Display private and public keys
+3. Optionally save to config
+
+##### `jig generate key wireguard`
+
+Generate WireGuard VPN keys.
+
+**Summary:** Creates WireGuard private and public key pairs.
+
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Generate WireGuard private key
+2. Derive public key
+3. Display both keys
+
+#### `jig generate jwt`
+
+Generate JSON Web Tokens with claims.
+
+**Summary:** Creates signed JWTs for API authentication.
+
+**Parameters:**
+
+- `--subject [subject]`: Token subject (required, e.g., "ai:alt")
+- `--description [text]`: Human-readable description
+- `--expiry [duration]`: Expiration time (default: "1h")
+- `--claim [key=value]`: Custom claims (repeatable)
+- `--secret [secret]`: Signing secret
+- `--algorithm [alg]`: Algorithm (default: HS256)
+
+**Configuration:**
+
+- `secret.jwt.key`: Default JWT secret
+- `secret.jwt.env`: Environment variable for secret
+- `secret.jwt.file`: File containing secret
+
+**Flow:**
+
+1. Generate UUID for token ID
+2. Build claims with subject and custom data
+3. Load signing secret (parameter > config > error)
+4. Sign token with specified algorithm
+5. Output JWT
+
+```mermaid
+graph TD
+    A[Start] --> B{Secret Source?}
+    B -->|Parameter| C[Use --secret]
+    B -->|Config| D[Load from config]
+    B -->|None| E[Error]
+    C --> F[Build Claims]
+    D --> F
+    F --> G[Sign JWT]
+    G --> H[Output Token]
+```
 
 ### `jig git`
 
-Git and GitHub utilities.
+Git and GitHub utilities for repository and release management.
 
 #### `jig git binary`
 
-Information about binaries is kept in `~/.local/share/jig/binaries.yaml` for use by the subcommands.
+Manage binary releases from GitHub repositories.
 
-Data format is [`yaml` using `saphypr`](https://lib.rs/crates/saphypr).
-
-`~/.local/share/jig/bin` is added/ensured to the user's `$PATH` as part of the shell integration hook in `jig workspace hook`.
-
-Binary file management.
+**Storage:** `~/.local/share/jig/binaries.yaml` (metadata), `~/.local/share/jig/bin` (binaries)
 
 ##### `jig git binary get`
 
-**Alias:** `jig git binary install`, `jig git binary add`
+Install binary releases from GitHub.
 
-Install binary files. Prints path to installed binary.
+**Summary:** Downloads and installs the latest binary release for your platform.
 
-- Uses the GitHub API to find releases for the specified repository.
-  - If no releases are found, returns an error.
-- Fetches the latest release for the user's operating environment.
-- Installs it to `~/.local/share/jig/bin`.
+**Aliases:** `install`, `add`
 
-Saves information about the binary (with hashes) to `~/.local/share/jig/binaries.yaml`.
+**Parameters:**
 
-##### `jig git binary remove`
+- `[USERNAME]/[REPO]`: GitHub repository (required)
 
-**Alias:** `jig git binary rm`
+**Configuration:** None.
 
-- `[USERNAME]/[REPO]`: GitHub username and repository name.
-- `[BINARY_NAME]`: Alternative to username/repo, remove binary by name.
+**Flow:**
 
-Remove installed binary files.
+1. Query GitHub API for latest release
+2. Find binary matching current OS/architecture
+3. Download to `~/.local/share/jig/bin`
+4. Make executable
+5. Save metadata with hash to `binaries.yaml`
+6. Display installation path
 
-Also removes entries from `~/.local/share/jig/binaries.yaml` if removal succeeds.
+**Notes:** PATH integration handled by shell hook.
 
 ##### `jig git binary show`
 
-- `-H` / `--hashes`: Show hashes of installed binaries as well as path.
+Display information about installed binaries.
 
-- `[USERNAME]/[REPO]`: GitHub username and repository name.
+**Summary:** Shows installation path and optional hash information.
 
-Prints path to installed binary for `username/repo`.
+**Parameters:**
 
-Remove installed binary files.
+- `[USERNAME]/[REPO]`: GitHub repository
+- `-H`, `--hashes`: Include file hashes
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Read metadata from `binaries.yaml`
+2. Display path and optional hash
 
 ##### `jig git binary update`
 
-- `-a` / `--all`: Attempt to update all installed binaries.
+Update installed binaries to latest versions.
 
-- `[USERNAME]/[REPO]`: GitHub username and repository name.
-- `[BINARY_NAME]`: Alternative to username/repo, update binary by name.
+**Summary:** Checks for and installs newer releases.
 
-Update binary files to the latest version. If we can get hashes, use them to prevent unnecessary downloads. Reads and writes `~/.local/share/jig/binaries.yaml`.
+**Parameters:**
+
+- `[USERNAME]/[REPO]`: Specific repository to update
+- `[BINARY_NAME]`: Update by binary name
+- `-a`, `--all`: Update all installed binaries
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Check current version hash
+2. Query GitHub for latest release
+3. Compare hashes to detect changes
+4. Download and replace if newer
+5. Update metadata
+
+##### `jig git binary remove`
+
+Remove installed binaries.
+
+**Summary:** Uninstalls binaries and cleans up metadata.
+
+**Aliases:** `rm`
+
+**Parameters:**
+
+- `[USERNAME]/[REPO]`: Repository to remove
+- `[BINARY_NAME]`: Remove by binary name
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Remove binary from filesystem
+2. Clean up metadata entry
+3. Confirm removal
 
 #### `jig git clone`
 
-Allows cloning GitHub repositories by `username/repo`. If just `repo` is given, it will use `resolve_github_username` to get the current user's GitHub username, throwing an error if `resolve_github_username` fails.
+Clone GitHub repositories with simplified syntax.
 
-- `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
-- `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to clone the repository.
-- `[USERNAME]/[REPO]` | `[REPO]`: GitHub username and repository name.
+**Summary:** Clone repositories using short `username/repo` or just `repo` notation.
 
-- By default, uses [`gix`](https://lib.rs/crates/gix) to clone the repository.
-  - This may not play well with things like SSH agents if you're cloning via SSH.
-- To use the `git` CLI, either:
-  - Set `git.internal` to `false` in your config.
-  - Use the `--cli` flag.
+**Parameters:**
+
+- `[USERNAME]/[REPO]` or `[REPO]`: Repository to clone
+- `-c`, `--cli`: Use git CLI instead of gix
+- `-i`, `--internal`: Force use of gix library
+
+**Configuration:**
+
+- `git.internal`: Use gix library by default (true)
+- `git.user`: Default GitHub username
+
+**Flow:**
+
+1. Resolve full repository path
+2. If just `repo`, use configured username
+3. Clone using gix or git CLI
+4. Set up local repository
+
+**Notes:**
+
+- SSH agent support may require `--cli` flag
+- Defaults to gix for better performance
 
 #### `jig git commit`
 
-AI-assisted commit messages.
+Generate AI-powered commit messages.
 
-Reimplements `oco` so we don't have to shell out to it.
+**Summary:** Creates conventional commit messages with AI analysis of changes.
 
-- `[PARAMETERS]`: Parameters to pass to `git`. If we're using `gix`, we should figure out what to do with them. If we're using the `git` CLI, we can just pass them through.
+**Parameters:**
 
-Flow:
+- `[PARAMETERS]`: Additional git commit parameters
 
-- Generates a diff of the current changes.
-- Does some mangling to reduce them to a manageable level if necessary - we don't want to pass massive changesets to the AI.
-- Uses the `ask_claude` utility to send the diff to Claude as `ASSOCIATED_DATA`.
-  - Claude is instructed to generate a multiline commit message with emoji, matching the `oco --fgm` format.
-  - Claude is also instructed to generate a short title, including conventional commit prefixes (configurable in `git.commit.prefixes`) and starting with an emoji.
-- We add the user's custom content to the commit message:
-  - If `git.commit.before` is a string, it is prepended to the commit message.
-  - If `git.commit.after` is a string, it is appended to the commit message.
-- We use the short title and full description to make the commit, respecting the parameters passed to the command.
+**Configuration:**
+
+- `git.commit.prefixes`: Allowed conventional prefixes
+- `git.commit.before`: Prepend text to messages
+- `git.commit.after`: Append text to messages
+
+**Flow:**
+
+1. Generate diff of staged changes
+2. Truncate large diffs for AI processing
+3. Send to Claude with commit format instructions
+4. Generate emoji + conventional prefix title
+5. Add configured before/after text
+6. Execute commit with generated message
+
+```mermaid
+graph TD
+    A[Get Diff] --> B{Diff Size}
+    B -->|Large| C[Truncate]
+    B -->|Small| D[Send to AI]
+    C --> D
+    D --> E[Generate Message]
+    E --> F[Add Custom Text]
+    F --> G[Commit]
+```
+
+**Notes:** Reimplements `oco` functionality natively.
 
 #### `jig git latest`
 
-Get the latest commit hash on a branch.
+Get latest commit hash from GitHub.
 
-- `[USERNAME]/[REPO]`: GitHub username and repository name.
-- `[BRANCH]`: Branch to get the latest commit from. Defaults to the default branch of the repository if omitted.
+**Summary:** Retrieves the most recent commit SHA for a branch.
+
+**Parameters:**
+
+- `[USERNAME]/[REPO]`: Repository to query
+- `[BRANCH]`: Branch name (defaults to default branch)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Query GitHub API for branch info
+2. Extract latest commit SHA
+3. Display hash
 
 #### `jig git secret`
 
-Put a secret to a Git repository. Uses `resolve_github_username` to get the current user's GitHub username if no username is specified.
+Manage GitHub repository secrets.
 
-- `[USERNAME]/[REPO]` | `[REPO]`: GitHub username and repository name.
-- `[SECRET_NAME]`: Name of the secret to put.
-- `[SECRET_VALUE]`: Value of the secret to put. If omitted, reads from `stdin`.
+**Summary:** Set encrypted secrets for GitHub Actions.
+
+**Parameters:**
+
+- `[USERNAME]/[REPO]` or `[REPO]`: Target repository
+- `[SECRET_NAME]`: Secret name
+- `[SECRET_VALUE]`: Secret value (or stdin)
+
+**Configuration:**
+
+- `git.user`: Default GitHub username
+
+**Flow:**
+
+1. Resolve repository path
+2. Read value from parameter or stdin
+3. Encrypt and upload to GitHub
+4. Confirm secret creation
 
 #### `jig git yank`
 
-Fetch and pull all repositories under the current directory, or a specific directory.
+Batch update all Git repositories.
 
-- `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
-- `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to fetch and pull the repository.
-- `[DIRECTORY]`: Directory to yank repositories in. Defaults to `yank.dir` if set, or the current directory if unset.
+**Summary:** Recursively fetch and pull all repositories in a directory.
 
-Config:
+**Parameters:**
 
-- `yank.dir`: Directory to yank repositories in.
-- `yank.fetch`: Parameters to `git fetch`. When using [`gix`](https://lib.rs/crates/gix), it will try to respect these.
-- `yank.pull`: Parameters to `git pull`. When using [`gix`](https://lib.rs/crates/gix), it will try to respect these.
+- `[DIRECTORY]`: Root directory to search
+- `-c`, `--cli`: Use git CLI
+- `-i`, `--internal`: Force gix usage
 
-Notes:
+**Configuration:**
 
-- By default, uses [`gix`](https://lib.rs/crates/gix) to fetch and pull the repository.
-  - This may not play well with things like SSH agents if you're cloning via SSH.
-- To use the `git` CLI, either:
-  - Set `git.internal` to `false` in your config.
-  - Use the `--cli` flag.
+- `yank.dir`: Default directory
+- `yank.fetch`: Git fetch parameters
+- `yank.pull`: Git pull parameters
+- `git.internal`: Use gix by default
 
-### `jig init`
+**Flow:**
 
-`-c` / `--clobber` : Overwrite existing config (with a new key!) without confirmation
+1. Find all `.git` directories recursively
+2. For each repository:
+   - Run fetch with configured parameters
+   - Run pull with configured parameters
+3. Report success/failure summary
 
-- Creates directories if they don't exist.
-  - `~/.local/share/jig`
-  - `~/.local/share/jig/bin`
-  - `~/.local/share/jig/templates`
-- Fetches stock templates.
-- Defaults to the `templates` branch of the `jig` repository.'
-  - Can be overridden in config as `template.repository` and `template.branch`.
-- Uses `git` to clone the templates into `~/.local/share/jig/templates/username/repo`.
-  - If the templates already exist and we're on the correct branch, they will be pulled and updated.
-  - Will then check out `branch` if non-default and not checked out already.
-  - Will use the `git` CLI if `git.internal` is set to `false` in the config, otherwise uses [`gix`](https://lib.rs/crates/gix).
-  - Includes special `_shared` template for files common to all templates.
-- Creates initial config file.
-  - If config file exists, asks for confirmation to overwrite it unless `--clobber` is specified.
-  - Generates a new private key in the configuration file.
-- Detects shell integration with `jig workspace hook`:
-  - If active, no-op.
-  - If inactive, tells user how to set up shell integration.
+**Notes:**
+
+- Respects fetch/pull parameters when possible
+- SSH operations may require `--cli`
 
 ### `jig mcp`
 
-Model Context Protocol server functionality.
+Model Context Protocol server for AI agent integration.
 
-`jig` will offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
+**Summary:** Provides a stdio MCP server allowing AI agents to interact with jig functionality.
 
-This will be implemented after the initial release.
+**Parameters:** None.
 
-The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too, but that all remains to be seen.
+**Configuration:** None.
+
+**Flow:** None.
+
+**Notes:**
+
+- Implementation planned post-initial release
+- Future plans for WASM compilation and remote MCP
+- Will expose dave.io API endpoints via MCP
 
 ### `jig network`
 
@@ -723,197 +1085,464 @@ Network utilities and diagnostics.
 
 #### `jig network dns`
 
-DNS operations and utilities.
+DNS query and management tools.
 
 ##### `jig network dns flush`
 
-Flush DNS cache. Detects operating system and runs commands accordingly.
+Clear local DNS cache.
+
+**Summary:** Flushes DNS resolver cache on the local system.
+
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Detect operating system
+2. Execute appropriate flush command:
+   - macOS: `dscacheutil -flushcache`
+   - Linux: `systemd-resolve --flush-caches`
+   - Windows: `ipconfig /flushdns`
 
 ##### `jig network dns lookup`
 
-- `[TYPE]`: Record type, `A`, `MX`, `TXT`, etc.
-- `[QUERY]`: Domain to query.
-- `--root`: Use root servers.
-- `--server`: Use specific nameserver.
+Perform DNS queries.
 
-Uses system resolver unless `--root` or `--server` are specified.
+**Summary:** Query DNS records with optional custom resolvers.
 
-`--root` and `--server` cannot be specified together.
+**Parameters:**
 
-Perform DNS lookups.
+- `[QUERY]`: Domain name to query
+- `[TYPE]`: Record type (A, AAAA, MX, TXT, etc.)
+- `--root`: Use root nameservers
+- `--server [SERVER]`: Use specific nameserver
+
+**Configuration:**
+
+- `dns.nameserver`: Default resolver
+
+**Flow:**
+
+1. Select resolver (system/root/custom)
+2. Perform DNS query
+3. Display formatted results
+
+**Notes:** `--root` and `--server` are mutually exclusive.
 
 ##### `jig network dns sec`
 
-- `[DOMAIN]`: domain to check.
+Verify DNSSEC configuration.
 
-Check DNSSEC configuration for `[DOMAIN]`.
+**Summary:** Checks DNSSEC validation chain for a domain.
+
+**Parameters:**
+
+- `[DOMAIN]`: Domain to verify
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Query DNSKEY records
+2. Verify DS records at parent
+3. Validate signature chain
+4. Report validation status
 
 ### `jig project`
 
-Project management utilities.
+Project management and scaffolding utilities.
 
 #### `jig project bump`
 
-Detects package manager files, such as `Cargo.toml`, `package.json`, `.github/workflows/*.ya?ml`, etc. Bumps the versions of all packages to latest.
+Update all dependencies to latest versions.
 
-GitHub Actions are a special case; they are pinned to the most recent commit hash on the default branch of the repository.
+**Summary:** Automatically updates package versions across multiple package managers.
 
-> [!CAUTION]
-> Packages are bumped to latest. This might mean major version bumps, which could break your project. Use with caution until more fine-grained control is implemented.
->
-> Further, GitHub Actions are pinned to the most recent commit hash on the default branch of the repository. This may not be the branch you intend to use.
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Scan for package files:
+   - `Cargo.toml`
+   - `package.json`
+   - `.github/workflows/*.ya?ml`
+2. For each dependency:
+   - Fetch latest version
+   - Update version specification
+3. For GitHub Actions:
+   - Pin to latest commit SHA
+
+**Notes:**
+
+> **⚠️ CAUTION:** Updates to latest major versions may introduce breaking changes.
+> GitHub Actions are pinned to default branch commits.
 
 #### `jig project dependabot`
 
-Dependabot configuration.
+Generate Dependabot configuration.
 
-Flow:
+**Summary:** Creates `.github/dependabot.yml` based on detected package managers.
 
-- Scans for language-specific package manager files, such as `Cargo.toml`, `package.json`, etc.
-- Generates a Dependabot configuration file in `.github/dependabot.yml`.
-  - Uses YAML template from config `project.dependabot`.
-  - For each, generates `ecosystem` and `directory` fields per discovered files.
+**Parameters:** None.
+
+**Configuration:**
+
+- `project.dependabot`: Template for dependabot config
+
+**Flow:**
+
+1. Scan project for package files
+2. Identify ecosystems (npm, cargo, pip, etc.)
+3. Generate config with:
+   - Ecosystem type
+   - Directory location
+   - Update schedule
+   - Configured options
+
+```mermaid
+graph LR
+    A[Scan Files] --> B[Detect Ecosystems]
+    B --> C[Apply Template]
+    C --> D[Generate YAML]
+```
 
 #### `jig project new`
 
-Templates are defined using [`tera`](https://lib.rs/crates/tera) templates in `~/.local/share/jig/templates`.
+Create new project from template.
 
-- `-n` / `--name`: Project name, if not the same as directory name
-- `-g` / `--git`: Initialise `git` repository in created directory
-- `-G` / `--no-git`: Don't initialise `git` repository in created directory
-- `[TEMPLATE]`: Which template to use for the new project.
-- `[NAME]`: Project name. A directory with this name will be created.
+**Summary:** Scaffolds a new project using Tera templates.
 
-Configuration:
+**Parameters:**
 
-`template.git`: Boolean. Create `git` repository in created directory. If enabled, commits as files are written, after each file.
+- `[TEMPLATE]`: Template name to use
+- `[NAME]`: Project name/directory
+- `-n`, `--name`: Override project name
+- `-g`, `--git`: Initialize git repo
+- `-G`, `--no-git`: Skip git initialization
 
-Creates `.jig.yaml` file:
+**Configuration:**
 
-- Template repo
-- Template branch name
-- Template path in repo
-- Commit of applied template
-- Creation date/time
-- Latest update date/time
+- `template.git`: Default git behavior
+
+**Flow:**
+
+1. Create project directory
+2. Load template from `~/.local/share/jig/templates`
+3. Process Tera templates with context
+4. Write files with git commits (if enabled)
+5. Create `.jig.yaml` tracking file
+
+**Notes:** Templates support Tera syntax for dynamic content.
+
+**Notes:**
+
+- Creates `.jig.yaml` tracking file with:
+  - Template repository
+  - Branch name
+  - Template path
+  - Applied commit
+  - Creation/update timestamps
 
 #### `jig project update`
 
-Apply updated template to existing project.
+Update existing project with template changes.
 
-- `-c` / `--clobber`: Overwrite files without attempting merge
-- `-n` / `--name`: Project name, if not the same as directory name
+**Summary:** Applies template updates while preserving local modifications.
 
-Reads `.jig.yaml` to find out which template to use and evaluate changes. Prompts for changes per-file unless `--clobber` is specified, showing diffs.
+**Parameters:**
+
+- `-c`, `--clobber`: Force overwrite without merge
+- `-n`, `--name`: Override project name
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Read `.jig.yaml` for template info
+2. Fetch latest template version
+3. Compare with applied version
+4. For each changed file:
+   - Show diff
+   - Prompt for action (unless `--clobber`)
+5. Update `.jig.yaml` metadata
 
 #### `jig project template`
 
-Project template management.
+Manage project templates.
 
 ##### `jig project template list`
 
-List installed templates.
+List available templates.
+
+**Summary:** Shows all installed project templates.
+
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Scan template directory
+2. Display template names and descriptions
 
 ##### `jig project template new`
 
-Initialise a new template.
+Create a new template.
 
-- `[NAME]`: Template name. Bails out if the template already exists.
+**Summary:** Initialize a new project template.
+
+**Parameters:**
+
+- `[NAME]`: Template name (required)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Check if template exists
+2. Create template directory
+3. Initialize with base files
 
 ##### `jig project template update`
 
-Fetch and pull templates from the configured repository.
+Update template repository.
 
-- `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
-- `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to clone the repository.
+**Summary:** Fetches latest templates from configured repository.
 
-Config:
+**Parameters:**
 
-`git.internal`: Whether to use internal [`gix`](https://lib.rs/crates/gix) or the `git` CLI. Overridden by params. Defaults to `true`.
+- `-c`, `--cli`: Use git CLI
+- `-i`, `--internal`: Force gix usage
+
+**Configuration:**
+
+- `git.internal`: Default git backend
+- `template.repository`: Template source
+- `template.branch`: Template branch
+
+**Flow:**
+
+1. Pull latest from template repository
+2. Update local template cache
 
 ### `jig terminal`
 
-Terminal utilities and enhancements.
+Terminal utilities and visual enhancements.
 
-#### jig terminal sysinfo
+#### `jig terminal sysinfo`
 
-Display system information as an image.
+Display system information visually.
 
-Flow:
+**Summary:** Shows system metrics as graphical gauges in the terminal.
 
-- Build image with gauges and indicators.
-  - Can we use SVGs with [`viuer`](https://lib.rs/crates/viuer)?
-- Resize if necessary with [`image`](https://lib.rs/crates/image).
-- Detect terminal.
-- Display with [`viuer`](https://lib.rs/crates/viuer) depending on terminal app.
+**Parameters:** None.
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Gather system metrics (CPU, memory, disk)
+2. Generate gauge visualization (SVG/raster)
+3. Detect terminal capabilities
+4. Resize image for terminal dimensions
+5. Display using appropriate protocol (sixel, kitty, iTerm2)
+
+**Notes:** Uses `viuer` for terminal detection and display.
 
 #### `jig terminal xkcd`
 
 Display XKCD comics in terminal.
 
-- `[NUMBER]`: Display specific `xkcd` number.
+**Summary:** Fetches and displays XKCD comics with terminal-appropriate rendering.
 
-Flow:
+**Parameters:**
 
-- Fetch latest or specified `xkcd` image into a buffer.
-- Resize if necessary with [`image`](https://lib.rs/crates/image).
-- Detect terminal.
-- Display with [`viuer`](https://lib.rs/crates/viuer) depending on terminal app.
+- `[NUMBER]`: Specific comic number (latest if omitted)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Fetch comic metadata from XKCD API
+2. Download comic image
+3. Resize for terminal display
+4. Render using terminal graphics protocol
 
 ### `jig tls`
 
-TLS/SSL utilities and diagnostics.
+TLS/SSL certificate and security utilities.
 
 #### `jig tls cert`
 
-Fetch the TLS certificate from a remote host.
+Retrieve TLS certificates.
 
-- `-c` / `--chain`: Include full certificate chain. Default: false.
-- `[HOSTNAME]`: Remote host to fetch from. Required.
-- `[PORT]`: Port to fetch from. Default: 443. Optional.
+**Summary:** Fetches and displays TLS certificates from remote hosts.
 
-Outputs PEM to `stdout`.
+**Parameters:**
+
+- `[HOSTNAME]`: Target host (required)
+- `[PORT]`: Target port (default: 443)
+- `-c`, `--chain`: Include full certificate chain
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Establish TLS connection
+2. Retrieve certificate(s)
+3. Output in PEM format to stdout
 
 #### `jig tls ciphers`
 
-Shows the enabled ciphersuites for a remote host.
+List supported cipher suites.
 
-- `[HOSTNAME]`: Remote host to query. Required.
-- `[PORT]`: Port to query. Default: 443. Optional.
+**Summary:** Shows enabled TLS cipher suites for a host.
+
+**Parameters:**
+
+- `[HOSTNAME]`: Target host (required)
+- `[PORT]`: Target port (default: 443)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Connect with various cipher suites
+2. Record successful handshakes
+3. Display supported ciphers with strength ratings
 
 ### `jig workspace`
 
-Workspace management and switching.
+Workspace environment management.
 
-Configuration lives inside the `workspace` top-level key.
+**Summary:** Manage multiple work environments with different configurations.
 
-**Alias:** `jig ws`
-
-#### `jig workspace hook`
-
-`[SHELL]`: Shell; we support `bash`, `zsh`, and `fish`.
-
-Used to hook into the user's shell by executing whenever the prompt renders. Not generally called by a human.
+**Alias:** `ws`
 
 #### `jig workspace list`
 
-List available workspaces.
+List configured workspaces.
+
+**Summary:** Shows all available workspace configurations.
+
+**Parameters:** None.
+
+**Configuration:**
+
+- `workspace.workspaces`: Workspace definitions
+
+**Flow:**
+
+1. Read workspace configurations
+2. Display names and current indicator
 
 #### `jig workspace switch`
 
-Switch between workspaces.
+Switch active workspace.
 
-- `[WORKSPACE]`: workspace name to switch to. Required.
+**Summary:** Changes environment variables and runs transition commands.
 
-## Notes
+**Parameters:**
 
-- Native hashes are `BLAKE3`: [`blake3`](https://lib.rs/crate/blake3) crate.
-  - We also need `SHA256`: [`sha2`](https://lib.rs/crates/sha2) crate.
-  - We don't generate our own `SHA256` hashes, but we need an implementation for comparisons.
+- `[WORKSPACE]`: Target workspace name (required)
+
+**Configuration:**
+
+- `workspace.current`: Current workspace
+- `workspace.create`: Auto-create if missing
+- `workspace.workspaces.[name]`: Workspace definitions
+
+**Flow:**
+
+1. Run current workspace `down` commands
+2. Execute global `before-down` hooks
+3. Update environment variables
+4. Execute global `before-up` hooks
+5. Run new workspace `up` commands
+6. Execute global `after-up` hooks
+
+```mermaid
+graph LR
+    A[Current Workspace] -->|down| B[Hooks]
+    B -->|before-down| C[Switch]
+    C -->|env vars| D[New Workspace]
+    D -->|before-up| E[Hooks]
+    E -->|up| F[Active]
+```
+
+#### `jig workspace hook`
+
+Shell integration hook.
+
+**Summary:** Internal command for shell prompt integration.
+
+**Parameters:**
+
+- `[SHELL]`: Shell type (bash, zsh, fish)
+
+**Configuration:** None.
+
+**Flow:**
+
+1. Export workspace environment variables
+2. Update PATH if needed
+3. Display workspace indicator
+
+**Notes:** Called automatically by shell integration.
+
+## Technical Implementation
+
+### Shared Utilities
+
+#### `prepare_image_for_claude`
+
+Optimizes images for Claude API compatibility.
+
+**Process:**
+
+1. Resize images over 2048px on long edge
+2. Convert to WebP format
+3. Apply compression levels (lossless → 90% → 75% → 50% → 25%)
+4. Ensure final size under 5MB
+
+#### `ask_claude`
+
+Sends prompts with optional data/images to Claude.
+
+**Parameters:**
+
+- `PROMPT`: Main prompt text
+- `ASSOCIATED_DATA`: Additional context (optional)
+- `IMAGE`/`FILENAME`: Image data (optional)
+
+#### `resolve_github_username`
+
+Determines current GitHub username.
+
+**Priority:**
+
+1. `git.user` configuration
+2. `gh api user --jq .login` command
+3. Error if unavailable
+
+### Git Abstraction
+
+Unified interface supporting both `git` CLI and `gix` library based on configuration.
+
+### Library Dependencies
+
+- **YAML Processing:** `saphyr` with `serde`
+- **Spinner Effects:** `spinoff` (noise/aesthetic modes)
+- **Hashing:** `blake3` (native), `sha2` (verification)
+- **Model Context Protocol:** `rmcp`
+- **Additional formats:** See [serde.rs](https://serde.rs/#data-formats)
 
 ## Vendoring
 
-Vendoring has been disabled. To re-enable, create `.cargo/config.toml`:
+Vendoring is disabled by default. To enable, create `.cargo/config.toml`:
 
 ```toml
 [source.crates-io]
@@ -923,60 +1552,24 @@ replace-with = "vendored-sources"
 directory = "vendor"
 ```
 
-## Easter Egg Nonsense
+## Easter Egg Implementation
 
-- `tachyonfx` as the primary effects engine.
-  - `tachyonfx` integrates nicely with `ratatui`.
-- `tui-rain` for atmospheric background effects.
-- `firework-rs` for explosive moments.
-- `rascii_art` to convert a profile photo into animated ASCII art.
-- `rusty-termcolor` typewriter effects for text reveals.
-- `spinoff` spinners for loading sequences.
+The `jig dance` command uses advanced terminal effects:
 
-### ASCII Art Generation
+### Effects Libraries
 
-`rascii_art`
+- **`tachyonfx`**: Primary shader-like effects engine for ratatui
+- **`tui-rain`**: Matrix rain and atmospheric effects
+- **`firework-rs`**: ASCII firework animations
+- **`rascii_art`**: Image to ASCII/emoji conversion
+- **`rusty-termcolor`**: Typewriter and text effects
+- **`spinoff`**: Loading spinners and indicators
 
-- <https://github.com/UTFeight/RASCII>
-- Advanced image to ASCII art converter
-- An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
+### Implementation Details
 
-### Atmospheric Effects
-
-`tui-rain`
-
-- <https://github.com/levilutz/tui-rain>
-- Rain and atmospheric effects widget
-- A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
-
-### Core Effects Engine
-
-`tachyonfx`
-
-- <https://github.com/junkdog/tachyonfx>
-- The primary shader-like effects engine for ratatui applications
-- A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
-
-### Explosive Visual Effects
-
-`firework-rs`
-
-- <https://github.com/Wayoung7/firework-rs>
-- ASCII art firework simulator
-- A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
-
-### Progress Indicators
-
-`spinoff`
-
-- <https://github.com/ad4mx/spinoff>
-- Terminal spinner library
-- An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
-
-### Text Effects
-
-`rusty-termcolor`
-
-- <https://github.com/rusty-libraries/rusty-termcolor>
-- Terminal text formatting and effects
-- A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
+- **ASCII Art:** Advanced image conversion with color and emoji support
+- **Atmospheric:** Rain, snow, and Matrix effects
+- **Core Engine:** Complex shader-like terminal transformations
+- **Explosions:** Particle-based firework simulations
+- **Progress:** 80+ spinner variants with custom colors
+- **Text Effects:** Typewriter, wiggle, and Matrix text animations
