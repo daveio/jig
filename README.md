@@ -70,6 +70,7 @@ graph LR
     jig --> mcp(mcp)
     jig --> dance(dance)
     jig --> terminal(terminal)
+      terminal --> terminalSysinfo(sysinfo)
       terminal --> terminalXKCD(xkcd)
     jig --> project(project)
       project --> projectNew(new)
@@ -100,7 +101,6 @@ graph LR
         aiRename --> aiRenameImage(image)
 
   style dance stroke-dasharray: 2 3,stroke-width: 5px
-
 ```
 
 ## Config
@@ -114,6 +114,9 @@ api: #                          API key configuration. optional.
   domainr: DOMAINR_API_KEY #      def: none. optional.
 dns: #                          DNS configuration. optional.
   nameserver: 8.8.8.8 #           def: system resolver. optional.
+generate: #                     Generation configuration. optional.
+  password: #                     Password generation configuration. optional.
+    emoji: true #                   def: false. include emoji. optional.
 git: #                          Git configuration. optional.
   commit: #                       Git commit configuration. optional.
     after: null #                   def: null. a custom commit message suffix.
@@ -168,8 +171,38 @@ template: #                     Template configuration. optional.
   git: true #                     def: true. init git repo, commit as templates applied. optional.
   branch: template #              def: main. branch to use for templates. optional.
   repository: daveio/jig #        def: daveio/jig. repository for templates. optional.
+workspace: #                    Workspace managment configuration. All optional.
+  current: example #              current workspace name
+  create: false #                 def: false. if switching to a nonexistent workspace, create it
+  #                               with blank configuration.
+  hooks: #                        hooks to run whenever switching workspace
+    before-up: [] #                 commands to run before new workspace's 'up' commands
+    after-up: #                     commands to run after new workspace's 'up' commands
+      - echo "hello example"
+    before-down: [] #               commands to run before old workspace's 'down' commands
+    after-down: #                   commands to run after old workspace's 'down' commands
+      - echo "bye example"
+  workspaces: #                   workspace definitions
+    example: #                      define a workspace called 'example'
+      up: #                           run when switching TO this workspace, after old workspace's 'down' commands
+        - gcloud config configurations activate example
+        - gcloud config set project example_project
+        - kubectx example_cluster
+      down: [] #                      run when switching FROM this workspace, before new workspace's 'up' commands
+      env: #                          environment variables to set. will be uppercased. {} for none.
+        EXAMPLE_VAR: abc123 #           set environment variable $EXAMPLE_VAR to 'abc123'
+        ANOTHER_VAR: "true" #           set environment variable $ANOTHER_VAR to 'true'
+        YET_ANOTHER_VAR: "12345" #      set environment variable $YET_ANOTHER_VAR to '12345'
+        #                               note the quoting in the previous two; otherwise, they would be interpreted as a
+        #                               boolean and a number. jig tries to do its best if you forget, but it's best to
+        #                               be unambiguous from the start and quote them.
+
 yank: #                         Yank configuration. optional.
   dir: ~/src #                    def: none. dir to yank in, with repos in subdirs. optional.
+  fetch: --prune --tags --prune-tags --recurse-submodules=yes # def: none. parameters to `git fetch`. optional.
+  #                                                             `gix` will try to respect these.
+  pull: --all --tags --prune --jobs=8 --recurse-submodules=yes # def: none. parameters to `git pull`. optional.
+  #                                                              `gix` will try to respect these.
 ```
 
 ### Minimal Config
@@ -509,6 +542,10 @@ Generate WireGuard private and public keys.
 
 Generate cryptographically secure random passwords with a safe alphabet.
 
+Config:
+
+`generate.password.emoji`: Whether to include emoji in generated passwords. Defaults to `false`.
+
 Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is above `2`, telling the user what is going on.
 
 A minimum of one item from each of the four (five if emoji is enabled) character sets.
@@ -632,6 +669,12 @@ Fetch and pull all repositories under the current directory, or a specific direc
 - `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
 - `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to fetch and pull the repository.
 - `[DIRECTORY]`: Directory to yank repositories in. Defaults to `yank.dir` if set, or the current directory if unset.
+
+Config:
+
+- `yank.dir`: Directory to yank repositories in.
+- `yank.fetch`: Parameters to `git fetch`. When using [`gix`](https://lib.rs/crates/gix), it will try to respect these.
+- `yank.pull`: Parameters to `git pull`. When using [`gix`](https://lib.rs/crates/gix), it will try to respect these.
 
 Notes:
 
@@ -792,6 +835,18 @@ Config:
 
 Terminal utilities and enhancements.
 
+#### jig terminal sysinfo
+
+Display system information as an image.
+
+Flow:
+
+- Build image with gauges and indicators.
+  - Can we use SVGs with [`viuer`](https://lib.rs/crates/viuer)?
+- Resize if necessary with [`image`](https://lib.rs/crates/image).
+- Detect terminal.
+- Display with [`viuer`](https://lib.rs/crates/viuer) depending on terminal app.
+
 #### `jig terminal xkcd`
 
 Display XKCD comics in terminal.
@@ -802,6 +857,8 @@ Flow:
 
 - Fetch latest or specified `xkcd` image into a buffer.
 - Resize if necessary with [`image`](https://lib.rs/crates/image).
+- Detect terminal.
+- Display with [`viuer`](https://lib.rs/crates/viuer) depending on terminal app.
 
 ### `jig tls`
 
@@ -809,15 +866,28 @@ TLS/SSL utilities and diagnostics.
 
 #### `jig tls cert`
 
-Certificate operations and analysis.
+Fetch the TLS certificate from a remote host.
+
+- `-c` / `--chain`: Include full certificate chain. Default: false.
+- `[HOSTNAME]`: Remote host to fetch from. Required.
+- `[PORT]`: Port to fetch from. Default: 443. Optional.
+
+Outputs PEM to `stdout`.
 
 #### `jig tls ciphers`
 
-Cipher suite analysis.
+Shows the enabled ciphersuites for a remote host.
+
+- `[HOSTNAME]`: Remote host to query. Required.
+- `[PORT]`: Port to query. Default: 443. Optional.
 
 ### `jig workspace`
 
 Workspace management and switching.
+
+Configuration lives inside the `workspace` top-level key.
+
+**Alias:** `jig ws`
 
 #### `jig workspace hook`
 
@@ -832,6 +902,8 @@ List available workspaces.
 #### `jig workspace switch`
 
 Switch between workspaces.
+
+- `[WORKSPACE]`: workspace name to switch to. Required.
 
 ## Notes
 
