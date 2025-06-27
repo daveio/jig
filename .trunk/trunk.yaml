@@ -23,14 +23,16 @@ lint:
         - target/**
         - tmp/**
   enabled:
+    - actionlint@1.7.7
+    - hadolint@2.12.1-beta
     - trunk-toolbox@0.5.4
-    - checkov@3.2.446
+    - checkov@3.2.447
     - yamllint@1.37.1
     - clippy@1.87.0
     - git-diff-check
     - markdownlint@0.45.0
     - osv-scanner@2.0.3
-    - prettier@3.6.0
+    - prettier@3.6.2
     - rustfmt@1.87.0
     - taplo@0.9.3
     - trufflehog@3.89.2
