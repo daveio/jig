@@ -4,7 +4,8 @@
 
 ## Project
 
-`jig` is a utility which collects tools for various tasks into one place. It merges all my disparate tools into a single CLI toolbox, making it easier to manage and use them, and teaches me Rust.
+`jig` is a utility which collects tools for various tasks into one place. It merges all my disparate tools into a single
+CLI toolbox, making it easier to manage and use them, and teaches me Rust.
 
 Will also include shell plugins. Support for **standalone installation**, or using:
 
@@ -130,17 +131,9 @@ git: #                          Git configuration. optional.
     user: daveio #                def: none. GitHub username. optional.
   internal: true #                def: true. use gix for git. optional.
   user: daveio #                  def: none. GitHub username. optional.
-jwt: #                          JWT configuration. optional.
-  env: JIG_JWT_SECRET #           def: JIG_JWT_SECRET. optional.
-  file: ~/.jig.jwt.key #          def: none. file containing key. optional.
-  key: JWT_SECRET_VALUE #         def: resolved secret from below. optional.
-  order: #                        def: env, file, key. first wins. optional.
-    - env #                         top priority
-    - file #                        second priority
-    - key #                         final priority
 project: #                      Project management configuration. optional.
   dependabot: #                   def: stated. Template for each ecosystem. optional.
-    #                               note: `ecosystem` and `directory` are generated.
+    #                             `ecosystem` and `directory` are generated.
     schedule:
       interval: daily
     open-pull-requests-limit: 100
@@ -151,16 +144,32 @@ project: #                      Project management configuration. optional.
         patterns:
           - "*"
 secret: #                       We use a secret in many places. required.
-  env: JIG_SECRET_KEY #           def: JIG_SECRET_KEY. optional.
-  file: ~/.jig.secret.key #       def: none. file containing key. optional.
-  key: AGE-SECRET-KEY-[...] #     def: generated. unencrypted key. required.
-  order: #                        def: env, file, key. first wins. optional.
-    - env #                         top priority
-    - file #                        second priority
-    - key #                         final priority
+  file: ~/.jig.secrets #          def: none. keep secrets in a separate file. optional.
+  #                               remaining secret configuration is ignored if set.
+  #                               this is useful for things like `chezmoi`, allowing
+  #                               you to encrypt your secrets file but keep the main
+  #                               configuration in plaintext.
+  main: #                         main private key. required.
+    env: JIG_SECRET_KEY #           def: JIG_SECRET_KEY. optional.
+    file: ~/.jig.secret.key #       def: none. file containing key. optional.
+    key: AGE-SECRET-KEY-[...] #     def: generated. unencrypted key. required.
+    order: #                        def: env, file, key. first wins. optional.
+      - env #                         top priority
+      - file #                        second priority
+      - key #                         final priority
+  jwt: #                          JWT configuration. optional.
+    env: JIG_JWT_SECRET #           def: JIG_JWT_SECRET. optional.
+    file: ~/.jig.jwt.key #          def: none. file containing key. optional.
+    key: JWT_SECRET_VALUE #         def: resolved secret from below. optional.
+    order: #                        def: env, file, key. first wins. optional.
+      - env #                         top priority
+      - file #                        second priority
+      - key #                         final priority
 template: #                     Template configuration. optional.
   branch: template #              def: main. branch to use for templates. optional.
   repository: daveio/jig #        def: daveio/jig. repository for templates. optional.
+yank: #                         Yank configuration. optional.
+  dir: ~/src #                    def: none. dir to yank in, with repos in subdirs. optional.
 ```
 
 ### Minimal Config
@@ -203,7 +212,8 @@ Shrinks images to under 5 MB for Claude compatibility.
 - `ASSOCIATED_DATA` - Associated data to send to Claude. Optional.
 - `IMAGE` | `FILENAME` - Image data to send to Claude. Optional.
 
-Calls `prepare_image_for_claude` to ensure the image is compatible, then sends the prompt, associated data, and any image to Claude.
+Calls `prepare_image_for_claude` to ensure the image is compatible, then sends the prompt, associated data, and any
+image to Claude.
 
 ### `resolve_github_username`
 
@@ -215,7 +225,8 @@ Gets the current user's GitHub username.
 
 ### Git abstraction
 
-We want an abstraction over Git, so we can call the same code whether we're using the `git` CLI or the [`gix`](https://lib.rs/crates/gix) library, and have the abstraction decide what to do.
+We want an abstraction over Git, so we can call the same code whether we're using the `git` CLI or the [
+`gix`](https://lib.rs/crates/gix) library, and have the abstraction decide what to do.
 
 ## Commands
 
@@ -239,7 +250,8 @@ AI renaming operations.
 
 AI-powered image renaming.
 
-- `[FILENAME_OR_GLOB]`: File or glob pattern to rename images. Defaults to all `*.jpg`, `*.jpeg`, `*.png`, `*.webp` in the current directory. Multiple filenames/globs can be specified.
+- `[FILENAME_OR_GLOB]`: File or glob pattern to rename images. Defaults to all `*.jpg`, `*.jpeg`, `*.png`, `*.webp` in
+  the current directory. Multiple filenames/globs can be specified.
 
 Flow:
 
@@ -378,7 +390,8 @@ Default: plaintext in via `stdin`, ciphertext out via `stdout`, information via 
 
 `-k` / `--key` `[KEY]`: Private key to process
 
-Prints the public key ('recipient' in `age` terms) associated with a private key. Uses the configured private key by default.
+Prints the public key ('recipient' in `age` terms) associated with a private key. Uses the configured private key by
+default.
 
 ### `jig dance`
 
@@ -411,7 +424,36 @@ Improvements:
 
 **Cloudflare TLDs:**
 
-> `ac` `academy` `accountant` `accountants` `actor` `adult` `agency` `ai` `airforce` `apartments` `app` `army` `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz` `black` `blog` `blue` `boo` `boston` `boutique` `broker` `build` `builders` `business` `cab` `cafe` `cam` `camera` `camp` `capital` `cards` `care` `careers` `casa` `cash` `casino` `catering` `cc` `center` `ceo` `chat` `cheap` `christmas` `church` `city` `claims` `cleaning` `clinic` `clothing` `cloud` `club` `co` `co.uk` `coach` `codes` `coffee` `college` `com` `com.ai` `com.co` `community` `company` `compare` `computer` `condos` `construction` `consulting` `contact` `contractors` `cooking` `cool` `coupons` `credit` `creditcard` `cricket` `cruises` `dad` `dance` `date` `dating` `day` `dealer` `deals` `degree` `delivery` `democrat` `dental` `dentist` `design` `dev` `diamonds` `diet` `digital` `direct` `directory` `discount` `doctor` `dog` `domains` `download` `education` `email` `energy` `engineer` `engineering` `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed` `express` `fail` `faith` `family` `fan` `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing` `fit` `fitness` `flights` `florist` `flowers` `fm` `foo` `football` `forex` `forsale` `forum` `foundation` `fun` `fund` `furniture` `futbol` `fyi` `gallery` `game` `games` `garden` `gifts` `gives` `glass` `global` `gmbh` `gold` `golf` `graphics` `gratis` `green` `gripe` `group` `guide` `guitars` `guru` `haus` `health` `healthcare` `help` `hockey` `holdings` `holiday` `horse` `hospital` `host` `hosting` `house` `how` `icu` `immo` `immobilien` `inc` `industries` `info` `ink` `institute` `insure` `international` `investments` `io` `irish` `jetzt` `jewelry` `kaufen` `kim` `kitchen` `land` `lawyer` `lease` `legal` `lgbt` `life` `lighting` `limited` `limo` `link` `live` `loan` `loans` `lol` `love` `ltd` `luxe` `maison` `management` `market` `marketing` `markets` `mba` `me` `me.uk` `media` `memorial` `men` `miami` `mobi` `moda` `mom` `money` `monster` `mortgage` `mov` `movie` `navy` `net` `net.ai` `net.co` `net.uk` `network` `new` `news` `nexus` `ngo` `ninja` `nom.co` `observer` `off.ai` `ong` `online` `org` `org.ai` `org.uk` `organic` `page` `partners` `parts` `party` `pet` `phd` `photography` `photos` `pics` `pictures` `pink` `pizza` `place` `plumbing` `plus` `porn` `press` `pro` `productions` `prof` `promo` `properties` `protection` `pub` `racing` `realty` `recipes` `red` `rehab` `reise` `reisen` `rent` `rentals` `repair` `report` `republican` `rest` `restaurant` `review` `reviews` `rip` `rocks` `rodeo` `rsvp` `run` `sale` `salon` `sarl` `school` `schule` `science` `security` `select` `services` `sex` `sh` `shoes` `shop` `shopping` `show` `singles` `site` `ski` `soccer` `social` `software` `solar` `solutions` `soy` `space` `storage` `store` `stream` `studio` `style` `supplies` `supply` `support` `surf` `surgery` `systems` `tax` `taxi` `team` `tech` `technology` `tennis` `theater` `theatre` `tienda` `tips` `tires` `today` `tools` `tours` `town` `toys` `trade` `trading` `training` `travel` `tv` `uk` `university` `uno` `us` `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision` `vodka` `voyage` `watch` `webcam` `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz` `yoga` `zone`
+> `ac` `academy` `accountant` `accountants` `actor` `adult` `agency` `ai` `airforce` `apartments` `app` `army`
+> `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz` `black`
+> `blog` `blue` `boo` `boston` `boutique` `broker` `build` `builders` `business` `cab` `cafe` `cam` `camera` `camp`
+> `capital` `cards` `care` `careers` `casa` `cash` `casino` `catering` `cc` `center` `ceo` `chat` `cheap` `christmas`
+> `church` `city` `claims` `cleaning` `clinic` `clothing` `cloud` `club` `co` `co.uk` `coach` `codes` `coffee` `college`
+> `com` `com.ai` `com.co` `community` `company` `compare` `computer` `condos` `construction` `consulting` `contact`
+> `contractors` `cooking` `cool` `coupons` `credit` `creditcard` `cricket` `cruises` `dad` `dance` `date` `dating` `day`
+> `dealer` `deals` `degree` `delivery` `democrat` `dental` `dentist` `design` `dev` `diamonds` `diet` `digital` `direct`
+> `directory` `discount` `doctor` `dog` `domains` `download` `education` `email` `energy` `engineer` `engineering`
+> `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed` `express` `fail` `faith` `family` `fan`
+> `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing` `fit` `fitness` `flights` `florist` `flowers`
+> `fm` `foo` `football` `forex` `forsale` `forum` `foundation` `fun` `fund` `furniture` `futbol` `fyi` `gallery` `game`
+> `games` `garden` `gifts` `gives` `glass` `global` `gmbh` `gold` `golf` `graphics` `gratis` `green` `gripe` `group`
+> `guide` `guitars` `guru` `haus` `health` `healthcare` `help` `hockey` `holdings` `holiday` `horse` `hospital` `host`
+> `hosting` `house` `how` `icu` `immo` `immobilien` `inc` `industries` `info` `ink` `institute` `insure` `international`
+> `investments` `io` `irish` `jetzt` `jewelry` `kaufen` `kim` `kitchen` `land` `lawyer` `lease` `legal` `lgbt` `life`
+> `lighting` `limited` `limo` `link` `live` `loan` `loans` `lol` `love` `ltd` `luxe` `maison` `management` `market`
+> `marketing` `markets` `mba` `me` `me.uk` `media` `memorial` `men` `miami` `mobi` `moda` `mom` `money` `monster`
+> `mortgage` `mov` `movie` `navy` `net` `net.ai` `net.co` `net.uk` `network` `new` `news` `nexus` `ngo` `ninja` `nom.co`
+> `observer` `off.ai` `ong` `online` `org` `org.ai` `org.uk` `organic` `page` `partners` `parts` `party` `pet` `phd`
+> `photography` `photos` `pics` `pictures` `pink` `pizza` `place` `plumbing` `plus` `porn` `press` `pro` `productions`
+> `prof` `promo` `properties` `protection` `pub` `racing` `realty` `recipes` `red` `rehab` `reise` `reisen` `rent`
+> `rentals` `repair` `report` `republican` `rest` `restaurant` `review` `reviews` `rip` `rocks` `rodeo` `rsvp` `run`
+> `sale` `salon` `sarl` `school` `schule` `science` `security` `select` `services` `sex` `sh` `shoes` `shop` `shopping`
+> `show` `singles` `site` `ski` `soccer` `social` `software` `solar` `solutions` `soy` `space` `storage` `store` `stream`
+> `studio` `style` `supplies` `supply` `support` `surf` `surgery` `systems` `tax` `taxi` `team` `tech` `technology`
+> `tennis` `theater` `theatre` `tienda` `tips` `tires` `today` `tools` `tours` `town` `toys` `trade` `trading` `training`
+> `travel` `tv` `uk` `university` `uno` `us` `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision`
+> `vodka` `voyage` `watch` `webcam` `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz`
+> `yoga` `zone`
 
 #### `jig domain expiry`
 
@@ -484,13 +526,15 @@ Generate WireGuard private and public keys.
 
 #### `jig generate password`
 
-- `-e` / `--emoji`: Include emoji. Experimental. Uses a subset of non-ZWJ emoji from the RGI list. Warns user to be able to reset their password if the site doesn't use Unicode for passwords. Emoji count as one character.
+- `-e` / `--emoji`: Include emoji. Experimental. Uses a subset of non-ZWJ emoji from the RGI list. Warns user to be able
+  to reset their password if the site doesn't use Unicode for passwords. Emoji count as one character.
 - `-x` / `--xkcd`: Use `correct horse battery staple` format from [xkcd](https://xkcd.com/936). Uses `chbs`.
 - `[LENGTH]`: password length to generate. Defaults to 16. In `--xkcd` mode, the number of words, defaulting to 4.
 
 Generate cryptographically secure random passwords with a safe alphabet.
 
-Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is above `2`, telling the user what is going on.
+Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is
+above `2`, telling the user what is going on.
 
 A minimum of one item from each of the four (five if emoji is enabled) character sets.
 
@@ -498,7 +542,9 @@ Alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
 
 With `--emoji`: Also include single-width non-ZWJ, RGI emoji
 
-Emoji list: 😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, 🙃, 😉, 😌, 😍, 🥰, 😘, 😗, 😙, 😚, 😋, 😛, 😜, 🤪, 😝, 🤑, 🤗, 🤭, 🤫, 🤔, 🤐, 🤨, 😐, 😑, 😶, 😏, 😒, 🙄, 😬, 🤥, 😌, 😔, 😪, 🤤, 😴, 😷, 🤒, 🤕, 🤢, 🤮, 🤧, 🥵, 🥶, 🥴, 😵, 🤯, 🤠, 🥳, 😎, 🤓, 🧐, 😕, 😟, 🙁, ☹️, 😮, 😯, 😲, 😳, 🥺, 😦, 😧, 😨, 😰, 😥, 😢, 😭, 😱, 😖, 😣, 😞, 😓, 😩, 😫, 🥱, 😤, 😡, 😠, 🤬, 😈, 👿, 💀, ☠️, 💩, 🤡, 👹, 👺, 👻
+Emoji list: 😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, 🙃, 😉, 😌, 😍, 🥰, 😘, 😗, 😙, 😚, 😋, 😛, 😜, 🤪, 😝, 🤑, 🤗, 🤭, 🤫, 🤔, 🤐, 🤨, 😐, 😑, 😶, 😏,
+😒, 🙄, 😬, 🤥, 😌, 😔, 😪, 🤤, 😴, 😷, 🤒, 🤕, 🤢, 🤮, 🤧, 🥵, 🥶, 🥴, 😵, 🤯, 🤠, 🥳, 😎, 🤓, 🧐, 😕, 😟, 🙁, ☹️, 😮, 😯, 😲, 😳, 🥺, 😦, 😧, 😨, 😰, 😥,
+😢, 😭, 😱, 😖, 😣, 😞, 😓, 😩, 😫, 🥱, 😤, 😡, 😠, 🤬, 😈, 👿, 💀, ☠️, 💩, 🤡, 👹, 👺, 👻
 
 ### `jig git`
 
@@ -506,9 +552,11 @@ Git and GitHub utilities.
 
 #### `jig git binary`
 
-Information about binaries is kept in `~/.local/share/jig/binaries.yaml` for use by the subcommands. Data format is [`yaml` using `saphypr`](https://lib.rs/crates/saphypr).
+Information about binaries is kept in `~/.local/share/jig/binaries.yaml` for use by the subcommands. Data format is [
+`yaml` using `saphypr`](https://lib.rs/crates/saphypr).
 
-`~/.local/share/jig/bin` is added/ensured to the user's `$PATH` as part of the shell integration hook in `jig workspace hook`.
+`~/.local/share/jig/bin` is added/ensured to the user's `$PATH` as part of the shell integration hook in
+`jig workspace hook`.
 
 Binary file management.
 
@@ -553,11 +601,13 @@ Remove installed binary files.
 - `[USERNAME]/[REPO]`: GitHub username and repository name.
 - `[BINARY_NAME]`: Alternative to username/repo, update binary by name.
 
-Update binary files to the latest version. If we can get hashes, use them to prevent unnecessary downloads. Reads and writes `~/.local/share/jig/binaries.yaml`.
+Update binary files to the latest version. If we can get hashes, use them to prevent unnecessary downloads. Reads and
+writes `~/.local/share/jig/binaries.yaml`.
 
 #### `jig git clone`
 
-Allows cloning GitHub repositories by `username/repo`. If just `repo` is given, it will use `resolve_github_username` to get the current user's GitHub username, throwing an error if `resolve_github_username` fails.
+Allows cloning GitHub repositories by `username/repo`. If just `repo` is given, it will use `resolve_github_username` to
+get the current user's GitHub username, throwing an error if `resolve_github_username` fails.
 
 - `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
 - `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to clone the repository.
@@ -575,15 +625,18 @@ AI-assisted commit messages.
 
 Reimplements `oco` so we don't have to shell out to it.
 
-- `[PARAMETERS]`: Parameters to pass to `git`. If we're using `gix`, we should figure out what to do with them. If we're using the `git` CLI, we can just pass them through.
+- `[PARAMETERS]`: Parameters to pass to `git`. If we're using `gix`, we should figure out what to do with them. If we're
+  using the `git` CLI, we can just pass them through.
 
 Flow:
 
 - Generates a diff of the current changes.
-- Does some mangling to reduce them to a manageable level if necessary - we don't want to pass massive changesets to the AI.
+- Does some mangling to reduce them to a manageable level if necessary - we don't want to pass massive changesets to the
+  AI.
 - Uses the `ask_claude` utility to send the diff to Claude as `ASSOCIATED_DATA`.
   - Claude is instructed to generate a multiline commit message with emoji, matching the `oco --fgm` format.
-  - Claude is also instructed to generate a short title, including conventional commit prefixes (configurable in `git.commit.prefixes`) and starting with an emoji.
+  - Claude is also instructed to generate a short title, including conventional commit prefixes (configurable in
+    `git.commit.prefixes`) and starting with an emoji.
 - We add the user's custom content to the commit message:
   - If `git.commit.before` is a string, it is prepended to the commit message.
   - If `git.commit.after` is a string, it is appended to the commit message.
@@ -598,7 +651,8 @@ Get the latest commit hash on a branch.
 
 #### `jig git secret`
 
-Put a secret to a Git repository. Uses `resolve_github_username` to get the current user's GitHub username if no username is specified.
+Put a secret to a Git repository. Uses `resolve_github_username` to get the current user's GitHub username if no
+username is specified.
 
 - `[USERNAME]/[REPO]` | `[REPO]`: GitHub username and repository name.
 - `[SECRET_NAME]`: Name of the secret to put.
@@ -610,7 +664,7 @@ Fetch and pull all repositories under the current directory, or a specific direc
 
 - `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
 - `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to fetch and pull the repository.
-- `[DIRECTORY]`: Directory to yank repositories in. Defaults to the current directory if omitted.
+- `[DIRECTORY]`: Directory to yank repositories in. Defaults to `yank.dir` if set, or the current directory if unset.
 
 Notes:
 
@@ -634,7 +688,8 @@ Notes:
 - Uses `git` to clone the templates into `~/.local/share/jig/templates/username/repo`.
   - If the templates already exist and we're on the correct branch, they will be pulled and updated.
   - Will then check out `branch` if non-default and not checked out already.
-  - Will use the `git` CLI if `git.internal` is set to `false` in the config, otherwise uses [`gix`](https://lib.rs/crates/gix).
+  - Will use the `git` CLI if `git.internal` is set to `false` in the config, otherwise uses [
+    `gix`](https://lib.rs/crates/gix).
   - Includes special `_shared` template for files common to all templates.
 - Creates initial config file.
   - If config file exists, asks for confirmation to overwrite it unless `--clobber` is specified.
@@ -647,11 +702,14 @@ Notes:
 
 Model Context Protocol server functionality.
 
-`jig` will offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other tools - particularly AI agents - to interact with `jig` and use its features.
+`jig` will offer a `stdio` [Model Context Protocol (MCP)](https://modelcontextprotocol.org) server, allowing other
+tools - particularly AI agents - to interact with `jig` and use its features.
 
 This will be implemented after the initial release.
 
-The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide the <https://dave.io/api> endpoints as MCP endpoints too, but that all remains to be seen.
+The MCP tool may be extended to a remote MCP in future, if I figure out how to compile `jig` to WASM and import it from
+my [personal site and API](https://github.com/daveio/dave-io) at <https://dave.io>. This would also allow me to provide
+the <https://dave.io/api> endpoints as MCP endpoints too, but that all remains to be seen.
 
 ### `jig network`
 
@@ -690,14 +748,18 @@ Project management utilities.
 
 #### `jig project bump`
 
-Detects package manager files, such as `Cargo.toml`, `package.json`, `.github/workflows/*.ya?ml`, etc. Bumps the versions of all packages to latest.
+Detects package manager files, such as `Cargo.toml`, `package.json`, `.github/workflows/*.ya?ml`, etc. Bumps the
+versions of all packages to latest.
 
-GitHub Actions are a special case; they are pinned to the most recent commit hash on the default branch of the repository.
+GitHub Actions are a special case; they are pinned to the most recent commit hash on the default branch of the
+repository.
 
 > [!CAUTION]
-> Packages are bumped to latest. This might mean major version bumps, which could break your project. Use with caution until more fine-grained control is implemented.
+> Packages are bumped to latest. This might mean major version bumps, which could break your project. Use with caution
+> until more fine-grained control is implemented.
 >
-> Further, GitHub Actions are pinned to the most recent commit hash on the default branch of the repository. This may not be the branch you intend to use.
+> Further, GitHub Actions are pinned to the most recent commit hash on the default branch of the repository. This may
+> not be the branch you intend to use.
 
 #### `jig project dependabot`
 
@@ -808,7 +870,8 @@ directory = "vendor"
 
 - <https://github.com/UTFeight/RASCII>
 - Advanced image to ASCII art converter
-- An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple character sets including block, emoji, default, russian, and slight variants
+- An advanced image to ASCII art tool and crate that supports colored ASCII generation, custom dimensions, and multiple
+  character sets including block, emoji, default, russian, and slight variants
 
 ### Atmospheric Effects
 
@@ -816,7 +879,8 @@ directory = "vendor"
 
 - <https://github.com/levilutz/tui-rain>
 - Rain and atmospheric effects widget
-- A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and emoji floods
+- A simple stateless ratatui widget that generates various rain effects including Matrix rain, normal rain, snow, and
+  emoji floods
 
 ### Core Effects Engine
 
@@ -824,7 +888,8 @@ directory = "vendor"
 
 - <https://github.com/junkdog/tachyonfx>
 - The primary shader-like effects engine for ratatui applications
-- A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex effect combinations
+- A ratatui library for creating shader-like effects in terminal UIs with color transformations, animations, and complex
+  effect combinations
 
 ### Explosive Visual Effects
 
@@ -832,7 +897,8 @@ directory = "vendor"
 
 - <https://github.com/Wayoung7/firework-rs>
 - ASCII art firework simulator
-- A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple particle system
+- A cross-platform ASCII-art firework simulator that provides colorful displays, smooth animations, and a simple
+  particle system
 
 ### Progress Indicators
 
@@ -840,7 +906,8 @@ directory = "vendor"
 
 - <https://github.com/ad4mx/spinoff>
 - Terminal spinner library
-- An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors, and multiple output stream support
+- An easy-to-use, robust library for displaying spinners in the terminal with over 80 spinner variants, custom colors,
+  and multiple output stream support
 
 ### Text Effects
 
@@ -848,4 +915,5 @@ directory = "vendor"
 
 - <https://github.com/rusty-libraries/rusty-termcolor>
 - Terminal text formatting and effects
-- A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar, wiggle, matrix), text formatting, and terminal control functions
+- A lightweight terminal manipulation library that provides color manipulation, text effects (typewriter, loading bar,
+  wiggle, matrix), text formatting, and terminal control functions
