@@ -162,18 +162,16 @@ secret:
 ### Complete Configuration Reference
 
 ```yaml
-api: #                          API key configuration. optional.
-  domainr: DOMAINR_API_KEY #      def: none. optional.
-dns: #                          DNS configuration. optional.
-  nameserver: 8.8.8.8 #           def: system resolver. optional.
-generate: #                     Generation configuration. optional.
-  password: #                     Password generation configuration. optional.
-    emoji: true #                   def: false. include emoji. optional.
-git: #                          Git configuration. optional.
-  commit: #                       Git commit configuration. optional.
-    after: null #                   def: null. a custom commit message suffix.
-    before: null #                  def: null. a custom commit message prefix.
-    prefixes: #                     def: stated. conventional commit prefixes. optional.
+dns:
+  nameserver: 8.8.8.8
+generate:
+  password:
+    emoji: true
+git:
+  commit:
+    after: null
+    before: null
+    prefixes:
       - docs
       - feat
       - fix
@@ -181,13 +179,10 @@ git: #                          Git configuration. optional.
       - refactor
       - style
       - test
-    internal: true #              def: true. use gix for git. optional.
-    user: daveio #                def: none. GitHub username. optional.
-  internal: true #                def: true. use gix for git. optional.
-  user: daveio #                  def: none. GitHub username. optional.
-project: #                      Project management configuration. optional.
-  dependabot: #                   def: stated. Template for each ecosystem. optional.
-    #                             `ecosystem` and `directory` are generated.
+  internal: true
+  user: daveio
+project:
+  dependabot:
     schedule:
       interval: daily
     open-pull-requests-limit: 100
@@ -197,64 +192,56 @@ project: #                      Project management configuration. optional.
       all-dependencies:
         patterns:
           - "*"
-secret: #                       We use a secret in many places. required.
-  file: ~/.jig.secrets #          def: none. keep secrets in a separate file. optional.
-  #                               remaining secret configuration is ignored if set.
-  #                               this is useful for things like `chezmoi`, allowing
-  #                               you to encrypt your secrets file but keep the main
-  #                               configuration in plaintext.
-  main: #                         main private key. required.
-    env: JIG_SECRET_KEY #           def: JIG_SECRET_KEY. optional.
-    file: ~/.jig.secret.key #       def: none. file containing key. optional.
-    key: AGE-SECRET-KEY-[...] #     def: generated. unencrypted key. required.
-    order: #                        def: env, file, key. first wins. optional.
-      - env #                         top priority
-      - file #                        second priority
-      - key #                         final priority
-  jwt: #                          JWT configuration. optional.
-    env: JIG_JWT_SECRET #           def: JIG_JWT_SECRET. optional.
-    file: ~/.jig.jwt.key #          def: none. file containing key. optional.
-    key: JWT_SECRET_VALUE #         def: resolved secret from below. optional.
-    order: #                        def: env, file, key. first wins. optional.
-      - env #                         top priority
-      - file #                        second priority
-      - key #                         final priority
-template: #                     Template configuration. optional.
-  git: true #                     def: true. init git repo, commit as templates applied. optional.
-  branch: template #              def: main. branch to use for templates. optional.
-  repository: daveio/jig #        def: daveio/jig. repository for templates. optional.
-workspace: #                    Workspace managment configuration. All optional.
-  current: example #              current workspace name
-  create: false #                 def: false. if switching to a nonexistent workspace, create it
-  #                               with blank configuration.
-  hooks: #                        hooks to run whenever switching workspace
-    before-up: [] #                 commands to run before new workspace's 'up' commands
-    after-up: #                     commands to run after new workspace's 'up' commands
+secret:
+  file: ~/.jig.secrets # ignores all other secret configuration if set, even if the file doesn't exist
+  api:
+    domainr:
+      env: DOMAINR_API_KEY
+      key:
+  main:
+    env: JIG_SECRET_KEY
+    file: ~/.jig.secret.key
+    key: AGE-SECRET-KEY-[...]
+    order:
+      - env
+      - file
+      - key
+  jwt:
+    env: JIG_JWT_SECRET
+    file: ~/.jig.jwt.key
+    key: JWT_SECRET_VALUE
+    order:
+      - env
+      - file
+      - key
+template:
+  branch: template
+  repository: daveio/jig
+workspace:
+  current: example
+  create: false
+  hooks:
+    before-up: []
+    after-up:
       - echo "hello example"
-    before-down: [] #               commands to run before old workspace's 'down' commands
-    after-down: #                   commands to run after old workspace's 'down' commands
+    before-down: []
+    after-down:
       - echo "bye example"
-  workspaces: #                   workspace definitions
-    example: #                      define a workspace called 'example'
-      up: #                           run when switching TO this workspace, after old workspace's 'down' commands
+  workspaces:
+    example:
+      up:
         - gcloud config configurations activate example
         - gcloud config set project example_project
         - kubectx example_cluster
-      down: [] #                      run when switching FROM this workspace, before new workspace's 'up' commands
-      env: #                          environment variables to set. will be uppercased. {} for none.
-        EXAMPLE_VAR: abc123 #           set environment variable $EXAMPLE_VAR to 'abc123'
-        ANOTHER_VAR: "true" #           set environment variable $ANOTHER_VAR to 'true'
-        YET_ANOTHER_VAR: "12345" #      set environment variable $YET_ANOTHER_VAR to '12345'
-        #                               note the quoting in the previous two; otherwise, they would be interpreted as a
-        #                               boolean and a number. jig tries to do its best if you forget, but it's best to
-        #                               be unambiguous from the start and quote them.
-
-yank: #                         Yank configuration. optional.
-  dir: ~/src #                    def: none. dir to yank in, with repos in subdirs. optional.
-  fetch: --prune --tags --prune-tags --recurse-submodules=yes # def: none. parameters to `git fetch`. optional.
-  #                                                             `gix` will try to respect these.
-  pull: --all --tags --prune --jobs=8 --recurse-submodules=yes # def: none. parameters to `git pull`. optional.
-  #                                                              `gix` will try to respect these.
+      down: []
+      env:
+        EXAMPLE_VAR: abc123
+        ANOTHER_VAR: "true"
+        YET_ANOTHER_VAR: "12345"
+yank:
+  dir: ~/src
+  fetch: --prune --tags --prune-tags --recurse-submodules=yes
+  pull: --all --tags --prune --jobs=8 --recurse-submodules=yes
 ```
 
 ### Minimal Configuration Example
@@ -1225,12 +1212,12 @@ Create new project from template.
 
 **Configuration:**
 
-- `template.git`: Default git behavior
+- `git.internal`: Default git backend
 
 **Flow:**
 
 1. Create project directory
-2. Load template from `~/.local/share/jig/templates`
+2. Load template from `~/.local/share/jig/templates` and `~/.local/share/jig/templates/_shared`
 3. Process Tera templates with context
 4. Write files with git commits (if enabled)
 5. Create `.jig.yaml` tracking file
@@ -1273,6 +1260,15 @@ Update existing project with template changes.
 
 Manage project templates.
 
+**`.jig.template.yaml`:**
+
+The `.jig.template.yaml` file is in the root of each template and defines its behaviour.
+
+```yaml
+name: null # if omitted or null, name of the root directory of the template, default: null
+shared: true # if false, disable shared template when rendering this template, default: true
+```
+
 ##### `jig project template list`
 
 List available templates.
@@ -1296,6 +1292,7 @@ Create a new template.
 
 **Parameters:**
 
+- `-S`, `--shared`: Copy files from `_shared` and disable the shared template for this template
 - `[NAME]`: Template name (required)
 
 **Configuration:** None.
@@ -1304,7 +1301,8 @@ Create a new template.
 
 1. Check if template exists
 2. Create template directory
-3. Initialize with base files
+3. Set up `.jig.template.yaml` with metadata and shared template behaviour
+4. Add base files from `_shared` if required
 
 ##### `jig project template update`
 
