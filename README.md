@@ -225,8 +225,8 @@ Gets the current user's GitHub username.
 
 ### Git abstraction
 
-We want an abstraction over Git, so we can call the same code whether we're using the `git` CLI or the [
-`gix`](https://lib.rs/crates/gix) library, and have the abstraction decide what to do.
+We want an abstraction over Git, so we can call the same code whether we're using the `git` CLI or the
+[`gix`](https://lib.rs/crates/gix) library, and have the abstraction decide what to do.
 
 ## Commands
 
@@ -425,7 +425,8 @@ Improvements:
 **Cloudflare TLDs:**
 
 > `ac` `academy` `accountant` `accountants` `actor` `adult` `agency` `ai` `airforce` `apartments` `app` `army`
-> `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz` `black`
+> `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz`
+> `black`
 > `blog` `blue` `boo` `boston` `boutique` `broker` `build` `builders` `business` `cab` `cafe` `cam` `camera` `camp`
 > `capital` `cards` `care` `careers` `casa` `cash` `casino` `catering` `cc` `center` `ceo` `chat` `cheap` `christmas`
 > `church` `city` `claims` `cleaning` `clinic` `clothing` `cloud` `club` `co` `co.uk` `coach` `codes` `coffee` `college`
@@ -433,8 +434,10 @@ Improvements:
 > `contractors` `cooking` `cool` `coupons` `credit` `creditcard` `cricket` `cruises` `dad` `dance` `date` `dating` `day`
 > `dealer` `deals` `degree` `delivery` `democrat` `dental` `dentist` `design` `dev` `diamonds` `diet` `digital` `direct`
 > `directory` `discount` `doctor` `dog` `domains` `download` `education` `email` `energy` `engineer` `engineering`
-> `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed` `express` `fail` `faith` `family` `fan`
-> `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing` `fit` `fitness` `flights` `florist` `flowers`
+> `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed` `express` `fail` `faith` `family`
+> `fan`
+> `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing` `fit` `fitness` `flights` `florist`
+> `flowers`
 > `fm` `foo` `football` `forex` `forsale` `forum` `foundation` `fun` `fund` `furniture` `futbol` `fyi` `gallery` `game`
 > `games` `garden` `gifts` `gives` `glass` `global` `gmbh` `gold` `golf` `graphics` `gratis` `green` `gripe` `group`
 > `guide` `guitars` `guru` `haus` `health` `healthcare` `help` `hockey` `holdings` `holiday` `horse` `hospital` `host`
@@ -448,9 +451,11 @@ Improvements:
 > `prof` `promo` `properties` `protection` `pub` `racing` `realty` `recipes` `red` `rehab` `reise` `reisen` `rent`
 > `rentals` `repair` `report` `republican` `rest` `restaurant` `review` `reviews` `rip` `rocks` `rodeo` `rsvp` `run`
 > `sale` `salon` `sarl` `school` `schule` `science` `security` `select` `services` `sex` `sh` `shoes` `shop` `shopping`
-> `show` `singles` `site` `ski` `soccer` `social` `software` `solar` `solutions` `soy` `space` `storage` `store` `stream`
+> `show` `singles` `site` `ski` `soccer` `social` `software` `solar` `solutions` `soy` `space` `storage` `store`
+> `stream`
 > `studio` `style` `supplies` `supply` `support` `surf` `surgery` `systems` `tax` `taxi` `team` `tech` `technology`
-> `tennis` `theater` `theatre` `tienda` `tips` `tires` `today` `tools` `tours` `town` `toys` `trade` `trading` `training`
+> `tennis` `theater` `theatre` `tienda` `tips` `tires` `today` `tools` `tours` `town` `toys` `trade` `trading`
+> `training`
 > `travel` `tv` `uk` `university` `uno` `us` `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision`
 > `vodka` `voyage` `watch` `webcam` `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz`
 > `yoga` `zone`
@@ -533,8 +538,8 @@ Generate WireGuard private and public keys.
 
 Generate cryptographically secure random passwords with a safe alphabet.
 
-Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the `zxcvbn` score is
-above `2`, telling the user what is going on.
+Prints password entropy and general security at the end with `zxcvbn` and `chbs`. Repeats until the
+`zxcvbn` score is above `2`, telling the user what is going on.
 
 A minimum of one item from each of the four (five if emoji is enabled) character sets.
 
@@ -552,8 +557,9 @@ Git and GitHub utilities.
 
 #### `jig git binary`
 
-Information about binaries is kept in `~/.local/share/jig/binaries.yaml` for use by the subcommands. Data format is [
-`yaml` using `saphypr`](https://lib.rs/crates/saphypr).
+Information about binaries is kept in `~/.local/share/jig/binaries.yaml` for use by the subcommands.
+
+Data format is [`yaml` using `saphypr`](https://lib.rs/crates/saphypr).
 
 `~/.local/share/jig/bin` is added/ensured to the user's `$PATH` as part of the shell integration hook in
 `jig workspace hook`.
@@ -688,8 +694,8 @@ Notes:
 - Uses `git` to clone the templates into `~/.local/share/jig/templates/username/repo`.
   - If the templates already exist and we're on the correct branch, they will be pulled and updated.
   - Will then check out `branch` if non-default and not checked out already.
-  - Will use the `git` CLI if `git.internal` is set to `false` in the config, otherwise uses [
-    `gix`](https://lib.rs/crates/gix).
+  - Will use the `git` CLI if `git.internal` is set to `false` in the config,
+    otherwise uses [`gix`](https://lib.rs/crates/gix).
   - Includes special `_shared` template for files common to all templates.
 - Creates initial config file.
   - If config file exists, asks for confirmation to overwrite it unless `--clobber` is specified.
