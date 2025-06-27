@@ -166,6 +166,7 @@ secret: #                       We use a secret in many places. required.
       - file #                        second priority
       - key #                         final priority
 template: #                     Template configuration. optional.
+  git: true #                     def: true. init git repo, commit as templates applied. optional.
   branch: template #              def: main. branch to use for templates. optional.
   repository: daveio/jig #        def: daveio/jig. repository for templates. optional.
 yank: #                         Yank configuration. optional.
@@ -227,6 +228,18 @@ Gets the current user's GitHub username.
 
 We want an abstraction over Git, so we can call the same code whether we're using the `git` CLI or the
 [`gix`](https://lib.rs/crates/gix) library, and have the abstraction decide what to do.
+
+## Universal Arguments
+
+- `-V` / `--version`: Get `jig` version.
+- `-h` / `--help`: Get help about a command.
+- `-y` / `--yes`: Skip any and all confirmations, assuming yes.
+- `-j` / `--json`: Write structured output, for use in scripts. Formats output with `stringify_pretty` of
+  [`json`](https://lib.rs/crates/json).
+- `-v` / `--verbose`: Print more detailed output to `STDERR`. Invalid with `--json`.
+- `-q` / `--quiet`: Print less detailed output to `STDERR`. Invalid with `--json`.
+- `-s` / `--silent`: Print nothing to `STDOUT` or `STDERR`, even in case of failures (return code is still emitted).
+  Invalid with `--json`.
 
 ## Commands
 
@@ -780,13 +793,37 @@ Flow:
 
 #### `jig project new`
 
-`[TEMPLATE]`: Which template to use for the new project.
-
 Templates are defined using [`tera`](https://lib.rs/crates/tera) templates in `~/.local/share/jig/templates`.
+
+- `-n` / `--name`: Project name, if not the same as directory name
+- `-g` / `--git`: Initialise `git` repository in created directory
+- `-G` / `--no-git`: Don't initialise `git` repository in created directory
+- `[TEMPLATE]`: Which template to use for the new project.
+- `[NAME]`: Project name. A directory with this name will be created.
+
+Configuration:
+
+`template.git`: Boolean. Create `git` repository in created directory. If enabled, commits as files are written, after
+each file.
+
+Creates `.jig.yaml` file:
+
+- Template repo
+- Template branch name
+- Template path in repo
+- Commit of applied template
+- Creation date/time
+- Latest update date/time
 
 #### `jig project update`
 
-Update project dependencies.
+Apply updated template to existing project.
+
+- `-c` / `--clobber`: Overwrite files without attempting merge
+- `-n` / `--name`: Project name, if not the same as directory name
+
+Reads `.jig.yaml` to find out which template to use and evaluate changes. Prompts for changes per-file unless
+`--clobber` is specified, showing diffs.
 
 #### `jig project template`
 
@@ -800,9 +837,19 @@ List installed templates.
 
 Initialise a new template.
 
+- `[NAME]`: Template name. Bails out if the template already exists.
+
 ##### `jig project template update`
 
 Fetch and pull templates from the configured repository.
+
+- `-c` / `--cli`: Shell out to the `git` CLI instead of using [`gix`](https://lib.rs/crates/gix).
+- `-i` / `--internal`: Force use of [`gix`](https://lib.rs/crates/gix) to clone the repository.
+
+Config:
+
+`git.internal`: Whether to use internal [`gix`](https://lib.rs/crates/gix) or the `git` CLI. Overridden by params.
+Defaults to `true`.
 
 ### `jig terminal`
 

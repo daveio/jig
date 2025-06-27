@@ -52,6 +52,7 @@ jiff = { version = "0.2.15", features = [
   "tzdb-bundle-always",
   "js",
 ] }
+json = "0.12.4"
 jwt-simple = { version = "0.12.12", default-features = false, features = [
   "pure-rust",
   "cwt",
