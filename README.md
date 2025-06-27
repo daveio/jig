@@ -800,7 +800,7 @@ Generate JSON Web Tokens with claims.
 5. Output JWT
 
 ```mermaid
-graph TD
+graph LR
     A[Start] --> B{Secret Source?}
     B -->|Parameter| C[Use --secret]
     B -->|Config| D[Load from config]
@@ -962,7 +962,7 @@ Generate AI-powered commit messages.
 6. Execute commit with generated message
 
 ```mermaid
-graph TD
+graph LR
     A[Get Diff] --> B{Diff Size}
     B -->|Large| C[Truncate]
     B -->|Small| D[Send to AI]
@@ -1455,20 +1455,35 @@ Switch active workspace.
 
 **Flow:**
 
-1. Run current workspace `down` commands
+1. Old workspace is active
 2. Execute global `before-down` hooks
-3. Update environment variables
-4. Execute global `before-up` hooks
-5. Run new workspace `up` commands
-6. Execute global `after-up` hooks
+3. Run old workspace `down` commands
+4. Remove old workspace's environment variables
+5. Execute global `after-down` hooks
+6. Execute global `before-up` hooks
+7. Set new environment's environment variables
+8. Run new workspace `up` commands
+9. Execute global `after-up` hooks
+10. New workspace is active
 
 ```mermaid
 graph LR
-    A[Current Workspace] -->|down| B[Hooks]
-    B -->|before-down| C[Switch]
-    C -->|env vars| D[New Workspace]
-    D -->|before-up| E[Hooks]
-    E -->|up| F[Active]
+  A[OLD is active]
+  A --> B(jig workspace switch NEW)
+  B --> C('before-down' hook)
+  C --> D(OLD 'down' commands)
+  D --> E('after-down' hook)
+  E --> F('before-up' hook)
+  F --> G(NEW 'up' commands)
+  G --> H('after-up' hook)
+  H --> I[NEW is active]
+
+  classDef state fill:#ff6,stroke:#333,stroke-width:2px;
+  classDef action fill:#fbb,stroke:#333,stroke-width:2px;
+  classDef execution fill:#bbf,stroke:#333,stroke-width:2px;
+  class A,I state
+  class B action
+  class C,D,E,F,G,H execution
 ```
 
 #### `jig workspace hook`
