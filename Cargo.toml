@@ -5,6 +5,12 @@ argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
 base64ct = { version = "1.8.0", features = ["std"] }
 blake3 = { version = "1.8.2", features = ["rayon", "zeroize"] }
 bs58 = { version = "0.5.1", features = ["std", "alloc", "check", "cb58"] }
+catppuccin = { version = "2.5.1", features = [
+  "ansi-term",
+  "css-colors",
+  "ratatui",
+  "serde",
+] }
 chbs = "0.1.1"
 clap = { version = "4.5.40", features = [
   "derive",
