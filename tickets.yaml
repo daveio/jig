@@ -1,2368 +1,2888 @@
-# Linear Tickets for Jig CLI Project
-# This file defines the complete ticket structure for implementing the jig CLI tool
+# Linear Tickets Configuration for jig CLI
+# This file defines all tickets for the jig CLI implementation project
 
 metadata:
-  team: "jig"
-  project_name: "Jig CLI v1.0"
+  team: jig
   labels:
-    - name: "infrastructure"
-      description: "Core infrastructure and foundational components"
+    - name: infrastructure
+      description: Core infrastructure and foundational work
       color: "#5E6AD2"
-    - name: "cli-command"
-      description: "Individual CLI command implementations"
-      color: "#26A69A"
-    - name: "api-integration"
-      description: "External API integrations"
-      color: "#FF7043"
-    - name: "ai-powered"
-      description: "AI and machine learning features"
-      color: "#AB47BC"
-    - name: "shell-integration"
-      description: "Shell and system integration features"
-      color: "#66BB6A"
-    - name: "testing"
-      description: "Testing and quality assurance"
-      color: "#42A5F5"
-    - name: "documentation"
-      description: "Documentation and guides"
-      color: "#FFA726"
-    - name: "security"
-      description: "Security-related features"
-      color: "#EF5350"
-    - name: "performance"
-      description: "Performance optimization"
-      color: "#FFCA28"
+    - name: cli-command
+      description: CLI command implementation
+      color: "#4CB782"
+    - name: api-integration
+      description: External API integration work
+      color: "#F2994A"
+    - name: ai-powered
+      description: AI/ML powered features
+      color: "#26B5CE"
+    - name: shell-integration
+      description: Shell and terminal integration
+      color: "#8B5CF6"
+    - name: testing
+      description: Testing and quality assurance
+      color: "#6B7280"
+    - name: documentation
+      description: Documentation and guides
+      color: "#10B981"
+    - name: security
+      description: Security-related features
+      color: "#EF4444"
+    - name: performance
+      description: Performance optimization
+      color: "#F59E0B"
 
+# Phase-level epics
 epics:
-  - id: "epic-phase1"
+  - id: phase-1
     title: "Phase 1: Core Infrastructure & Project Setup"
+    priority: 1 # High priority
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Establish the foundational components of the jig CLI application. This phase focuses on setting up the command-line argument parsing, configuration management, and essential shared utilities that all other commands will rely on.
+      Establish the foundational components of the `jig` CLI application, including command-line argument parsing, configuration management, and essential shared utilities that all other commands will rely on.
 
       ## 🧵 It's Done When…
 
-      - [ ] CLI framework is fully configured with clap
-      - [ ] Configuration system loads and merges YAML files correctly
-      - [ ] Core utilities module provides Git abstraction and helper functions
-      - [ ] Error handling and logging strategy is implemented consistently
-      - [ ] All global CLI options work correctly
+      - Main CLI structure is set up with all global options working
+      - Configuration loading from `~/.jig.yaml` and `~/.jig.secret.yaml` is functional
+      - Hierarchical secret resolution (key/file/env) is implemented
+      - Core utilities module with Git abstraction and error handling is complete
+      - All components have proper error propagation and logging
 
       ## 📦 Related Material
 
-      - [README.md - Configuration section](./README.md#configuration)
-      - [PLAN.md - Phase 1 details](./PLAN.md#phase-1-core-infrastructure--project-setup)
+      - [README.md - Configuration section](https://github.com/daveio/jig#configuration)
+      - [PLAN.md - Phase 1 details](https://github.com/daveio/jig#phase-1)
 
       ## 🫧 Further Detail
 
-      This phase is critical as it establishes the foundation for all subsequent development. The configuration system must handle the complex secret resolution hierarchy, and the Git abstraction layer needs to support both CLI and library approaches.
-    priority: 1
-    estimate: 21
-    labels: ["infrastructure"]
+      This phase lays the groundwork for all future development. Key technologies:
+      - clap for CLI parsing with abbreviation support
+      - saphyr and serde for YAML configuration
+      - anyhow for error handling
+      - tracing for logging
 
-  - id: "epic-phase2"
+      Duration: 2 weeks
+
+  - id: phase-2
     title: "Phase 2: Foundational Command Groups"
+    priority: 1 # High priority
+    labels:
+      - cli-command
+      - security
     description: |
       ## 🩻 Summary
 
-      Implement the core, self-contained utility commands that provide immediate value without significant external dependencies. This includes crypto operations, generation utilities, and basic network tools.
+      Implement the core, self-contained utility commands that provide immediate value and do not have significant external dependencies. This includes crypto, generate, network, and TLS commands.
 
       ## 🧵 It's Done When…
 
-      - [ ] All crypto commands (encrypt, decrypt, public) work with age encryption
-      - [ ] Generation commands produce cryptographically secure outputs
-      - [ ] Network and TLS commands provide reliable diagnostics
-      - [ ] All commands handle errors gracefully and provide helpful output
+      - All crypto commands (encrypt/decrypt/public) work with age encryption
+      - Generate commands produce secure hex, passwords, keys, and JWTs
+      - Network DNS commands handle flush/lookup/DNSSEC
+      - TLS commands retrieve certificates and list ciphers
+      - All commands respect global options (`--json`, `--quiet`, etc.)
 
       ## 📦 Related Material
 
-      - [README.md - Command Reference](./README.md#command-reference)
-      - [PLAN.md - Phase 2 details](./PLAN.md#phase-2-foundational-command-groups)
+      - [README.md - Command Reference](https://github.com/daveio/jig#command-reference)
+      - [PLAN.md - Phase 2 details](https://github.com/daveio/jig#phase-2)
 
       ## 🫧 Further Detail
 
-      These commands form the core utility set of jig. They should work independently and provide immediate value to users. Special attention to cryptographic security and proper entropy sources is essential.
-    priority: 1
-    estimate: 34
-    labels: ["cli-command", "security"]
-    depends_on: ["epic-phase1"]
+      These commands form the utility belt of `jig`, providing everyday tools for developers:
+      - Age encryption for secure file handling
+      - Password generation with entropy validation (zxcvbn)
+      - JWT generation with configurable claims
+      - DNS and TLS utilities for network debugging
 
-  - id: "epic-phase3"
+      Duration: 3 weeks
+
+  - id: phase-3
     title: "Phase 3: Project & Git Management"
+    priority: 2 # Medium priority
+    labels:
+      - cli-command
+      - Development
     description: |
       ## 🩻 Summary
 
-      Build commands for managing projects and interacting with Git repositories. This includes the template system, project scaffolding, and Git utilities that require filesystem manipulation and external process execution.
+      Build the commands for managing projects and interacting with Git repositories. These involve filesystem manipulation, template processing, and external process execution.
 
       ## 🧵 It's Done When…
 
-      - [ ] Template system can create, list, and update project templates
-      - [ ] Project commands can scaffold and update projects from templates
-      - [ ] Git integration provides simplified repository management
-      - [ ] Binary release management handles GitHub releases efficiently
+      - Project templates can be listed, created, and updated
+      - New projects can be scaffolded from Tera templates
+      - Git operations work with both CLI and gix library
+      - Binary release management is functional
+      - Batch repository operations (yank) work correctly
 
       ## 📦 Related Material
 
-      - [README.md - Project commands](./README.md#jig-project)
-      - [README.md - Git commands](./README.md#jig-git)
-      - [PLAN.md - Phase 3 details](./PLAN.md#phase-3-project--git-management)
+      - [README.md - jig project commands](https://github.com/daveio/jig#jig-project)
+      - [README.md - jig git commands](https://github.com/daveio/jig#jig-git)
 
       ## 🫧 Further Detail
 
-      This phase introduces more complex interactions with the filesystem and external services. The template system using Tera is particularly important for project scaffolding workflows.
-    priority: 2
-    estimate: 42
-    labels: ["cli-command", "infrastructure"]
-    depends_on: ["epic-phase1"]
+      Key features include:
+      - Tera template engine integration
+      - Git abstraction layer (CLI vs gix)
+      - GitHub API integration for releases
+      - `.jig.yaml` tracking for project updates
+      - Binary metadata storage in YAML
 
-  - id: "epic-phase4"
+      Duration: 3 weeks
+
+  - id: phase-4
     title: "Phase 4: External API Integration"
+    priority: 2 # Medium priority
+    labels:
+      - api-integration
     description: |
       ## 🩻 Summary
 
-      Implement features that rely on external APIs including dave.io, Domainr, and RDAP services. This phase establishes the foundation for all API-dependent features.
+      Implement features that rely on external APIs including dave.io, Domainr, and RDAP. This phase can run in parallel with Phase 3.
 
       ## 🧵 It's Done When…
 
-      - [ ] Dave.io API client provides reliable base functionality
-      - [ ] Domain commands integrate with Domainr and RDAP services
-      - [ ] API authentication and error handling work consistently
-      - [ ] Rate limiting and caching prevent API abuse
+      - Base dave.io API client is implemented with retry logic
+      - All dave.io endpoints are accessible (ping, token, etc.)
+      - Domain availability checking works via Domainr API
+      - Domain expiry and nameserver lookup work via RDAP
+      - Proper error handling and caching are in place
 
       ## 📦 Related Material
 
-      - [README.md - API commands](./README.md#jig-api)
-      - [README.md - Domain commands](./README.md#jig-domain)
-      - [PLAN.md - Phase 4 details](./PLAN.md#phase-4-external-api-integration)
+      - [README.md - jig api commands](https://github.com/daveio/jig#jig-api)
+      - [README.md - jig domain commands](https://github.com/daveio/jig#jig-domain)
 
       ## 🫧 Further Detail
 
-      External API integration requires careful attention to authentication, rate limiting, and graceful degradation when services are unavailable.
-    priority: 2
-    estimate: 28
-    labels: ["api-integration"]
-    depends_on: ["epic-phase2"]
+      API integrations include:
+      - dave.io API for various services
+      - Domainr API for domain availability
+      - RDAP for domain information
+      - Cloudflare TLD filtering for domain checks
 
-  - id: "epic-phase5"
+      Duration: 2 weeks
+
+  - id: phase-5
     title: "Phase 5: AI-Powered Features"
+    priority: 2 # Medium priority
+    labels:
+      - ai-powered
+      - api-integration
     description: |
       ## 🩻 Summary
 
-      Integrate with AI services (Claude) to deliver intelligent automation features. This includes image processing, commit message generation, and content creation utilities.
+      Integrate with AI services (Claude) to deliver intelligent automation features for image processing, commit messages, and ticket management.
 
       ## 🧵 It's Done When…
 
-      - [ ] AI utilities handle image preparation and API communication
-      - [ ] Image renaming uses AI to generate descriptive filenames
-      - [ ] Commit message generation creates conventional commits from diffs
-      - [ ] Ticket and content generation features work reliably
+      - Image preparation utility optimizes images for Claude
+      - AI image renaming generates descriptive filenames
+      - Git commits get AI-generated conventional messages
+      - Image alt text and optimization work via API
+      - Ticket title/description generation is functional
 
       ## 📦 Related Material
 
-      - [README.md - AI commands](./README.md#jig-ai)
-      - [README.md - API image commands](./README.md#jig-api-image)
-      - [PLAN.md - Phase 5 details](./PLAN.md#phase-5-ai-powered-features)
+      - [README.md - jig ai commands](https://github.com/daveio/jig#jig-ai)
+      - Technical utilities documentation
 
       ## 🫧 Further Detail
 
-      AI features require careful prompt engineering and rate limiting. Image processing must handle various formats and optimize for API constraints.
-    priority: 2
-    estimate: 21
-    labels: ["ai-powered", "api-integration"]
-    depends_on: ["epic-phase4"]
+      Key components:
+      - `prepare_image_for_claude` utility (resize, WebP, compression)
+      - `ask_claude` helper for API communication
+      - Conventional commit format generation
+      - Rate limiting and quota management
 
-  - id: "epic-phase6"
+      Duration: 2 weeks
+
+  - id: phase-6
     title: "Phase 6: Advanced Shell & System Integration"
+    priority: 2 # Medium priority
+    labels:
+      - shell-integration
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement features requiring deep integration with the user's shell and local environment. This includes initialization, workspace management, and terminal utilities.
+      Implement features requiring deep integration with the user's shell and local environment, including initialization, workspace management, and terminal utilities.
 
       ## 🧵 It's Done When…
 
-      - [ ] Initialization system sets up complete jig environment
-      - [ ] Workspace management handles environment switching seamlessly
-      - [ ] Terminal utilities provide rich visual experiences
-      - [ ] Shell integration works across bash, zsh, and fish
+      - `jig init` creates full environment setup
+      - Workspace switching manages state transitions correctly
+      - Shell hooks work for fish, bash, and zsh
+      - Terminal utilities display system info and XKCD comics
+      - Environment variable isolation is functional
 
       ## 📦 Related Material
 
-      - [README.md - Workspace commands](./README.md#jig-workspace)
-      - [README.md - Terminal commands](./README.md#jig-terminal)
-      - [PLAN.md - Phase 6 details](./PLAN.md#phase-6-advanced-shell--system-integration)
+      - [README.md - jig init](https://github.com/daveio/jig#jig-init)
+      - [README.md - jig workspace](https://github.com/daveio/jig#jig-workspace)
 
       ## 🫧 Further Detail
 
-      Shell integration is complex and must handle different shell environments gracefully. The workspace system is particularly important for developer workflow.
-    priority: 2
-    estimate: 28
-    labels: ["shell-integration"]
-    depends_on: ["epic-phase3"]
+      Complex shell integration features:
+      - Multi-shell support (fish, bash, zsh)
+      - Workspace state management
+      - Environment variable handling
+      - Terminal capability detection
+      - viuer for terminal graphics
 
-  - id: "epic-phase7"
+      Duration: 2 weeks
+
+  - id: phase-7
     title: "Phase 7: Polish & Easter Eggs"
+    priority: 3 # Low priority
+    labels:
+      - Enhancement
     description: |
       ## 🩻 Summary
 
-      Add features that enhance user experience but are not critical to core functionality. This includes the animated dance command and other delightful touches.
+      Add features that enhance the user experience but are not critical to core functionality, including the hidden `jig dance` command with terminal animations.
 
       ## 🧵 It's Done When…
 
-      - [ ] Dance command provides entertaining terminal effects
-      - [ ] Animation sequences are smooth and interruptible
-      - [ ] Easter egg is properly hidden from help output
-      - [ ] Multiple animation modes provide variety
+      - `jig dance` displays animated terminal effects
+      - Multiple animation modes are available
+      - Command is hidden from `--help` output
+      - Clean interrupt handling works
+      - All effects libraries are integrated
 
       ## 📦 Related Material
 
-      - [README.md - Easter Egg Implementation](./README.md#easter-egg-implementation)
-      - [PLAN.md - Phase 7 details](./PLAN.md#phase-7-polish--easter-eggs)
+      - [README.md - Easter Egg Implementation](https://github.com/daveio/jig#easter-egg-implementation)
 
       ## 🫧 Further Detail
 
-      While not critical, these features contribute significantly to user delight and tool personality. The terminal effects libraries integration requires careful testing.
-    priority: 3
-    estimate: 14
-    labels: ["cli-command"]
-    depends_on: ["epic-phase6"]
+      Terminal effects libraries:
+      - tachyonfx for shader-like effects
+      - tui-rain for atmospheric effects
+      - firework-rs for ASCII animations
+      - rascii_art for image conversion
+      - spinoff for loading indicators
 
-  - id: "epic-phase8"
-    title: "Phase 8: Model Context Protocol"
+      Duration: 1 week
+
+  - id: phase-8
+    title: "Phase 8: Future & Protocol Implementation"
+    priority: 3 # Low priority
+    labels:
+      - Feature
+      - Planning
     description: |
       ## 🩻 Summary
 
-      Implement forward-looking Model Context Protocol server functionality planned for post-initial release. This enables AI agent integration with jig.
+      Implement forward-looking features planned for after the initial release, primarily the Model Context Protocol (MCP) server for AI agent integration.
 
       ## 🧵 It's Done When…
 
-      - [ ] MCP server architecture is designed and documented
-      - [ ] Stdio MCP server implementation works with AI agents
-      - [ ] Protocol specification is complete and tested
-      - [ ] Security boundaries and permissions are properly implemented
+      - MCP server is implemented using rmcp
+      - Protocol is documented for AI agents
+      - Security boundaries are established
+      - Command filtering and permissions work
+      - Integration examples are provided
 
       ## 📦 Related Material
 
-      - [README.md - MCP section](./README.md#jig-mcp)
-      - [PLAN.md - Phase 8 details](./PLAN.md#phase-8-future--protocol-implementation)
+      - [README.md - jig mcp](https://github.com/daveio/jig#jig-mcp)
+      - Future roadmap documentation
 
       ## 🫧 Further Detail
 
-      This is a post-v1.0 feature that enables AI agents to interact with jig functionality. Security and proper command filtering are essential.
-    priority: 3
-    estimate: 14
-    labels: ["api-integration"]
-    depends_on: ["epic-phase7"]
+      Post-v1.0 feature for AI integration:
+      - stdio MCP server implementation
+      - Command exposure to AI agents
+      - Security and permission system
+      - Future: WASM compilation, remote MCP
 
-  - id: "epic-phase9"
+      Duration: 1 week (initial implementation)
+
+  - id: phase-9
     title: "Phase 9: Testing, Documentation & Release"
+    priority: 1 # High priority
+    labels:
+      - testing
+      - documentation
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Finalize the application for public release with comprehensive testing, documentation, and distribution setup. This phase ensures production readiness.
+      Finalize the application for public release with comprehensive testing, CI/CD setup, documentation updates, and distribution packaging.
 
       ## 🧵 It's Done When…
 
-      - [ ] Test coverage exceeds 80% with comprehensive test suite
-      - [ ] CI/CD pipeline builds and tests across all platforms
-      - [ ] Documentation is complete and accurate
-      - [ ] Distribution methods work correctly (cargo, homebrew, etc.)
+      - 80%+ test coverage achieved
+      - CI/CD pipeline runs on all commits
+      - Cross-platform binaries build successfully
+      - Documentation is accurate and complete
+      - Homebrew formula and cargo package work
 
       ## 📦 Related Material
 
-      - [README.md - Installation section](./README.md#installation)
-      - [PLAN.md - Phase 9 details](./PLAN.md#phase-9-testing-documentation--release)
+      - [PLAN.md - Success Metrics](https://github.com/daveio/jig#success-metrics)
+      - Release checklist
 
       ## 🫧 Further Detail
 
-      This phase is critical for public release success. Testing must be comprehensive, and documentation must be clear for new users.
-    priority: 1
-    estimate: 35
-    labels: ["testing", "documentation"]
-    depends_on: ["epic-phase8"]
+      Release preparation:
+      - Unit and integration tests
+      - Property-based testing
+      - GitHub Actions workflows
+      - Man page generation
+      - Binary signing
+      - < 100ms startup time
+      - < 5MB compressed binary
 
+      Duration: 2 weeks (continuous throughout)
+
+# Feature-level tickets
 features:
   # Phase 1 Features
-  - id: "feature-cli-framework"
-    epic_id: "epic-phase1"
-    title: "CLI Framework Setup"
-    description: |
-      ## 🩻 Summary
-
-      Set up the main command structure using clap with proper global options, command abbreviation support, and error handling.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Main jig command structure with subcommands is implemented
-      - [ ] All global options (--version, --help, --yes, --json, --verbose, --quiet, --silent) work
-      - [ ] Command abbreviation is configured and tested
-      - [ ] Error propagation uses anyhow or custom error types
-
-      ## 📦 Related Material
-
-      - [Clap documentation](https://docs.rs/clap/latest/clap/)
-      - [README.md - Global Command Options](./README.md#global-command-options)
-    priority: 1
+  - id: feat-cli-framework
+    epic_id: phase-1
+    title: CLI Framework Setup
     estimate: 8
-    labels: ["infrastructure"]
-
-  - id: "feature-config-management"
-    epic_id: "epic-phase1"
-    title: "Configuration Management"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement robust YAML configuration loading with hierarchical secret resolution and validation.
+      Set up the main `jig` command structure using clap with support for subcommands, global options, and command abbreviation.
 
       ## 🧵 It's Done When…
 
-      - [ ] ~/.jig.yaml loading works with saphyr/serde
-      - [ ] Optional ~/.jig.secret.yaml merging is implemented
-      - [ ] Hierarchical secret resolution (key/file/env) works correctly
-      - [ ] Configuration validation prevents invalid states
+      - Main CLI entry point is created with clap
+      - All global options are implemented and tested
+      - Command abbreviation works (e.g., `jig gen` → `jig generate`)
+      - Help text is comprehensive and well-formatted
+      - Version information is correctly displayed
 
       ## 📦 Related Material
 
-      - [README.md - Configuration](./README.md#configuration)
-      - [Serde documentation](https://serde.rs/)
+      - clap documentation
+      - Global options specification in README
+
+      ## 🫧 Further Detail
+
+      Global options to implement:
+      - `--version`/`-V`: Display version
+      - `--help`/`-h`: Show help
+      - `--yes`/`-y`: Skip confirmations
+      - `--json`/`-j`: JSON output
+      - `--verbose`/`-v`: Detailed output
+      - `--quiet`/`-q`: Minimal output
+      - `--silent`/`-s`: No output
+
+  - id: feat-config-mgmt
+    epic_id: phase-1
+    title: Configuration Management
+    estimate: 13
     priority: 1
+    labels:
+      - infrastructure
+    description: |
+      ## 🩻 Summary
+
+      Implement comprehensive configuration loading and management using saphyr and serde, including secret resolution logic.
+
+      ## 🧵 It's Done When…
+
+      - `~/.jig.yaml` loads correctly
+      - `~/.jig.secret.yaml` merges properly
+      - Secret resolution follows priority: env → file → key
+      - Configuration validation catches errors
+      - Default values are applied correctly
+
+      ## 📦 Related Material
+
+      - Configuration reference in README
+      - saphyr/serde documentation
+
+      ## 🫧 Further Detail
+
+      Complex secret resolution logic for:
+      - `secret.main` (encryption key)
+      - `secret.jwt` (JWT signing)
+      - `secret.api.*` (API keys)
+
+      Support for order configuration and fallbacks.
+
+  - id: feat-core-utils
+    epic_id: phase-1
+    title: Core Utilities Module
     estimate: 8
-    labels: ["infrastructure"]
-
-  - id: "feature-core-utilities"
-    epic_id: "epic-phase1"
-    title: "Core Utilities Module"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Create shared utilities including Git abstraction, error handling, logging, and common helper functions.
+      Create the shared utilities module containing common functionality used across all commands.
 
       ## 🧵 It's Done When…
 
-      - [ ] Shared utilities module structure is created
-      - [ ] Git abstraction layer (CLI vs gix) works based on config
-      - [ ] Error handling and logging strategy using tracing is implemented
-      - [ ] resolve_github_username utility works correctly
+      - Git abstraction layer switches between CLI and gix
+      - Error handling is consistent with anyhow
+      - Logging uses tracing effectively
+      - `resolve_github_username` works with all methods
+      - Output formatting supports JSON and human-readable
 
       ## 📦 Related Material
 
-      - [README.md - Git Abstraction](./README.md#git-abstraction)
-      - [Tracing documentation](https://docs.rs/tracing/latest/tracing/)
-    priority: 1
-    estimate: 5
-    labels: ["infrastructure"]
+      - Technical implementation notes
+      - Git abstraction design
+
+      ## 🫧 Further Detail
+
+      Key utilities:
+      - Git operations abstraction
+      - GitHub username resolution
+      - JSON formatting with `stringify_pretty`
+      - Common error types
 
   # Phase 2 Features
-  - id: "feature-crypto-commands"
-    epic_id: "epic-phase2"
-    title: "Crypto Commands"
-    description: |
-      ## 🩻 Summary
-
-      Implement age encryption/decryption commands with proper key handling and binary support.
-
-      ## 🧵 It's Done When…
-
-      - [ ] age encryption (encrypt command) works with files and stdin
-      - [ ] age decryption (decrypt command) works with files and stdin
-      - [ ] Public key derivation from private keys is implemented
-      - [ ] Binary input/output handling works correctly
-
-      ## 📦 Related Material
-
-      - [README.md - jig crypto](./README.md#jig-crypto)
-      - [Age encryption specification](https://age-encryption.org/)
-    priority: 1
+  - id: feat-crypto-cmds
+    epic_id: phase-2
+    title: "`jig crypto` commands"
     estimate: 8
-    labels: ["cli-command", "security"]
-
-  - id: "feature-generate-commands"
-    epic_id: "epic-phase2"
-    title: "Generate Commands"
+    priority: 1
+    labels:
+      - cli-command
+      - security
     description: |
       ## 🩻 Summary
 
-      Implement cryptographically secure generation utilities for hex, passwords, keys, and JWTs.
+      Implement age encryption/decryption commands with support for files and stdin/stdout.
 
       ## 🧵 It's Done When…
 
-      - [ ] Hex generation produces cryptographically secure random values
-      - [ ] Password generation with entropy validation using zxcvbn works
-      - [ ] XKCD password mode generates word-based passphrases
-      - [ ] Age and WireGuard key generation work correctly
-      - [ ] JWT generation with configurable claims and expiry is implemented
+      - `encrypt` command works with files and stdin
+      - `decrypt` command works with files and stdin
+      - `public` command shows recipient from private key
+      - Binary data is handled correctly
+      - Key loading follows configuration hierarchy
 
       ## 📦 Related Material
 
-      - [README.md - jig generate](./README.md#jig-generate)
-      - [zxcvbn documentation](https://github.com/dropbox/zxcvbn)
-    priority: 1
+      - age encryption documentation
+      - Crypto command specifications
+
+      ## 🫧 Further Detail
+
+      Features:
+      - Input/output flexibility (files or streams)
+      - Key override with `--key` option
+      - Binary-safe operations
+      - Clear error messages for invalid keys
+
+  - id: feat-generate-cmds
+    epic_id: phase-2
+    title: "`jig generate` commands"
     estimate: 13
-    labels: ["cli-command", "security"]
-
-  - id: "feature-network-commands"
-    epic_id: "epic-phase2"
-    title: "Network Commands"
+    priority: 1
+    labels:
+      - cli-command
+      - security
     description: |
       ## 🩻 Summary
 
-      Implement network diagnostic utilities including DNS operations and cache management.
+      Implement secure generation utilities for hex strings, passwords, cryptographic keys, and JWTs.
 
       ## 🧵 It's Done When…
 
-      - [ ] DNS cache flush works across different operating systems
-      - [ ] DNS lookup with custom servers is implemented
-      - [ ] DNSSEC validation provides proper security checks
-      - [ ] Timeout handling for network operations works correctly
+      - `hex` generates cryptographically secure strings
+      - `password` includes entropy validation with zxcvbn
+      - xkcd mode generates memorable passphrases
+      - key generation supports age and WireGuard
+      - JWT generation includes claims and expiry
+      - Deterministic generation works with `--keyed`/`--seed`
 
       ## 📦 Related Material
 
-      - [README.md - jig network](./README.md#jig-network)
-    priority: 1
+      - Generation command specifications
+      - Password entropy requirements
+
+      ## 🫧 Further Detail
+
+      Complex features:
+      - Character set management for passwords
+      - Emoji support in passwords
+      - JWT claim handling
+      - Minimum entropy score enforcement
+
+  - id: feat-network-cmds
+    epic_id: phase-2
+    title: "`jig network` commands"
     estimate: 8
-    labels: ["cli-command"]
-
-  - id: "feature-tls-commands"
-    epic_id: "epic-phase2"
-    title: "TLS Commands"
+    priority: 1
+    labels:
+      - cli-command
     description: |
       ## 🩻 Summary
 
-      Implement TLS certificate retrieval and cipher suite analysis tools.
+      Implement network utilities for DNS operations including cache flushing, lookups, and DNSSEC validation.
 
       ## 🧵 It's Done When…
 
-      - [ ] TLS certificate retrieval from remote hosts works
-      - [ ] Certificate chain support is implemented
-      - [ ] Cipher suite listing and analysis is functional
-      - [ ] Connection timeout and error handling work properly
+      - DNS flush works on macOS, Linux, and Windows
+      - DNS lookup supports custom nameservers
+      - DNSSEC validation checks work correctly
+      - Root nameserver queries are supported
+      - Timeout handling prevents hangs
 
       ## 📦 Related Material
 
-      - [README.md - jig tls](./README.md#jig-tls)
-    priority: 1
+      - DNS command specifications
+      - OS-specific flush commands
+
+      ## 🫧 Further Detail
+
+      OS-specific implementations:
+      - macOS: `dscacheutil -flushcache`
+      - Linux: `systemd-resolve --flush-caches`
+      - Windows: `ipconfig /flushdns`
+
+  - id: feat-tls-cmds
+    epic_id: phase-2
+    title: "`jig tls` commands"
     estimate: 5
-    labels: ["cli-command", "security"]
+    priority: 1
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement TLS utilities for certificate retrieval and cipher suite analysis.
+
+      ## 🧵 It's Done When…
+
+      - Certificate retrieval works for any TLS host
+      - Full certificate chain can be retrieved
+      - Cipher suite listing shows all supported ciphers
+      - Custom ports are supported
+      - Output is in standard PEM format
+
+      ## 📦 Related Material
+
+      - TLS command specifications
+      - Certificate format standards
+
+      ## 🫧 Further Detail
+
+      Features:
+      - Default port 443 with override
+      - Strength ratings for ciphers
+      - Timeout handling for connections
 
   # Phase 3 Features
-  - id: "feature-template-system"
-    epic_id: "epic-phase3"
-    title: "Template System"
-    description: |
-      ## 🩻 Summary
-
-      Implement project template management with Tera processing and shared template support.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Template listing from local cache works
-      - [ ] Template repository updates via Git are functional
-      - [ ] New template creation with .jig.template.yaml works
-      - [ ] Tera template processing with context is implemented
-      - [ ] _shared template support is working
-
-      ## 📦 Related Material
-
-      - [README.md - jig project template](./README.md#jig-project-template)
-      - [Tera documentation](https://tera.netlify.app/)
-    priority: 2
+  - id: feat-template-system
+    epic_id: phase-3
+    title: Project Template System
     estimate: 13
-    labels: ["cli-command", "infrastructure"]
-
-  - id: "feature-project-commands"
-    epic_id: "epic-phase3"
-    title: "Project Commands"
+    priority: 2
+    labels:
+      - cli-command
+      - Development
     description: |
       ## 🩻 Summary
 
-      Implement project scaffolding, updates, and dependency management features.
+      Build the template management system for project scaffolding with Tera template engine support.
 
       ## 🧵 It's Done When…
 
-      - [ ] Project scaffolding from templates with .jig.yaml tracking works
-      - [ ] Project update with diff display is implemented
-      - [ ] Dependabot.yml generation based on detected ecosystems works
-      - [ ] Dependency version bumping for multiple package managers is functional
+      - Templates can be listed from local cache
+      - Template updates pull from Git repository
+      - New templates can be created with metadata
+      - `_shared` template support works
+      - Tera processing handles all syntax
 
       ## 📦 Related Material
 
-      - [README.md - jig project](./README.md#jig-project)
-    priority: 2
+      - Template system design
+      - Tera template documentation
+
+      ## 🫧 Further Detail
+
+      Key features:
+      - `.jig.template.yaml` metadata
+      - Shared template inheritance
+      - Git-based template distribution
+      - Template context variables
+
+  - id: feat-project-cmds
+    epic_id: phase-3
+    title: Project Management Commands
     estimate: 13
-    labels: ["cli-command"]
-
-  - id: "feature-git-integration"
-    epic_id: "epic-phase3"
-    title: "Git Integration"
+    priority: 2
+    labels:
+      - cli-command
+      - Development
     description: |
       ## 🩻 Summary
 
-      Implement Git utilities including simplified cloning, commit operations, and batch repository management.
+      Implement project scaffolding, updating, dependency management, and Dependabot configuration.
 
       ## 🧵 It's Done When…
 
-      - [ ] Simplified clone (username/repo) works with both gix and CLI
-      - [ ] Latest commit hash retrieval from GitHub API is functional
-      - [ ] GitHub secrets management via API works
-      - [ ] Batch repo update (yank) with progress indicators is implemented
+      - New projects scaffold from templates
+      - Updates show diffs and preserve changes
+      - Dependency bumping works for all ecosystems
+      - Dependabot YAML generates correctly
+      - `.jig.yaml` tracking works properly
 
       ## 📦 Related Material
 
-      - [README.md - jig git](./README.md#jig-git)
-    priority: 2
-    estimate: 8
-    labels: ["cli-command"]
+      - Project command specifications
+      - Dependabot configuration format
 
-  - id: "feature-binary-management"
-    epic_id: "epic-phase3"
-    title: "Binary Release Management"
+      ## 🫧 Further Detail
+
+      Ecosystem support:
+      - `Cargo.toml` (Rust)
+      - `package.json` (Node.js)
+      - GitHub Actions YAML
+      - Automatic ecosystem detection
+
+  - id: feat-git-integration
+    epic_id: phase-3
+    title: Git Integration Commands
+    estimate: 13
+    priority: 2
+    labels:
+      - cli-command
+      - Development
     description: |
       ## 🩻 Summary
 
-      Implement GitHub binary release management with metadata storage and PATH integration.
+      Implement Git and GitHub integration features including simplified cloning, secret management, and batch operations.
 
       ## 🧵 It's Done When…
 
-      - [ ] Binary metadata storage in ~/.local/share/jig/binaries.yaml works
-      - [ ] GitHub release downloading with architecture detection is functional
-      - [ ] Binary installation and PATH management work correctly
-      - [ ] Binary updates and removal with cleanup are implemented
+      - Clone works with username/repo syntax
+      - Latest commit retrieval works via API
+      - GitHub secrets can be set via API
+      - Yank updates all repos in a directory
+      - Git abstraction layer works correctly
 
       ## 📦 Related Material
 
-      - [README.md - jig git binary](./README.md#jig-git-binary)
-    priority: 2
+      - Git command specifications
+      - GitHub API documentation
+
+      ## 🫧 Further Detail
+
+      Features:
+      - SSH agent support detection
+      - Progress indicators for long operations
+      - Batch operation parallelization
+      - Error recovery in yank
+
+  - id: feat-binary-mgmt
+    epic_id: phase-3
+    title: Binary Release Management
     estimate: 8
-    labels: ["cli-command"]
+    priority: 2
+    labels:
+      - cli-command
+      - Development
+    description: |
+      ## 🩻 Summary
+
+      Implement GitHub binary release management with automatic platform detection and updates.
+
+      ## 🧵 It's Done When…
+
+      - Binaries download from GitHub releases
+      - Platform/architecture detection works
+      - Update checks compare hashes
+      - Metadata tracks installations
+      - PATH integration via shell hook works
+
+      ## 📦 Related Material
+
+      - Binary management specifications
+      - GitHub releases API
+
+      ## 🫧 Further Detail
+
+      Storage locations:
+      - `~/.local/share/jig/binaries.yaml` (metadata)
+      - `~/.local/share/jig/bin` (executables)
+
+      Hash verification for updates.
 
   # Phase 4 Features
-  - id: "feature-api-client"
-    epic_id: "epic-phase4"
-    title: "Dave.io API Client"
+  - id: feat-dave-api
+    epic_id: phase-4
+    title: Dave.io API Client
+    estimate: 8
+    priority: 2
+    labels:
+      - api-integration
     description: |
       ## 🩻 Summary
 
-      Create base API client for dave.io with authentication, retry logic, and core endpoints.
+      Create the base API client for dave.io with authentication, retry logic, and error handling.
 
       ## 🧵 It's Done When…
 
-      - [ ] Base API client with authentication headers is implemented
-      - [ ] Ping endpoint for health checks works
-      - [ ] Token management endpoints (info, revoke, usage) are functional
-      - [ ] Retry logic and error handling work correctly
+      - Base client handles authentication headers
+      - Retry logic handles transient failures
+      - All endpoints are accessible
+      - JSON responses parse correctly
+      - Rate limiting is respected
 
       ## 📦 Related Material
 
-      - [README.md - jig api](./README.md#jig-api)
-    priority: 2
-    estimate: 8
-    labels: ["api-integration"]
+      - dave.io API documentation
+      - API client best practices
 
-  - id: "feature-domain-commands"
-    epic_id: "epic-phase4"
-    title: "Domain Commands"
+      ## 🫧 Further Detail
+
+      Endpoints to implement:
+      - `/api/ping`
+      - `/api/tokens/*`
+      - `/api/images/*`
+      - `/api/tickets/*`
+      - `/api/ai/*`
+
+  - id: feat-domain-cmds
+    epic_id: phase-4
+    title: Domain Management Commands
+    estimate: 8
+    priority: 2
+    labels:
+      - cli-command
+      - api-integration
     description: |
       ## 🩻 Summary
 
-      Integrate Domainr API and RDAP services for domain information and availability checks.
+      Implement domain availability checking, expiry monitoring, and nameserver lookups using external APIs.
 
       ## 🧵 It's Done When…
 
-      - [ ] Domainr API integration for availability checks works
-      - [ ] RDAP client for expiry checks is functional
-      - [ ] Nameserver lookup with DNS fallback is implemented
-      - [ ] Cloudflare TLD filtering is working correctly
+      - Domainr API checks availability
+      - Results filter to Cloudflare TLDs
+      - RDAP provides expiry information
+      - Nameserver lookups fall back to DNS
+      - API responses are cached appropriately
 
       ## 📦 Related Material
 
-      - [README.md - jig domain](./README.md#jig-domain)
-    priority: 2
-    estimate: 8
-    labels: ["api-integration"]
+      - Domain command specifications
+      - Domainr API documentation
+      - RDAP protocol specification
+
+      ## 🫧 Further Detail
+
+      Cloudflare TLD list is hardcoded.
+      Fallback strategies for RDAP failures.
 
   # Phase 5 Features
-  - id: "feature-ai-utilities"
-    epic_id: "epic-phase5"
-    title: "AI Utilities"
-    description: |
-      ## 🩻 Summary
-
-      Implement core AI utilities for image processing and Claude API communication.
-
-      ## 🧵 It's Done When…
-
-      - [ ] prepare_image_for_claude utility with resizing and optimization works
-      - [ ] ask_claude helper function with retry logic is implemented
-      - [ ] Rate limiting and quota management are functional
-      - [ ] Error handling for AI API calls works correctly
-
-      ## 📦 Related Material
-
-      - [README.md - Shared Utilities](./README.md#shared-utilities)
-    priority: 2
+  - id: feat-ai-utils
+    epic_id: phase-5
+    title: AI Integration Utilities
     estimate: 8
-    labels: ["ai-powered", "api-integration"]
-
-  - id: "feature-ai-commands"
-    epic_id: "epic-phase5"
-    title: "AI Commands"
+    priority: 2
+    labels:
+      - ai-powered
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement AI-powered commands for image processing, commit generation, and content creation.
+      Implement shared utilities for AI integration including image preparation and Claude API communication.
 
       ## 🧵 It's Done When…
 
-      - [ ] AI image renaming with descriptive filenames works
-      - [ ] AI commit message generation from diffs is functional
-      - [ ] Image alt text generation and optimization API work
-      - [ ] Ticket title/description generation is implemented
+      - Image resizing keeps under 2048px
+      - WebP conversion with compression works
+      - Final images stay under 5MB
+      - `ask_claude` handles all response types
+      - Retry logic handles API failures
 
       ## 📦 Related Material
 
-      - [README.md - jig ai](./README.md#jig-ai)
-      - [README.md - jig api ticket](./README.md#jig-api-ticket)
-    priority: 2
+      - Claude API requirements
+      - Image optimization strategies
+
+      ## 🫧 Further Detail
+
+      Compression levels:
+      1. Lossless
+      2. 90% quality
+      3. 75% quality
+      4. 50% quality
+      5. 25% quality
+
+  - id: feat-ai-cmds
+    epic_id: phase-5
+    title: AI-Powered Commands
     estimate: 13
-    labels: ["ai-powered", "cli-command"]
+    priority: 2
+    labels:
+      - cli-command
+      - ai-powered
+    description: |
+      ## 🩻 Summary
+
+      Implement AI-powered features for image renaming, commit messages, alt text, and ticket management.
+
+      ## 🧵 It's Done When…
+
+      - Image renaming generates descriptive names
+      - Commit messages follow conventional format
+      - Alt text generation works via API
+      - Ticket titles and descriptions generate
+      - Rate limiting prevents quota exhaustion
+
+      ## 📦 Related Material
+
+      - AI command specifications
+      - Conventional commit format
+
+      ## 🫧 Further Detail
+
+      Filename format: `descriptive_words-YYYYMMDD-HHMMss.ext`
+      Commit format: emoji + type + description
 
   # Phase 6 Features
-  - id: "feature-initialization"
-    epic_id: "epic-phase6"
-    title: "Initialization System"
-    description: |
-      ## 🩻 Summary
-
-      Implement complete jig environment setup including directories, templates, and shell integration.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Directory structure creation works correctly
-      - [ ] Template repository cloning is functional
-      - [ ] Shell integration detection works across shells
-      - [ ] Shell plugin installers provide clear instructions
-
-      ## 📦 Related Material
-
-      - [README.md - jig init](./README.md#jig-init)
-    priority: 2
+  - id: feat-init-system
+    epic_id: phase-6
+    title: Initialization System
     estimate: 8
-    labels: ["shell-integration"]
-
-  - id: "feature-workspace-management"
-    epic_id: "epic-phase6"
-    title: "Workspace Management"
+    priority: 2
+    labels:
+      - shell-integration
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement workspace switching with environment variable management and shell hooks.
+      Implement the full initialization flow for setting up `jig` environment and shell integration.
 
       ## 🧵 It's Done When…
 
-      - [ ] Workspace listing displays configured workspaces
-      - [ ] Workspace switching logic with state transitions works
-      - [ ] Environment variable management and isolation are functional
-      - [ ] Shell hooks for bash/zsh/fish are implemented
+      - Directory structure creates correctly
+      - Template repository clones successfully
+      - Configuration generates with keys
+      - Shell detection identifies current shell
+      - Installation instructions are accurate
 
       ## 📦 Related Material
 
-      - [README.md - jig workspace](./README.md#jig-workspace)
-    priority: 2
+      - Initialization flow documentation
+      - Shell plugin installation guides
+
+      ## 🫧 Further Detail
+
+      Directories to create:
+      - `~/.local/share/jig`
+      - `~/.local/share/jig/bin`
+      - `~/.local/share/jig/templates`
+
+  - id: feat-workspace-mgmt
+    epic_id: phase-6
+    title: Workspace Management
     estimate: 13
-    labels: ["shell-integration"]
-
-  - id: "feature-terminal-utilities"
-    epic_id: "epic-phase6"
-    title: "Terminal Utilities"
+    priority: 2
+    labels:
+      - cli-command
+      - shell-integration
     description: |
       ## 🩻 Summary
 
-      Implement visual terminal utilities for system information and entertainment.
+      Implement workspace switching with state management, environment variables, and command execution.
 
       ## 🧵 It's Done When…
 
-      - [ ] System info visualization using viuer works
-      - [ ] XKCD comic display in terminal is functional
-      - [ ] Terminal capability detection works correctly
-      - [ ] Fallback rendering modes are implemented
+      - Workspace listing shows all configurations
+      - Switching runs up/down commands correctly
+      - Environment variables isolate properly
+      - Shell hooks integrate seamlessly
+      - All shells (fish, bash, zsh) work
 
       ## 📦 Related Material
 
-      - [README.md - jig terminal](./README.md#jig-terminal)
-    priority: 2
+      - Workspace specifications
+      - Shell hook documentation
+
+      ## 🫧 Further Detail
+
+      State transition flow:
+      1. before-down hooks
+      2. Old workspace down
+      3. after-down hooks
+      4. before-up hooks
+      5. New workspace up
+      6. after-up hooks
+
+  - id: feat-terminal-utils
+    epic_id: phase-6
+    title: Terminal Utilities
     estimate: 5
-    labels: ["cli-command"]
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Implement terminal visualization utilities for system information and XKCD comics.
+
+      ## 🧵 It's Done When…
+
+      - System info displays as gauges
+      - Terminal capabilities are detected
+      - Images resize for terminal display
+      - XKCD comics render correctly
+      - Multiple protocols supported (sixel, kitty, iTerm2)
+
+      ## 📦 Related Material
+
+      - Terminal command specifications
+      - viuer documentation
+
+      ## 🫧 Further Detail
+
+      System metrics:
+      - CPU usage
+      - Memory usage
+      - Disk usage
+
+      Fallback rendering modes for compatibility.
 
   # Phase 7 Features
-  - id: "feature-easter-eggs"
-    epic_id: "epic-phase7"
-    title: "Easter Eggs & Polish"
+  - id: feat-easter-eggs
+    epic_id: phase-7
+    title: Easter Egg Implementation
+    estimate: 5
+    priority: 3
+    labels:
+      - Enhancement
     description: |
       ## 🩻 Summary
 
-      Implement the dance command with terminal effects and animation sequences.
+      Implement the hidden `jig dance` command with advanced terminal animations and effects.
 
       ## 🧵 It's Done When…
 
-      - [ ] Terminal effects libraries integration works
-      - [ ] Animation sequences are smooth and varied
-      - [ ] Command is hidden from help output
-      - [ ] Interrupt handling for clean exit works
-      - [ ] Multiple animation modes provide entertainment
+      - All effects libraries integrate properly
+      - Animation sequences run smoothly
+      - Command is hidden from help
+      - Interrupt handling exits cleanly
+      - Multiple animation modes available
 
       ## 📦 Related Material
 
-      - [README.md - Easter Egg Implementation](./README.md#easter-egg-implementation)
-    priority: 3
-    estimate: 8
-    labels: ["cli-command"]
+      - Easter egg specifications
+      - Terminal effects libraries
+
+      ## 🫧 Further Detail
+
+      Effects to implement:
+      - Matrix rain
+      - Fireworks
+      - ASCII art conversion
+      - Typewriter effects
+      - Loading spinners
 
   # Phase 8 Features
-  - id: "feature-mcp-protocol"
-    epic_id: "epic-phase8"
-    title: "Model Context Protocol"
+  - id: feat-mcp-server
+    epic_id: phase-8
+    title: Model Context Protocol Server
+    estimate: 8
+    priority: 3
+    labels:
+      - Feature
+      - api-integration
     description: |
       ## 🩻 Summary
 
-      Implement MCP server for AI agent integration with proper security boundaries.
+      Implement the MCP server for AI agent integration using rmcp library.
 
       ## 🧵 It's Done When…
 
-      - [ ] MCP server architecture is designed and documented
-      - [ ] Stdio MCP server using rmcp is implemented
-      - [ ] Protocol specification is complete
-      - [ ] Security boundaries and command filtering work
+      - stdio MCP server responds to requests
+      - Commands are exposed to AI agents
+      - Security boundaries prevent abuse
+      - Permission system filters commands
+      - Protocol documentation is complete
 
       ## 📦 Related Material
 
-      - [README.md - jig mcp](./README.md#jig-mcp)
-    priority: 3
-    estimate: 8
-    labels: ["api-integration"]
+      - MCP specifications
+      - rmcp library documentation
+
+      ## 🫧 Further Detail
+
+      Post-v1.0 feature.
+      Future: WASM compilation, remote MCP.
 
   # Phase 9 Features
-  - id: "feature-test-suite"
-    epic_id: "epic-phase9"
-    title: "Test Suite"
-    description: |
-      ## 🩻 Summary
-
-      Implement comprehensive testing including unit tests, integration tests, and test fixtures.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Unit tests for crypto operations achieve >80% coverage
-      - [ ] Unit tests for generation utilities are comprehensive
-      - [ ] Integration tests for CLI commands work correctly
-      - [ ] Test fixtures and mocks are properly implemented
-
-      ## 📦 Related Material
-
-      - [PLAN.md - Testing section](./PLAN.md#phase-9-testing-documentation--release)
-    priority: 1
+  - id: feat-test-suite
+    epic_id: phase-9
+    title: Comprehensive Test Suite
     estimate: 13
-    labels: ["testing"]
-
-  - id: "feature-ci-cd"
-    epic_id: "epic-phase9"
-    title: "CI/CD Pipeline"
+    priority: 1
+    labels:
+      - testing
     description: |
       ## 🩻 Summary
 
-      Configure GitHub Actions for automated testing, building, and release processes.
+      Write comprehensive unit and integration tests achieving 80%+ coverage.
 
       ## 🧵 It's Done When…
 
-      - [ ] GitHub Actions workflow runs tests, rustfmt, and clippy
-      - [ ] Cross-platform builds work correctly
-      - [ ] Release automation creates and publishes binaries
-      - [ ] Code coverage and vulnerability scanning are implemented
+      - Unit tests cover all core logic
+      - Integration tests validate CLI behavior
+      - Property-based tests check generators
+      - End-to-end scenarios pass
+      - Coverage reports show 80%+
 
       ## 📦 Related Material
 
-      - [PLAN.md - CI/CD section](./PLAN.md#phase-9-testing-documentation--release)
-    priority: 1
+      - Testing strategy documentation
+      - Coverage requirements
+
+      ## 🫧 Further Detail
+
+      Test categories:
+      - Unit tests for utilities
+      - Integration tests for commands
+      - Property tests for generation
+      - E2E tests for workflows
+
+  - id: feat-cicd
+    epic_id: phase-9
+    title: CI/CD Pipeline
     estimate: 8
-    labels: ["testing", "infrastructure"]
-
-  - id: "feature-documentation"
-    epic_id: "epic-phase9"
-    title: "Documentation"
+    priority: 1
+    labels:
+      - infrastructure
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Complete and verify all documentation including README, help messages, and guides.
+      Configure GitHub Actions for testing, building, and releasing cross-platform binaries.
 
       ## 🧵 It's Done When…
 
-      - [ ] README.md is reviewed and updated for accuracy
-      - [ ] All --help messages are clear and comprehensive
-      - [ ] Installation guides are tested and work correctly
-      - [ ] Troubleshooting guide addresses common issues
+      - Tests run on every push
+      - rustfmt and clippy pass
+      - Cross-platform builds work
+      - Release automation publishes binaries
+      - Dependencies scan for vulnerabilities
 
       ## 📦 Related Material
 
-      - [README.md](./README.md)
-    priority: 1
+      - GitHub Actions documentation
+      - Release workflow examples
+
+      ## 🫧 Further Detail
+
+      Platforms to support:
+      - macOS (x64, ARM)
+      - Linux (x64, ARM)
+      - Windows (x64)
+
+  - id: feat-documentation
+    epic_id: phase-9
+    title: Documentation & Help
     estimate: 8
-    labels: ["documentation"]
-
-  - id: "feature-distribution"
-    epic_id: "epic-phase9"
-    title: "Distribution"
+    priority: 1
+    labels:
+      - documentation
     description: |
       ## 🩻 Summary
 
-      Set up distribution methods including Cargo, Homebrew, and shell completions.
+      Ensure all documentation is accurate, complete, and helpful for users.
 
       ## 🧵 It's Done When…
 
-      - [ ] Cargo package metadata is configured correctly
-      - [ ] Homebrew tap formula is created and tested
-      - [ ] Installation methods work reliably
-      - [ ] Shell completion files are generated and functional
+      - README accurately reflects all features
+      - `--help` messages are comprehensive
+      - Man pages exist for all commands
+      - Examples demonstrate usage
+      - Troubleshooting guide helps users
 
       ## 📦 Related Material
 
-      - [README.md - Installation](./README.md#installation)
-    priority: 1
+      - Documentation standards
+      - Man page format
+
+      ## 🫧 Further Detail
+
+      Documentation types:
+      - Command reference
+      - Configuration guide
+      - Installation instructions
+      - Troubleshooting tips
+
+  - id: feat-packaging
+    epic_id: phase-9
+    title: Distribution Packaging
     estimate: 5
-    labels: ["infrastructure"]
+    priority: 1
+    labels:
+      - Deployment
+    description: |
+      ## 🩻 Summary
 
+      Package `jig` for distribution via cargo, Homebrew, and direct download.
+
+      ## 🧵 It's Done When…
+
+      - `cargo install` works correctly
+      - Homebrew tap formula installs
+      - Binary signing prevents warnings
+      - Shell completions install properly
+      - Docker image builds (optional)
+
+      ## 📦 Related Material
+
+      - Packaging requirements
+      - Distribution channels
+
+      ## 🫧 Further Detail
+
+      Distribution methods:
+      - crates.io (cargo)
+      - Homebrew tap
+      - GitHub releases
+      - Docker Hub (optional)
+
+# Individual task-level tickets
 tasks:
   # Phase 1 Tasks
-  - id: "task-clap-setup"
-    feature_id: "feature-cli-framework"
-    title: "Set up main jig command structure with clap"
-    description: |
-      ## 🩻 Summary
-
-      Configure the main command structure using clap with all subcommands and proper help organization.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Main jig binary with clap derives is created
-      - [ ] All subcommands from the README are defined
-      - [ ] Command structure matches the documented hierarchy
-      - [ ] Help output is well-organized and informative
-
-      ## 📦 Related Material
-
-      - [Clap documentation](https://docs.rs/clap/latest/clap/)
-      - [README.md - Command Structure](./README.md#command-structure)
-    priority: 1
+  - id: task-cli-main
+    feature_id: feat-cli-framework
+    title: Set up main `jig` command structure with clap
     estimate: 3
-    labels: ["infrastructure"]
-
-  - id: "task-global-options"
-    feature_id: "feature-cli-framework"
-    title: "Implement global options"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement all global CLI options including version, help, output control, and verbosity flags.
+      Create the main entry point for the `jig` CLI using clap, setting up the basic command structure and argument parsing.
 
       ## 🧵 It's Done When…
 
-      - [ ] --version/-V shows version information
-      - [ ] --help/-h works for all commands
-      - [ ] --yes/-y skips all confirmations
-      - [ ] --json/-j outputs structured JSON
-      - [ ] --verbose/-v, --quiet/-q, --silent/-s control output levels
-      - [ ] Incompatible options are properly handled
+      - `src/main.rs` contains clap app definition
+      - Basic command structure matches README
+      - Version information from `Cargo.toml`
+      - Subcommand routing works
 
       ## 📦 Related Material
 
-      - [README.md - Global Command Options](./README.md#global-command-options)
+      - clap v4 documentation
+      - CLI structure diagram in README
+
+  - id: task-global-opts
+    feature_id: feat-cli-framework
+    title: Implement global options
+    estimate: 3
     priority: 1
+    labels:
+      - infrastructure
+    description: |
+      ## 🩻 Summary
+
+      Implement all global command-line options that apply to every `jig` command.
+
+      ## 🧵 It's Done When…
+
+      - `--version`/`-V` shows version
+      - `--help`/`-h` displays help text
+      - `--yes`/`-y` skips confirmations
+      - `--json`/`-j` outputs JSON
+      - `--verbose`/`-v` increases verbosity
+      - `--quiet`/`-q` reduces output
+      - `--silent`/`-s` suppresses all output
+      - Conflicting options error appropriately
+
+      ## 📦 Related Material
+
+      - Global options specification
+
+  - id: task-cmd-abbrev
+    feature_id: feat-cli-framework
+    title: Configure command abbreviation support
     estimate: 2
-    labels: ["infrastructure"]
-
-  - id: "task-command-abbreviation"
-    feature_id: "feature-cli-framework"
-    title: "Configure command abbreviation support"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Enable clap command abbreviation to allow users to use shortened command names.
+      Enable command abbreviation in clap so users can type shortened versions of commands.
 
       ## 🧵 It's Done When…
 
-      - [ ] Commands can be abbreviated to the point of disambiguation
-      - [ ] Abbreviation works at all command levels
-      - [ ] Error messages for ambiguous abbreviations are helpful
-      - [ ] Feature is documented and tested
+      - `jig gen` resolves to `jig generate`
+      - `jig proj` resolves to `jig project`
+      - Ambiguous abbreviations show error
+      - Help text mentions abbreviation support
 
-      ## 📦 Related Material
-
-      - [Clap documentation on command abbreviation](https://docs.rs/clap/latest/clap/)
+  - id: task-config-load
+    feature_id: feat-config-mgmt
+    title: Implement `~/.jig.yaml` loading
+    estimate: 3
     priority: 1
-    estimate: 1
-    labels: ["infrastructure"]
-
-  - id: "task-error-handling"
-    feature_id: "feature-cli-framework"
-    title: "Set up proper error propagation"
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement comprehensive error handling strategy using anyhow or custom error types.
+      Implement configuration file loading from `~/.jig.yaml` using saphyr and serde.
 
       ## 🧵 It's Done When…
 
-      - [ ] Error types are defined for different error categories
-      - [ ] Error propagation works consistently throughout the application
-      - [ ] Error messages are user-friendly and actionable
-      - [ ] Debug information is available when needed
+      - Configuration loads from `~/.jig.yaml`
+      - Missing file handled gracefully
+      - YAML parsing errors show helpful messages
+      - Configuration struct matches README spec
 
       ## 📦 Related Material
 
-      - [Anyhow documentation](https://docs.rs/anyhow/latest/anyhow/)
+      - Configuration file format
+      - saphyr documentation
+
+  - id: task-secret-merge
+    feature_id: feat-config-mgmt
+    title: Implement secret file loading and merging
+    estimate: 3
     priority: 1
+    labels:
+      - infrastructure
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement loading and merging of `~/.jig.secret.yaml` with proper override behavior.
+
+      ## 🧵 It's Done When…
+
+      - Secret file loads if exists
+      - Secrets override main config
+      - `secret.file` disables other secret config
+      - Missing secret file handled gracefully
+
+  - id: task-secret-resolution
+    feature_id: feat-config-mgmt
+    title: Implement hierarchical secret resolution
+    estimate: 4
+    priority: 1
+    labels:
+      - infrastructure
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement the complex secret resolution logic supporting key, file, and env sources with configurable order.
+
+      ## 🧵 It's Done When…
+
+      - env variables load correctly
+      - file paths resolve and load
+      - key values used directly
+      - Order configuration respected
+      - Fallback chain works correctly
+
+      ## 🫧 Further Detail
+
+      Resolution priority:
+      1. Check sources in configured order
+      2. First non-empty value wins
+      3. Support for `secret.main` and `secret.jwt`
+
+  - id: task-config-validate
+    feature_id: feat-config-mgmt
+    title: Create configuration validation layer
+    estimate: 3
+    priority: 1
+    labels:
+      - infrastructure
+    description: |
+      ## 🩻 Summary
+
+      Add validation to ensure configuration values are valid and provide helpful error messages.
+
+      ## 🧵 It's Done When…
+
+      - Invalid values caught early
+      - Error messages explain problems
+      - Required fields validated
+      - Type mismatches detected
+
+  - id: task-git-abstraction
+    feature_id: feat-core-utils
+    title: Implement Git abstraction layer
+    estimate: 3
+    priority: 1
+    labels:
+      - infrastructure
+    description: |
+      ## 🩻 Summary
+
+      Create abstraction layer allowing switching between git CLI and gix library based on configuration.
+
+      ## 🧵 It's Done When…
+
+      - Interface supports common operations
+      - CLI backend executes git commands
+      - gix backend uses library calls
+      - `git.internal` config switches backends
+
+      ## 🫧 Further Detail
+
+      Operations to support:
+      - clone
+      - fetch
+      - pull
+      - status
+      - add/commit
+
+  - id: task-error-handling
+    feature_id: feat-core-utils
+    title: Implement error handling and logging strategy
     estimate: 2
-    labels: ["infrastructure"]
-
-  - id: "task-yaml-loading"
-    feature_id: "feature-config-management"
-    title: "Implement ~/.jig.yaml loading with saphyr/serde"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Set up YAML configuration file loading using saphyr and serde with proper error handling.
+      Set up consistent error handling using anyhow and logging with tracing.
 
       ## 🧵 It's Done When…
 
-      - [ ] ~/.jig.yaml is loaded correctly with saphyr
-      - [ ] Configuration struct uses serde derives appropriately
-      - [ ] Missing file handling works gracefully
-      - [ ] YAML syntax errors provide helpful messages
+      - Error types defined or anyhow used
+      - Context added to errors
+      - Logging levels configured
+      - Verbose flag increases detail
 
-      ## 📦 Related Material
-
-      - [Saphyr documentation](https://docs.rs/saphyr/latest/saphyr/)
-      - [README.md - Configuration](./README.md#configuration)
-    priority: 1
+  - id: task-github-username
+    feature_id: feat-core-utils
+    title: Implement `resolve_github_username` utility
     estimate: 2
-    labels: ["infrastructure"]
-
-  - id: "task-secret-file-loading"
-    feature_id: "feature-config-management"
-    title: "Implement secret file loading and merging"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement optional ~/.jig.secret.yaml loading with proper merging into main configuration.
+      Create utility to determine current GitHub username from config or gh CLI.
 
       ## 🧵 It's Done When…
 
-      - [ ] Secret file loading works when file exists
-      - [ ] Configuration merging preserves precedence correctly
-      - [ ] Missing secret file doesn't cause errors
-      - [ ] Secret file path can be configured
+      - Checks `git.user` config first
+      - Falls back to `gh api user`
+      - Returns error if unavailable
+      - Caches result for performance
 
-      ## 📦 Related Material
-
-      - [README.md - Configuration Reference](./README.md#complete-configuration-reference)
-    priority: 1
+  - id: task-output-format
+    feature_id: feat-core-utils
+    title: Create output formatting utilities
     estimate: 2
-    labels: ["infrastructure", "security"]
-
-  - id: "task-secret-resolution"
-    feature_id: "feature-config-management"
-    title: "Implement hierarchical secret resolution"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement the complex secret resolution logic supporting key, file, and env sources with proper precedence.
+      Create utilities for formatting output as JSON or human-readable text based on `--json` flag.
 
       ## 🧵 It's Done When…
 
-      - [ ] Secret resolution follows order: env > file > key
-      - [ ] Environment variable lookup works correctly
-      - [ ] File-based secret loading is functional
-      - [ ] Fallback to direct key value works
-      - [ ] Resolution logic is well-tested
+      - JSON output uses `stringify_pretty`
+      - Human output well-formatted
+      - Global flag controls format
+      - Consistent across commands
 
-      ## 📦 Related Material
-
-      - [README.md - Secret configuration](./README.md#complete-configuration-reference)
-    priority: 1
+  # Phase 2 Tasks
+  - id: task-age-encrypt
+    feature_id: feat-crypto-cmds
+    title: Implement age encryption command
     estimate: 3
-    labels: ["infrastructure", "security"]
-
-  - id: "task-config-validation"
-    feature_id: "feature-config-management"
-    title: "Create configuration validation layer"
+    priority: 1
+    labels:
+      - cli-command
+      - security
     description: |
       ## 🩻 Summary
 
-      Implement validation to ensure configuration is valid and complete before use.
+      Implement the encrypt subcommand using age encryption for files and stdin.
 
       ## 🧵 It's Done When…
 
-      - [ ] Required fields are validated at startup
-      - [ ] Invalid configuration provides helpful error messages
-      - [ ] Default values are applied correctly
-      - [ ] Configuration dependencies are checked
+      - Encrypts files with `-i` flag
+      - Encrypts stdin without `-i`
+      - Outputs to file with `-o`
+      - Outputs to stdout without `-o`
+      - Key override with `-k` works
+      - Binary data handled correctly
 
-      ## 📦 Related Material
-
-      - [README.md - Minimal Configuration](./README.md#minimal-configuration)
-    priority: 1
-    estimate: 1
-    labels: ["infrastructure"]
-
-  - id: "task-shared-module"
-    feature_id: "feature-core-utilities"
-    title: "Create shared utilities module structure"
-    description: |
-      ## 🩻 Summary
-
-      Set up the shared utilities module with proper organization and exports.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Shared utilities module is created
-      - [ ] Module structure is logical and well-organized
-      - [ ] Common utilities are properly exported
-      - [ ] Documentation is clear for utility functions
-
-      ## 📦 Related Material
-
-      - [README.md - Shared Utilities](./README.md#shared-utilities)
-    priority: 1
-    estimate: 1
-    labels: ["infrastructure"]
-
-  - id: "task-git-abstraction"
-    feature_id: "feature-core-utilities"
-    title: "Implement Git abstraction layer"
-    description: |
-      ## 🩻 Summary
-
-      Create unified Git interface supporting both CLI and gix library based on configuration.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Git trait defines common operations
-      - [ ] CLI implementation uses git command
-      - [ ] Gix implementation uses gix library
-      - [ ] Selection based on git.internal config works
-      - [ ] Error handling is consistent between implementations
-
-      ## 📦 Related Material
-
-      - [README.md - Git Abstraction](./README.md#git-abstraction)
-      - [Gix documentation](https://docs.rs/gix/latest/gix/)
-    priority: 1
+  - id: task-age-decrypt
+    feature_id: feat-crypto-cmds
+    title: Implement age decryption command
     estimate: 3
-    labels: ["infrastructure"]
-
-  - id: "task-logging-strategy"
-    feature_id: "feature-core-utilities"
-    title: "Implement error handling and logging strategy"
+    priority: 1
+    labels:
+      - cli-command
+      - security
     description: |
       ## 🩻 Summary
 
-      Set up consistent error handling and logging using tracing throughout the application.
+      Implement the decrypt subcommand using age decryption for files and stdin.
 
       ## 🧵 It's Done When…
 
-      - [ ] Tracing is configured with appropriate levels
-      - [ ] Logging macros are used consistently
-      - [ ] Error handling follows established patterns
-      - [ ] Debug information is available when needed
+      - Decrypts files with `-i` flag
+      - Decrypts stdin without `-i`
+      - Outputs to file with `-o`
+      - Outputs to stdout without `-o`
+      - Invalid keys show clear errors
+      - Binary output preserved
 
-      ## 📦 Related Material
-
-      - [Tracing documentation](https://docs.rs/tracing/latest/tracing/)
+  - id: task-age-public
+    feature_id: feat-crypto-cmds
+    title: Implement public key derivation
+    estimate: 2
     priority: 1
-    estimate: 1
-    labels: ["infrastructure"]
-
-  # Phase 2 Tasks (continued)
-  - id: "task-age-decryption"
-    feature_id: "feature-crypto-commands"
-    title: "Implement age decryption"
+    labels:
+      - cli-command
+      - security
     description: |
       ## 🩻 Summary
 
-      Implement the decrypt command using age decryption for files and stdin.
+      Implement the public subcommand to show age recipient from private key.
 
       ## 🧵 It's Done When…
 
-      - [ ] File decryption works correctly
-      - [ ] Stdin decryption is functional
-      - [ ] Key loading from config works
-      - [ ] Binary data handling is proper
-      - [ ] Output can go to file or stdout
+      - Derives public key from private
+      - Uses configured key by default
+      - `-k` flag overrides key
+      - Output suitable for sharing
 
-      ## 📦 Related Material
-
-      - [README.md - jig crypto decrypt](./README.md#jig-crypto-decrypt)
-      - [Age encryption docs](https://age-encryption.org/)
+  - id: task-gen-hex
+    feature_id: feat-generate-cmds
+    title: Implement hex generation
+    estimate: 2
     priority: 1
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Implement cryptographically secure hex string generation.
+
+      ## 🧵 It's Done When…
+
+      - Generates specified bytes (default 16)
+      - Uses secure random source
+      - Outputs lowercase hex
+      - Deterministic mode with `--keyed` works
+
+  - id: task-gen-password
+    feature_id: feat-generate-cmds
+    title: Implement password generation with entropy
+    estimate: 4
+    priority: 1
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement secure password generation with entropy validation using zxcvbn.
+
+      ## 🧵 It's Done When…
+
+      - Generates passwords of specified length
+      - Includes all character sets
+      - Validates entropy (min score 3)
+      - Regenerates if entropy too low
+      - Shows security metrics
+
+      ## 🫧 Further Detail
+
+      Character sets:
+      - Uppercase A-Z
+      - Lowercase a-z
+      - Numbers 0-9
+      - Symbols @%^-_,.~
+
+  - id: task-gen-xkcd
+    feature_id: feat-generate-cmds
+    title: Implement xkcd password mode
+    estimate: 2
+    priority: 1
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Implement memorable passphrase generation using word lists.
+
+      ## 🧵 It's Done When…
+
+      - `-x` flag enables word mode
+      - Length specifies word count
+      - Words separated by hyphens
+      - Entropy validation works
+      - Word list comprehensive
+
+  - id: task-gen-age-key
+    feature_id: feat-generate-cmds
+    title: Implement age key generation
+    estimate: 2
+    priority: 1
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement age encryption key pair generation.
+
+      ## 🧵 It's Done When…
+
+      - Generates valid age keys
+      - Shows private and public
+      - `-w` flag saves to config
+      - Deterministic with `--keyed`
+
+  - id: task-gen-wg-key
+    feature_id: feat-generate-cmds
+    title: Implement WireGuard key generation
+    estimate: 2
+    priority: 1
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement WireGuard VPN key pair generation.
+
+      ## 🧵 It's Done When…
+
+      - Generates valid WireGuard keys
+      - Shows private and public
+      - Keys work with wg tools
+
+  - id: task-gen-jwt
+    feature_id: feat-generate-cmds
+    title: Implement JWT generation
     estimate: 3
-    labels: ["cli-command", "security"]
-
-  - id: "task-age-encryption"
-    feature_id: "feature-crypto-commands"
-    title: "Implement age encryption"
+    priority: 1
+    labels:
+      - cli-command
+      - security
     description: |
       ## 🩻 Summary
 
-      Implement the encrypt command using age encryption for files and stdin.
+      Implement JWT generation with claims and configurable signing.
 
       ## 🧵 It's Done When…
 
-      - [ ] File encryption works correctly
-      - [ ] Stdin encryption is functional
-      - [ ] Key loading from config works
-      - [ ] Binary data handling is proper
-      - [ ] Output can go to file or stdout
+      - `--subject` sets sub claim
+      - `--description` adds human text
+      - `--expiry` sets expiration
+      - `--claim` adds custom claims
+      - Secret loads from config
+      - Multiple algorithms supported
 
-      ## 📦 Related Material
-
-      - [README.md - jig crypto encrypt](./README.md#jig-crypto-encrypt)
-      - [Age encryption docs](https://age-encryption.org/)
-    priority: 1
+  - id: task-dns-flush
+    feature_id: feat-network-cmds
+    title: Implement OS-aware DNS cache flush
     estimate: 3
-    labels: ["cli-command", "security"]
-
-  - id: "task-password-generation"
-    feature_id: "feature-generate-commands"
-    title: "Implement password generation with entropy validation"
-    description: |
-      ## 🩻 Summary
-
-      Create secure password generation with zxcvbn entropy validation and character set requirements.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Password generation uses cryptographically secure random
-      - [ ] Character sets are properly implemented
-      - [ ] Entropy validation with zxcvbn works
-      - [ ] Minimum entropy score of 3 is enforced
-      - [ ] Configuration options are respected
-
-      ## 📦 Related Material
-
-      - [README.md - jig generate password](./README.md#jig-generate-password)
-      - [zxcvbn documentation](https://github.com/dropbox/zxcvbn)
     priority: 1
-    estimate: 5
-    labels: ["cli-command", "security"]
-
-  - id: "task-template-processing"
-    feature_id: "feature-template-system"
-    title: "Implement Tera template processing"
+    labels:
+      - cli-command
     description: |
       ## 🩻 Summary
 
-      Set up Tera template processing with context and shared template support.
+      Implement DNS cache flushing with OS detection and appropriate commands.
 
       ## 🧵 It's Done When…
 
-      - [ ] Tera engine is configured correctly
-      - [ ] Template context includes project metadata
-      - [ ] Shared templates (_shared) work properly
-      - [ ] Template rendering handles errors gracefully
-      - [ ] File outputs preserve directory structure
+      - Detects current OS
+      - Runs correct flush command
+      - Handles permission errors
+      - Confirms success
 
-      ## 📦 Related Material
+      ## 🫧 Further Detail
 
-      - [README.md - Template system](./README.md#jig-project-template)
-      - [Tera documentation](https://tera.netlify.app/)
+      Commands by OS:
+      - macOS: `dscacheutil -flushcache`
+      - Linux: `systemd-resolve --flush-caches`
+      - Windows: `ipconfig /flushdns`
+
+  - id: task-dns-lookup
+    feature_id: feat-network-cmds
+    title: Implement DNS lookup with custom servers
+    estimate: 3
+    priority: 1
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Implement DNS query functionality with support for custom nameservers and record types.
+
+      ## 🧵 It's Done When…
+
+      - Queries any record type
+      - `--server` uses custom NS
+      - `--root` uses root servers
+      - Formats output clearly
+      - Timeout prevents hangs
+
+  - id: task-dns-sec
+    feature_id: feat-network-cmds
+    title: Implement DNSSEC validation
+    estimate: 2
+    priority: 1
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement DNSSEC validation checking for domains.
+
+      ## 🧵 It's Done When…
+
+      - Queries DNSKEY records
+      - Verifies DS at parent
+      - Validates signatures
+      - Reports status clearly
+
+  - id: task-tls-cert
+    feature_id: feat-tls-cmds
+    title: Implement TLS certificate retrieval
+    estimate: 2
+    priority: 1
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement TLS certificate fetching from remote hosts.
+
+      ## 🧵 It's Done When…
+
+      - Connects to TLS hosts
+      - Retrieves certificates
+      - `-c` shows full chain
+      - Outputs PEM format
+      - Custom ports work
+
+  - id: task-tls-ciphers
+    feature_id: feat-tls-cmds
+    title: Implement cipher suite listing
+    estimate: 3
+    priority: 1
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Implement TLS cipher suite enumeration for hosts.
+
+      ## 🧵 It's Done When…
+
+      - Tests multiple ciphers
+      - Shows supported suites
+      - Includes strength ratings
+      - Handles timeouts properly
+
+  # Phase 3 Tasks
+  - id: task-template-list
+    feature_id: feat-template-system
+    title: Implement template listing
+    estimate: 2
     priority: 2
-    estimate: 5
-    labels: ["cli-command", "infrastructure"]
-
-  - id: "task-ai-image-processing"
-    feature_id: "feature-ai-utilities"
-    title: "Implement prepare_image_for_claude utility"
+    labels:
+      - cli-command
     description: |
       ## 🩻 Summary
 
-      Create image optimization utility for Claude API compatibility with proper resizing and compression.
+      List available templates from the local cache directory.
 
       ## 🧵 It's Done When…
 
-      - [ ] Images over 2048px are resized correctly
-      - [ ] WebP conversion works properly
-      - [ ] Compression levels are applied progressively
-      - [ ] Final size under 5MB is enforced
-      - [ ] Temporary file cleanup works
+      - Scans template directory
+      - Shows template names
+      - Reads `.jig.template.yaml`
+      - Displays descriptions
 
-      ## 📦 Related Material
-
-      - [README.md - prepare_image_for_claude](./README.md#prepare_image_for_claude)
-    priority: 2
+  - id: task-template-update
+    feature_id: feat-template-system
+    title: Implement template repository updates
     estimate: 3
-    labels: ["ai-powered", "api-integration"]
-
-  - id: "task-workspace-switching"
-    feature_id: "feature-workspace-management"
-    title: "Implement workspace switching logic"
-    description: |
-      ## 🩻 Summary
-
-      Create complete workspace switching with state transitions, environment management, and hook execution.
-
-      ## 🧵 It's Done When…
-
-      - [ ] State transition flow works as documented
-      - [ ] Environment variables are properly isolated
-      - [ ] Hook execution (before-down, down, after-down, before-up, up, after-up) works
-      - [ ] Error handling during transitions is robust
-      - [ ] Current workspace state is tracked correctly
-
-      ## 📦 Related Material
-
-      - [README.md - jig workspace switch](./README.md#jig-workspace-switch)
     priority: 2
-    estimate: 8
-    labels: ["shell-integration"]
-
-  - id: "task-terminal-effects"
-    feature_id: "feature-easter-eggs"
-    title: "Integrate terminal effects libraries"
+    labels:
+      - cli-command
     description: |
       ## 🩻 Summary
 
-      Integrate tachyonfx, tui-rain, firework-rs and other effects libraries for the dance command.
+      Update local template cache from configured Git repository.
 
       ## 🧵 It's Done When…
 
-      - [ ] All effects libraries are properly integrated
-      - [ ] Animation sequences are smooth and responsive
-      - [ ] Terminal cleanup works correctly
-      - [ ] Interrupt handling allows clean exit
-      - [ ] Multiple animation modes provide variety
+      - Pulls from configured repo
+      - Uses configured branch
+      - Shows update progress
+      - Handles conflicts
 
-      ## 📦 Related Material
+  - id: task-template-new
+    feature_id: feat-template-system
+    title: Implement new template creation
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
 
-      - [README.md - Easter Egg Implementation](./README.md#easter-egg-implementation)
+      Create new empty template with metadata file.
+
+      ## 🧵 It's Done When…
+
+      - Creates template directory
+      - Generates `.jig.template.yaml`
+      - Sets up basic structure
+      - `-S` copies from `_shared`
+
+  - id: task-template-tera
+    feature_id: feat-template-system
+    title: Implement Tera template processing
+    estimate: 3
+    priority: 2
+    labels:
+      - infrastructure
+    description: |
+      ## 🩻 Summary
+
+      Set up Tera template engine for processing project templates.
+
+      ## 🧵 It's Done When…
+
+      - Tera processes templates
+      - Context variables work
+      - `_shared` inheritance works
+      - Error messages helpful
+
+  - id: task-project-new
+    feature_id: feat-project-cmds
+    title: Implement project scaffolding
+    estimate: 4
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Scaffold new projects from templates with Tera processing.
+
+      ## 🧵 It's Done When…
+
+      - Creates project directory
+      - Processes all templates
+      - Generates `.jig.yaml`
+      - `-g` initializes git
+      - Context includes metadata
+
+  - id: task-project-update
+    feature_id: feat-project-cmds
+    title: Implement project update with diffs
+    estimate: 4
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Apply template updates to existing projects showing diffs.
+
+      ## 🧵 It's Done When…
+
+      - Reads `.jig.yaml` tracking
+      - Fetches template updates
+      - Shows diffs for changes
+      - Prompts for conflicts
+      - Updates tracking file
+
+  - id: task-project-bump
+    feature_id: feat-project-cmds
+    title: Implement dependency version bumping
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Update all dependencies to latest versions across package managers.
+
+      ## 🧵 It's Done When…
+
+      - Updates `Cargo.toml` deps
+      - Updates `package.json` deps
+      - Updates GitHub Actions
+      - Shows changes made
+      - Warns about major bumps
+
+  - id: task-project-dependabot
+    feature_id: feat-project-cmds
+    title: Implement `dependabot.yml` generation
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Generate Dependabot configuration based on detected ecosystems.
+
+      ## 🧵 It's Done When…
+
+      - Detects all ecosystems
+      - Generates valid YAML
+      - Uses configuration template
+      - Includes all options
+
+  - id: task-git-clone
+    feature_id: feat-git-integration
+    title: Implement simplified clone
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Clone repositories using simplified username/repo syntax.
+
+      ## 🧵 It's Done When…
+
+      - Accepts username/repo
+      - Accepts just repo name
+      - Uses configured username
+      - Works with both backends
+
+  - id: task-git-latest
+    feature_id: feat-git-integration
+    title: Implement latest commit retrieval
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Get latest commit hash from GitHub API.
+
+      ## 🧵 It's Done When…
+
+      - Queries GitHub API
+      - Gets default branch
+      - Returns commit SHA
+      - Handles custom branches
+
+  - id: task-git-secrets
+    feature_id: feat-git-integration
+    title: Implement GitHub secrets management
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+      - security
+    description: |
+      ## 🩻 Summary
+
+      Set GitHub Actions secrets via API.
+
+      ## 🧵 It's Done When…
+
+      - Accepts repo and secret name
+      - Reads value or stdin
+      - Encrypts properly
+      - Confirms creation
+
+  - id: task-git-yank
+    feature_id: feat-git-integration
+    title: Implement batch repo update
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Batch fetch and pull all repositories in a directory.
+
+      ## 🧵 It's Done When…
+
+      - Finds all `.git` dirs
+      - Runs fetch with params
+      - Runs pull with params
+      - Shows progress/summary
+      - Handles errors gracefully
+
+  - id: task-binary-metadata
+    feature_id: feat-binary-mgmt
+    title: Implement metadata storage
+    estimate: 2
+    priority: 2
+    labels:
+      - infrastructure
+    description: |
+      ## 🩻 Summary
+
+      Set up YAML storage for installed binary metadata.
+
+      ## 🧵 It's Done When…
+
+      - Creates `binaries.yaml`
+      - Stores install info
+      - Tracks file hashes
+      - Updates atomically
+
+  - id: task-binary-get
+    feature_id: feat-binary-mgmt
+    title: Implement binary downloading
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Download and install binaries from GitHub releases.
+
+      ## 🧵 It's Done When…
+
+      - Queries release API
+      - Detects platform/arch
+      - Downloads correct binary
+      - Makes executable
+      - Updates metadata
+
+  - id: task-binary-update
+    feature_id: feat-binary-mgmt
+    title: Implement binary updates
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Update installed binaries to latest versions.
+
+      ## 🧵 It's Done When…
+
+      - Checks current hash
+      - Queries latest release
+      - Compares versions
+      - Downloads if newer
+      - Updates specific or all
+
+  - id: task-binary-show
+    feature_id: feat-binary-mgmt
+    title: Implement binary info display
+    estimate: 1
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Show information about installed binaries.
+
+      ## 🧵 It's Done When…
+
+      - Reads metadata
+      - Shows install path
+      - `-H` shows hashes
+      - Formats nicely
+
+  - id: task-binary-remove
+    feature_id: feat-binary-mgmt
+    title: Implement binary removal
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Remove installed binaries and clean metadata.
+
+      ## 🧵 It's Done When…
+
+      - Removes binary file
+      - Cleans metadata
+      - Handles missing files
+      - Confirms removal
+
+  # Phase 4 Tasks
+  - id: task-api-client
+    feature_id: feat-dave-api
+    title: Create base API client
+    estimate: 3
+    priority: 2
+    labels:
+      - api-integration
+    description: |
+      ## 🩻 Summary
+
+      Create base HTTP client for dave.io API with authentication and retry logic.
+
+      ## 🧵 It's Done When…
+
+      - Base URL configured
+      - Auth headers added
+      - Retry logic works
+      - JSON parsing works
+      - Errors handled well
+
+  - id: task-api-ping
+    feature_id: feat-dave-api
+    title: Implement ping endpoint
+    estimate: 1
+    priority: 2
+    labels:
+      - api-integration
+    description: |
+      ## 🩻 Summary
+
+      Implement simple health check endpoint.
+
+      ## 🧵 It's Done When…
+
+      - GET `/api/ping` works
+      - Shows response JSON
+      - Validates connectivity
+
+  - id: task-api-token
+    feature_id: feat-dave-api
+    title: Implement token endpoints
+    estimate: 3
+    priority: 2
+    labels:
+      - api-integration
+    description: |
+      ## 🩻 Summary
+
+      Implement all token management endpoints.
+
+      ## 🧵 It's Done When…
+
+      - Token info retrieves details
+      - Token revoke invalidates
+      - Token usage shows stats
+      - All use proper auth
+
+  - id: task-api-image
+    feature_id: feat-dave-api
+    title: Implement image endpoints
+    estimate: 2
+    priority: 2
+    labels:
+      - api-integration
+    description: |
+      ## 🩻 Summary
+
+      Implement image processing API endpoints.
+
+      ## 🧵 It's Done When…
+
+      - Alt text generation works
+      - Image optimization works
+      - Files upload correctly
+      - Results download properly
+
+  - id: task-api-ticket
+    feature_id: feat-dave-api
+    title: Implement ticket endpoints
+    estimate: 2
+    priority: 2
+    labels:
+      - api-integration
+    description: |
+      ## 🩻 Summary
+
+      Implement ticket management API endpoints.
+
+      ## 🧵 It's Done When…
+
+      - Title generation works
+      - Description generation works
+      - Input methods work (file/stdin)
+      - Enrichment endpoint ready
+
+  - id: task-domainr-check
+    feature_id: feat-domain-cmds
+    title: Implement Domainr availability check
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+      - api-integration
+    description: |
+      ## 🩻 Summary
+
+      Check domain availability using Domainr API with Cloudflare filtering.
+
+      ## 🧵 It's Done When…
+
+      - Queries Domainr API
+      - Filters to CF TLDs
+      - Shows availability
+      - Handles API errors
+      - Respects rate limits
+
+  - id: task-rdap-expiry
+    feature_id: feat-domain-cmds
+    title: Implement RDAP expiry check
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Check domain expiration using RDAP protocol.
+
+      ## 🧵 It's Done When…
+
+      - Queries RDAP server
+      - Extracts expiry date
+      - Shows days remaining
+      - Falls back to WHOIS URL
+
+  - id: task-domain-ns
+    feature_id: feat-domain-cmds
+    title: Implement nameserver lookup
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Retrieve nameservers via RDAP with DNS fallback.
+
+      ## 🧵 It's Done When…
+
+      - RDAP query works
+      - Falls back to DNS
+      - Lists all nameservers
+      - Handles both methods
+
+  # Phase 5 Tasks
+  - id: task-image-prep
+    feature_id: feat-ai-utils
+    title: Implement image preparation utility
+    estimate: 3
+    priority: 2
+    labels:
+      - ai-powered
+    description: |
+      ## 🩻 Summary
+
+      Create utility to prepare images for Claude API with size and format constraints.
+
+      ## 🧵 It's Done When…
+
+      - Resizes to max 2048px
+      - Converts to WebP
+      - Compresses to <5MB
+      - Tries multiple quality levels
+      - Preserves aspect ratio
+
+  - id: task-claude-helper
+    feature_id: feat-ai-utils
+    title: Implement `ask_claude` helper
+    estimate: 3
+    priority: 2
+    labels:
+      - ai-powered
+    description: |
+      ## 🩻 Summary
+
+      Create helper function for Claude API communication.
+
+      ## 🧵 It's Done When…
+
+      - Sends prompts correctly
+      - Handles images/data
+      - Retries on failures
+      - Parses responses
+      - Rate limits respected
+
+  - id: task-ai-rename
+    feature_id: feat-ai-cmds
+    title: Implement AI image renaming
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+      - ai-powered
+    description: |
+      ## 🩻 Summary
+
+      Rename images using AI-generated descriptive names.
+
+      ## 🧵 It's Done When…
+
+      - Processes image files
+      - Sends to Claude
+      - Generates descriptive names
+      - Follows naming format
+      - Handles globs/multiple files
+
+  - id: task-ai-commit
+    feature_id: feat-ai-cmds
+    title: Implement AI commit messages
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+      - ai-powered
+    description: |
+      ## 🩻 Summary
+
+      Generate conventional commit messages from diffs using AI.
+
+      ## 🧵 It's Done When…
+
+      - Gets staged diff
+      - Truncates large diffs
+      - Generates conventional format
+      - Adds emoji prefix
+      - Applies before/after text
+
+  - id: task-ai-alt
+    feature_id: feat-ai-cmds
+    title: Implement alt text generation
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+      - ai-powered
+    description: |
+      ## 🩻 Summary
+
+      Generate accessibility alt text for images via API.
+
+      ## 🧵 It's Done When…
+
+      - Prepares image
+      - Calls API endpoint
+      - Returns alt text
+      - Handles errors
+
+  - id: task-ai-optimize
+    feature_id: feat-ai-cmds
+    title: Implement image optimization
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+      - api-integration
+    description: |
+      ## 🩻 Summary
+
+      Optimize images through dave.io API.
+
+      ## 🧵 It's Done When…
+
+      - Uploads image
+      - Receives optimized version
+      - Saves to file
+      - Shows size reduction
+
+  - id: task-ai-ticket
+    feature_id: feat-ai-cmds
+    title: Implement ticket generation
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+      - ai-powered
+    description: |
+      ## 🩻 Summary
+
+      Generate ticket titles and descriptions using AI.
+
+      ## 🧵 It's Done When…
+
+      - Title from description works
+      - Description from title works
+      - Input methods work
+      - API calls succeed
+
+  # Phase 6 Tasks
+  - id: task-init-dirs
+    feature_id: feat-init-system
+    title: Create directory structure
+    estimate: 2
+    priority: 2
+    labels:
+      - shell-integration
+    description: |
+      ## 🩻 Summary
+
+      Create all required directories for `jig` operation.
+
+      ## 🧵 It's Done When…
+
+      - `~/.local/share/jig` created
+      - bin subdirectory created
+      - templates subdirectory created
+      - Permissions correct
+
+  - id: task-init-clone
+    feature_id: feat-init-system
+    title: Clone template repository
+    estimate: 2
+    priority: 2
+    labels:
+      - shell-integration
+    description: |
+      ## 🩻 Summary
+
+      Clone the template repository during initialization.
+
+      ## 🧵 It's Done When…
+
+      - Clones from GitHub
+      - Uses configured repo/branch
+      - Shows progress
+      - Handles errors
+
+  - id: task-init-config
+    feature_id: feat-init-system
+    title: Generate configuration
+    estimate: 3
+    priority: 2
+    labels:
+      - shell-integration
+    description: |
+      ## 🩻 Summary
+
+      Generate initial configuration with encryption keys.
+
+      ## 🧵 It's Done When…
+
+      - Generates age key
+      - Creates config file
+      - Prompts if exists
+      - `--clobber` overwrites
+
+  - id: task-init-shell
+    feature_id: feat-init-system
+    title: Check shell integration
+    estimate: 2
+    priority: 2
+    labels:
+      - shell-integration
+    description: |
+      ## 🩻 Summary
+
+      Detect shell and provide integration instructions.
+
+      ## 🧵 It's Done When…
+
+      - Detects current shell
+      - Checks if integrated
+      - Provides instructions
+      - Supports all shells
+
+  - id: task-ws-list
+    feature_id: feat-workspace-mgmt
+    title: Implement workspace listing
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      List all configured workspaces.
+
+      ## 🧵 It's Done When…
+
+      - Reads config
+      - Lists workspaces
+      - Shows current
+      - Formats nicely
+
+  - id: task-ws-switch
+    feature_id: feat-workspace-mgmt
+    title: Implement workspace switching
+    estimate: 4
+    priority: 2
+    labels:
+      - cli-command
+      - shell-integration
+    description: |
+      ## 🩻 Summary
+
+      Switch between workspaces with full state management.
+
+      ## 🧵 It's Done When…
+
+      - Runs down commands
+      - Clears old env vars
+      - Sets new env vars
+      - Runs up commands
+      - Executes all hooks
+
+  - id: task-ws-hook
+    feature_id: feat-workspace-mgmt
+    title: Implement shell hooks
+    estimate: 3
+    priority: 2
+    labels:
+      - shell-integration
+    description: |
+      ## 🩻 Summary
+
+      Create shell integration hooks for workspace management.
+
+      ## 🧵 It's Done When…
+
+      - Fish hook works
+      - Bash hook works
+      - Zsh hook works
+      - Exports env vars
+      - Updates PATH
+
+  - id: task-term-sysinfo
+    feature_id: feat-terminal-utils
+    title: Implement system info display
+    estimate: 3
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Display system information as terminal gauges.
+
+      ## 🧵 It's Done When…
+
+      - Gathers system metrics
+      - Generates visualizations
+      - Detects terminal type
+      - Displays appropriately
+
+  - id: task-term-xkcd
+    feature_id: feat-terminal-utils
+    title: Implement XKCD display
+    estimate: 2
+    priority: 2
+    labels:
+      - cli-command
+    description: |
+      ## 🩻 Summary
+
+      Fetch and display XKCD comics in terminal.
+
+      ## 🧵 It's Done When…
+
+      - Fetches from API
+      - Downloads images
+      - Resizes for terminal
+      - Renders with viuer
+
+  # Phase 7 Tasks
+  - id: task-dance-effects
+    feature_id: feat-easter-eggs
+    title: Integrate terminal effects
+    estimate: 3
     priority: 3
+    labels:
+      - Enhancement
+    description: |
+      ## 🩻 Summary
+
+      Integrate all terminal effect libraries for dance command.
+
+      ## 🧵 It's Done When…
+
+      - tachyonfx works
+      - tui-rain works
+      - firework-rs works
+      - All effects render
+      - No conflicts
+
+  - id: task-dance-sequence
+    feature_id: feat-easter-eggs
+    title: Design animation sequence
+    estimate: 2
+    priority: 3
+    labels:
+      - Enhancement
+    description: |
+      ## 🩻 Summary
+
+      Create the animation sequence for `jig dance`.
+
+      ## 🧵 It's Done When…
+
+      - Sequence designed
+      - Timing works well
+      - Effects transition
+      - Looks impressive
+      - Clean exit
+
+  # Phase 8 Tasks
+  - id: task-mcp-design
+    feature_id: feat-mcp-server
+    title: Design MCP architecture
+    estimate: 3
+    priority: 3
+    labels:
+      - Feature
+      - Planning
+    description: |
+      ## 🩻 Summary
+
+      Design the Model Context Protocol server architecture.
+
+      ## 🧵 It's Done When…
+
+      - Protocol defined
+      - Security model clear
+      - Command filtering designed
+      - Integration points identified
+
+  - id: task-mcp-implement
+    feature_id: feat-mcp-server
+    title: Implement MCP server
     estimate: 5
-    labels: ["cli-command"]
-
-  - id: "task-comprehensive-tests"
-    feature_id: "feature-test-suite"
-    title: "Write comprehensive unit and integration tests"
+    priority: 3
+    labels:
+      - Feature
+      - api-integration
     description: |
       ## 🩻 Summary
 
-      Create comprehensive test suite covering all major functionality with proper fixtures and mocks.
+      Implement the stdio MCP server using rmcp.
 
       ## 🧵 It's Done When…
 
-      - [ ] Unit tests achieve >80% code coverage
-      - [ ] Integration tests cover all CLI commands
-      - [ ] Property-based tests exist for generation utilities
-      - [ ] Test fixtures are well-organized
-      - [ ] CI can run all tests reliably
+      - Server responds to requests
+      - Commands exposed properly
+      - Security boundaries work
+      - Examples provided
 
-      ## 📦 Related Material
-
-      - [PLAN.md - Testing section](./PLAN.md#phase-9-testing-documentation--release)
-    priority: 1
-    estimate: 8
-    labels: ["testing"]
-
-  - id: "task-github-actions"
-    feature_id: "feature-ci-cd"
-    title: "Configure GitHub Actions workflow"
-    description: |
-      ## 🩻 Summary
-
-      Set up comprehensive GitHub Actions workflow for testing, linting, building, and releasing.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Tests run on push and PR
-      - [ ] Rustfmt and clippy checks pass
-      - [ ] Cross-platform builds work
-      - [ ] Release workflow creates binaries
-      - [ ] Code coverage reporting is functional
-
-      ## 📦 Related Material
-
-      - [PLAN.md - CI/CD section](./PLAN.md#phase-9-testing-documentation--release)
-    priority: 1
+  # Phase 9 Tasks (many more tasks would go here)
+  - id: task-unit-tests
+    feature_id: feat-test-suite
+    title: Write unit tests for core logic
     estimate: 5
-    labels: ["testing", "infrastructure"]
-
-  - id: "task-readme-review"
-    feature_id: "feature-documentation"
-    title: "Review and update README for accuracy"
+    priority: 1
+    labels:
+      - testing
     description: |
       ## 🩻 Summary
 
-      Thoroughly review README.md to ensure all information is accurate and up-to-date.
+      Write comprehensive unit tests for all core functionality.
 
       ## 🧵 It's Done When…
 
-      - [ ] All command descriptions match implementations
-      - [ ] Configuration examples are correct
-      - [ ] Installation instructions are tested
-      - [ ] Examples work as documented
-      - [ ] Links and references are valid
-
-      ## 📦 Related Material
-
-      - [README.md](./README.md)
-    priority: 1
-    estimate: 3
-    labels: ["documentation"]
-
-  - id: "task-homebrew-formula"
-    feature_id: "feature-distribution"
-    title: "Create Homebrew tap formula"
-    description: |
-      ## 🩻 Summary
-
-      Create and test Homebrew formula for easy macOS installation.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Homebrew formula is created
-      - [ ] Formula installs correctly from tap
-      - [ ] Dependencies are properly specified
-      - [ ] Installation is tested on clean system
-      - [ ] Formula follows Homebrew guidelines
-
-      ## 📦 Related Material
-
-      - [README.md - Installation](./README.md#installation)
-      - [Homebrew formula documentation](https://docs.brew.sh/Formula-Cookbook)
-    priority: 1
-    estimate: 2
-    labels: ["infrastructure"]
-
-  # Additional Phase 2 Tasks
-  - id: "task-crypto-public-key"
-    feature_id: "feature-crypto-commands"
-    title: "Implement public key derivation"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig crypto public` command to derive public keys from private age keys.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Public command accepts private key input
-      - [ ] Age key derivation works correctly
-      - [ ] Error handling for invalid private keys
-      - [ ] Output formatting is consistent
-
-      ## 📦 Related Material
-
-      - [README.md - Crypto commands](./README.md#jig-crypto)
-      - [PLAN.md - Crypto implementation](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Public key derivation is essential for sharing encryption keys securely.
-    priority: 1
-    estimate: 2
-    labels: ["cli-command", "security"]
-
-  - id: "task-crypto-error-handling"
-    feature_id: "feature-crypto-commands"
-    title: "Add comprehensive error handling for crypto operations"
-    description: |
-      ## 🩻 Summary
-
-      Implement robust error handling across all crypto commands with helpful error messages.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Invalid key errors are user-friendly
-      - [ ] File I/O errors are handled gracefully
-      - [ ] Corruption detection provides clear messages
-      - [ ] All error paths are tested
-
-      ## 📦 Related Material
-
-      - [README.md - Crypto commands](./README.md#jig-crypto)
-      - [PLAN.md - Error handling strategy](./PLAN.md#phase-1-core-infrastructure--project-setup)
-
-      ## 🫧 Further Detail
-
-      Crypto operations are particularly sensitive to errors and need excellent user guidance.
-    priority: 1
-    estimate: 2
-    labels: ["cli-command", "security"]
-
-  - id: "task-crypto-binary-handling"
-    feature_id: "feature-crypto-commands"
-    title: "Support binary input/output handling"
-    description: |
-      ## 🩻 Summary
-
-      Ensure crypto commands properly handle binary data without corruption.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Binary files encrypt/decrypt correctly
-      - [ ] Stdin/stdout handle binary data
-      - [ ] No character encoding issues
-      - [ ] Performance is acceptable for large files
-
-      ## 📦 Related Material
-
-      - [README.md - Crypto commands](./README.md#jig-crypto)
-      - [PLAN.md - Binary handling](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Binary handling is crucial for encrypting various file types beyond text.
-    priority: 1
-    estimate: 2
-    labels: ["cli-command", "security"]
-
-  - id: "task-hex-generation"
-    feature_id: "feature-generate-commands"
-    title: "Implement hex generation"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig generate hex` command for cryptographically secure hex string generation.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Hex command accepts length parameter
-      - [ ] Uses cryptographically secure randomness
-      - [ ] Output formatting is consistent
-      - [ ] Length validation and error handling
-
-      ## 📦 Related Material
-
-      - [README.md - Generate commands](./README.md#jig-generate)
-      - [PLAN.md - Generation utilities](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Hex generation is fundamental for creating secure tokens and identifiers.
-    priority: 1
-    estimate: 2
-    labels: ["cli-command", "security"]
-
-  - id: "task-password-generation"
-    feature_id: "feature-generate-commands"
-    title: "Implement password generation with entropy validation"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig generate password` command with entropy validation using zxcvbn.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Password command generates secure passwords
-      - [ ] Entropy validation with zxcvbn integration
-      - [ ] Configurable length and character sets
-      - [ ] Clear strength feedback to users
-
-      ## 📦 Related Material
-
-      - [README.md - Generate commands](./README.md#jig-generate)
-      - [PLAN.md - Password generation](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Password generation must balance security with usability and provide clear strength indicators.
-    priority: 1
-    estimate: 3
-    labels: ["cli-command", "security"]
-
-  - id: "task-xkcd-password-mode"
-    feature_id: "feature-generate-commands"
-    title: "Implement xkcd password mode"
-    description: |
-      ## 🩻 Summary
-
-      Implement xkcd-style memorable password generation with word lists.
-
-      ## 🧵 It's Done When…
-
-      - [ ] XKCD mode generates word-based passwords
-      - [ ] Word list is comprehensive and appropriate
-      - [ ] Configurable word count and separators
-      - [ ] Entropy calculation for word-based passwords
-
-      ## 📦 Related Material
-
-      - [README.md - Generate commands](./README.md#jig-generate)
-      - [PLAN.md - XKCD passwords](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      XKCD passwords provide a good balance of security and memorability.
-    priority: 1
-    estimate: 3
-    labels: ["cli-command", "security"]
-
-  - id: "task-age-key-generation"
-    feature_id: "feature-generate-commands"
-    title: "Implement age key generation"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig generate key crypto` command for age key pair generation.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Crypto key command generates age key pairs
-      - [ ] Private and public keys are output correctly
-      - [ ] Key format follows age standards
-      - [ ] Secure key generation using proper entropy
-
-      ## 📦 Related Material
-
-      - [README.md - Generate commands](./README.md#jig-generate)
-      - [PLAN.md - Key generation](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Age key generation is essential for the crypto commands to function properly.
-    priority: 1
-    estimate: 2
-    labels: ["cli-command", "security"]
-
-  - id: "task-wireguard-key-generation"
-    feature_id: "feature-generate-commands"
-    title: "Implement WireGuard key generation"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig generate key wireguard` command for WireGuard key pair generation.
-
-      ## 🧵 It's Done When…
-
-      - [ ] WireGuard key command generates valid key pairs
-      - [ ] Keys are compatible with WireGuard
-      - [ ] Output format matches WireGuard conventions
-      - [ ] Proper curve25519 key generation
-
-      ## 📦 Related Material
-
-      - [README.md - Generate commands](./README.md#jig-generate)
-      - [PLAN.md - WireGuard keys](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      WireGuard key generation requires specific cryptographic standards.
-    priority: 1
-    estimate: 3
-    labels: ["cli-command", "security"]
-
-  - id: "task-jwt-generation"
-    feature_id: "feature-generate-commands"
-    title: "Implement JWT generation with claims"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig generate jwt` command with configurable claims, expiry, and secret handling.
-
-      ## 🧵 It's Done When…
-
-      - [ ] JWT command generates valid tokens
-      - [ ] Configurable claims and expiry
-      - [ ] Secret handling from configuration
-      - [ ] Multiple signing algorithms supported
-
-      ## 📦 Related Material
-
-      - [README.md - Generate commands](./README.md#jig-generate)
-      - [PLAN.md - JWT generation](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      JWT generation is complex and requires careful handling of claims and signing.
-    priority: 1
+      - Crypto operations tested
+      - Generation utilities tested
+      - Config loading tested
+      - Utilities tested
+      - Mocks created
+
+  - id: task-integration-tests
+    feature_id: feat-test-suite
+    title: Write integration tests
     estimate: 5
-    labels: ["cli-command", "security"]
-
-  - id: "task-deterministic-generation"
-    feature_id: "feature-generate-commands"
-    title: "Add deterministic generation support with --keyed and --seed options"
+    priority: 1
+    labels:
+      - testing
     description: |
       ## 🩻 Summary
 
-      Add support for deterministic generation using keyed or seeded randomness.
+      Write integration tests for CLI commands.
 
       ## 🧵 It's Done When…
 
-      - [ ] --keyed option uses configuration secrets
-      - [ ] --seed option accepts explicit seeds
-      - [ ] Deterministic output is reproducible
-      - [ ] Security implications are documented
+      - Command execution tested
+      - Output validation works
+      - Error cases covered
+      - Fixtures created
 
-      ## 📦 Related Material
-
-      - [README.md - Generate commands](./README.md#jig-generate)
-      - [PLAN.md - Deterministic generation](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Deterministic generation is useful for testing and reproducible deployments.
-    priority: 2
+  - id: task-property-tests
+    feature_id: feat-test-suite
+    title: Add property-based tests
     estimate: 3
-    labels: ["cli-command", "security"]
-
-  - id: "task-dns-cache-flush"
-    feature_id: "feature-network-commands"
-    title: "Implement DNS cache flush (OS-aware)"
+    priority: 1
+    labels:
+      - testing
     description: |
       ## 🩻 Summary
 
-      Implement the `jig network dns flush` command with OS-specific DNS cache flushing.
+      Add property-based testing for generators.
 
       ## 🧵 It's Done When…
 
-      - [ ] Flush command works on macOS, Linux, Windows
-      - [ ] OS detection and appropriate commands
-      - [ ] Proper privilege handling and error messages
-      - [ ] Success confirmation feedback
+      - Password generation tested
+      - Hex generation tested
+      - Key generation tested
+      - Edge cases found
 
-      ## 📦 Related Material
-
-      - [README.md - Network commands](./README.md#jig-network)
-      - [PLAN.md - DNS operations](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      DNS cache flushing requires different approaches on different operating systems.
-    priority: 2
+  - id: task-ci-setup
+    feature_id: feat-cicd
+    title: Configure GitHub Actions
     estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-dns-lookup"
-    feature_id: "feature-network-commands"
-    title: "Implement DNS lookup with custom servers"
+    priority: 1
+    labels:
+      - infrastructure
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Implement the `jig network dns lookup` command with custom DNS server support.
+      Set up CI/CD pipeline with GitHub Actions.
 
       ## 🧵 It's Done When…
 
-      - [ ] Lookup command performs DNS queries
-      - [ ] Custom DNS server specification
-      - [ ] Multiple record type support
-      - [ ] Timeout handling for queries
+      - Tests run on push
+      - Linting passes
+      - Multiple OS tested
+      - Caching configured
 
-      ## 📦 Related Material
-
-      - [README.md - Network commands](./README.md#jig-network)
-      - [PLAN.md - DNS operations](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      DNS lookup functionality is essential for network diagnostics.
-    priority: 2
+  - id: task-release-automation
+    feature_id: feat-cicd
+    title: Implement release automation
     estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-dnssec-validation"
-    feature_id: "feature-network-commands"
-    title: "Implement DNSSEC validation"
+    priority: 1
+    labels:
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Implement the `jig network dns sec` command for DNSSEC validation checks.
+      Automate binary releases to GitHub.
 
       ## 🧵 It's Done When…
 
-      - [ ] DNSSEC validation performs proper checks
-      - [ ] Chain of trust verification
-      - [ ] Clear validation status reporting
-      - [ ] Error handling for validation failures
+      - Tags trigger builds
+      - Binaries uploaded
+      - Checksums generated
+      - Release notes created
 
-      ## 📦 Related Material
-
-      - [README.md - Network commands](./README.md#jig-network)
-      - [PLAN.md - DNSSEC validation](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      DNSSEC validation requires understanding of cryptographic signatures and trust chains.
-    priority: 2
-    estimate: 4
-    labels: ["cli-command", "security"]
-
-  - id: "task-network-timeouts"
-    feature_id: "feature-network-commands"
-    title: "Add timeout handling for network operations"
-    description: |
-      ## 🩻 Summary
-
-      Implement consistent timeout handling across all network operations.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Configurable timeouts for all network calls
-      - [ ] Graceful handling of timeout errors
-      - [ ] User feedback for slow operations
-      - [ ] Cancellation support where appropriate
-
-      ## 📦 Related Material
-
-      - [README.md - Network commands](./README.md#jig-network)
-      - [PLAN.md - Network operations](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Network operations can be unpredictable and need robust timeout handling.
-    priority: 2
+  - id: task-cross-platform
+    feature_id: feat-cicd
+    title: Set up cross-platform builds
     estimate: 2
-    labels: ["cli-command", "performance"]
-
-  - id: "task-tls-cert-retrieval"
-    feature_id: "feature-tls-commands"
-    title: "Implement TLS certificate retrieval"
+    priority: 1
+    labels:
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Implement the `jig tls cert` command to retrieve and display TLS certificates.
+      Configure builds for all target platforms.
 
       ## 🧵 It's Done When…
 
-      - [ ] Cert command retrieves certificates from servers
-      - [ ] Certificate information is parsed and displayed
-      - [ ] Chain validation and trust path analysis
-      - [ ] Expiration date and validity checking
+      - macOS builds work
+      - Linux builds work
+      - Windows builds work
+      - All architectures covered
 
-      ## 📦 Related Material
-
-      - [README.md - TLS commands](./README.md#jig-tls)
-      - [PLAN.md - TLS operations](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      TLS certificate analysis is crucial for security diagnostics.
-    priority: 2
-    estimate: 4
-    labels: ["cli-command", "security"]
-
-  - id: "task-tls-cipher-suites"
-    feature_id: "feature-tls-commands"
-    title: "Implement cipher suite listing"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig tls ciphers` command to list supported TLS cipher suites.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Ciphers command lists available cipher suites
-      - [ ] Security assessment of cipher strengths
-      - [ ] Filtering and sorting options
-      - [ ] Clear presentation of cipher information
-
-      ## 📦 Related Material
-
-      - [README.md - TLS commands](./README.md#jig-tls)
-      - [PLAN.md - TLS operations](./PLAN.md#phase-2-foundational-command-groups)
-
-      ## 🫧 Further Detail
-
-      Cipher suite analysis helps assess TLS configuration security.
-    priority: 2
+  - id: task-readme-review
+    feature_id: feat-documentation
+    title: Review and update README
     estimate: 3
-    labels: ["cli-command", "security"]
-
-  # Phase 3 Tasks - Project & Git Management
-  - id: "task-template-listing"
-    feature_id: "feature-template-system"
-    title: "Implement template listing"
+    priority: 1
+    labels:
+      - documentation
     description: |
       ## 🩻 Summary
 
-      Implement the `jig project template list` command to show available templates.
+      Ensure README accurately reflects implementation.
 
       ## 🧵 It's Done When…
 
-      - [ ] List command shows cached templates
-      - [ ] Template metadata is displayed clearly
-      - [ ] Filtering and search capabilities
-      - [ ] Template descriptions are shown
+      - All commands documented
+      - Examples accurate
+      - Configuration complete
+      - Installation clear
 
-      ## 📦 Related Material
+  - id: task-help-text
+    feature_id: feat-documentation
+    title: Ensure comprehensive help messages
+    estimate: 3
+    priority: 1
+    labels:
+      - documentation
+    description: |
+      ## 🩻 Summary
 
-      - [README.md - Template commands](./README.md#jig-project-template)
-      - [PLAN.md - Template system](./PLAN.md#phase-3-project--git-management)
+      Review and improve all `--help` output.
 
-      ## 🫧 Further Detail
+      ## 🧵 It's Done When…
 
-      Template listing helps users discover and choose appropriate project templates.
-    priority: 2
+      - Every command has help
+      - Options documented
+      - Examples included
+      - Formatting consistent
+
+  - id: task-man-pages
+    feature_id: feat-documentation
+    title: Create man pages
     estimate: 2
-    labels: ["cli-command"]
-
-  - id: "task-template-updates"
-    feature_id: "feature-template-system"
-    title: "Implement template repository updates"
+    priority: 1
+    labels:
+      - documentation
     description: |
       ## 🩻 Summary
 
-      Implement the `jig project template update` command to refresh template cache.
+      Generate man pages for all commands.
 
       ## 🧵 It's Done When…
 
-      - [ ] Update command fetches latest templates
-      - [ ] Git repository synchronization
-      - [ ] Progress indicators for downloads
-      - [ ] Error handling for network issues
+      - Man pages generated
+      - Sections complete
+      - Examples included
+      - Install configured
 
-      ## 📦 Related Material
-
-      - [README.md - Template commands](./README.md#jig-project-template)
-      - [PLAN.md - Template updates](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Template updates ensure users have access to the latest project scaffolding.
-    priority: 2
-    estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-new-template-creation"
-    feature_id: "feature-template-system"
-    title: "Implement new template creation"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig project template new` command to create empty template structures.
-
-      ## 🧵 It's Done When…
-
-      - [ ] New command creates template directory structure
-      - [ ] .jig.template.yaml file is generated
-      - [ ] Template metadata is properly initialized
-      - [ ] Documentation for template creators
-
-      ## 📦 Related Material
-
-      - [README.md - Template commands](./README.md#jig-project-template)
-      - [PLAN.md - Template creation](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Template creation enables users to contribute back to the template ecosystem.
-    priority: 2
-    estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-tera-processing"
-    feature_id: "feature-template-system"
-    title: "Implement Tera template processing"
-    description: |
-      ## 🩻 Summary
-
-      Implement Tera template engine integration for dynamic template processing.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Tera templates are processed correctly
-      - [ ] Variable substitution works
-      - [ ] Template context includes project metadata
-      - [ ] Error handling for template syntax errors
-
-      ## 📦 Related Material
-
-      - [README.md - Template system](./README.md#jig-project-template)
-      - [PLAN.md - Tera integration](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Tera processing is the core of the dynamic template system.
-    priority: 2
-    estimate: 4
-    labels: ["cli-command", "infrastructure"]
-
-  - id: "task-shared-template-support"
-    feature_id: "feature-template-system"
-    title: "Implement _shared template support"
-    description: |
-      ## 🩻 Summary
-
-      Implement support for _shared template components across templates.
-
-      ## 🧵 It's Done When…
-
-      - [ ] _shared directory is recognized
-      - [ ] Shared components can be included
-      - [ ] Template inheritance works correctly
-      - [ ] Documentation for shared components
-
-      ## 📦 Related Material
-
-      - [README.md - Template system](./README.md#jig-project-template)
-      - [PLAN.md - Shared templates](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Shared templates reduce duplication and improve maintainability.
-    priority: 2
-    estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-project-scaffolding"
-    feature_id: "feature-project-commands"
-    title: "Implement project scaffolding from templates"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig project new` command to create projects from templates.
-
-      ## 🧵 It's Done When…
-
-      - [ ] New command creates projects from templates
-      - [ ] User prompts for template variables
-      - [ ] Directory structure is created correctly
-      - [ ] .jig.yaml tracking file is generated
-
-      ## 📦 Related Material
-
-      - [README.md - Project commands](./README.md#jig-project)
-      - [PLAN.md - Project scaffolding](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Project scaffolding is a core feature that provides immediate value to users.
-    priority: 2
-    estimate: 5
-    labels: ["cli-command"]
-
-  - id: "task-project-updates"
-    feature_id: "feature-project-commands"
-    title: "Implement project update with diff display"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig project update` command to apply template updates to existing projects.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Update command applies template changes
-      - [ ] Diff display shows changes before applying
-      - [ ] User confirmation for destructive changes
-      - [ ] Backup creation for safety
-
-      ## 📦 Related Material
-
-      - [README.md - Project commands](./README.md#jig-project)
-      - [PLAN.md - Project updates](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Project updates help maintain consistency as templates evolve.
-    priority: 2
-    estimate: 4
-    labels: ["cli-command"]
-
-  - id: "task-jig-yaml-tracking"
-    feature_id: "feature-project-commands"
-    title: "Implement .jig.yaml tracking file"
-    description: |
-      ## 🩻 Summary
-
-      Implement .jig.yaml file creation and management for project tracking.
-
-      ## 🧵 It's Done When…
-
-      - [ ] .jig.yaml file is created with projects
-      - [ ] Template source and version are tracked
-      - [ ] Project metadata is maintained
-      - [ ] Update compatibility checking
-
-      ## 📦 Related Material
-
-      - [README.md - Project tracking](./README.md#jig-project)
-      - [PLAN.md - Project tracking](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      The tracking file enables intelligent project updates and maintenance.
-    priority: 2
+  - id: task-cargo-package
+    feature_id: feat-packaging
+    title: Configure cargo package
     estimate: 2
-    labels: ["cli-command", "infrastructure"]
-
-  - id: "task-dependabot-generation"
-    feature_id: "feature-project-commands"
-    title: "Implement dependabot.yml generation"
+    priority: 1
+    labels:
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Implement the `jig project dependabot` command to generate .github/dependabot.yml files.
+      Set up package for crates.io publication.
 
       ## 🧵 It's Done When…
 
-      - [ ] Dependabot command detects project ecosystems
-      - [ ] Appropriate dependabot.yml is generated
-      - [ ] Configuration is customizable
-      - [ ] Multiple ecosystem support
+      - `Cargo.toml` complete
+      - Metadata accurate
+      - `cargo install` works
+      - Dependencies minimal
 
-      ## 📦 Related Material
-
-      - [README.md - Project commands](./README.md#jig-project)
-      - [PLAN.md - Dependabot generation](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Automated dependency management improves project maintenance.
-    priority: 2
-    estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-dependency-bumping"
-    feature_id: "feature-project-commands"
-    title: "Implement dependency version bumping"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig project bump` command for dependency version updates.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Bump command updates Cargo.toml dependencies
-      - [ ] package.json dependency updates
-      - [ ] GitHub Actions version updates
-      - [ ] Semantic version handling
-
-      ## 📦 Related Material
-
-      - [README.md - Project commands](./README.md#jig-project)
-      - [PLAN.md - Dependency bumping](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Dependency bumping helps maintain secure and up-to-date projects.
-    priority: 2
-    estimate: 4
-    labels: ["cli-command"]
-
-  - id: "task-project-tera-context"
-    feature_id: "feature-project-commands"
-    title: "Add Tera template context with project metadata"
-    description: |
-      ## 🩻 Summary
-
-      Implement rich template context for Tera processing with project metadata.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Project metadata is available in templates
-      - [ ] User information is included in context
-      - [ ] Git repository information is accessible
-      - [ ] Environment variables can be referenced
-
-      ## 📦 Related Material
-
-      - [README.md - Template system](./README.md#jig-project)
-      - [PLAN.md - Template context](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Rich template context enables more sophisticated template processing.
-    priority: 2
-    estimate: 3
-    labels: ["cli-command", "infrastructure"]
-
-  - id: "task-simplified-clone"
-    feature_id: "feature-git-integration"
-    title: "Implement simplified clone (username/repo)"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig git clone` command for simplified GitHub repository cloning.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Clone command accepts username/repo format
-      - [ ] GitHub URL construction works correctly
-      - [ ] SSH and HTTPS protocol support
-      - [ ] Error handling for invalid repositories
-
-      ## 📦 Related Material
-
-      - [README.md - Git commands](./README.md#jig-git)
-      - [PLAN.md - Git integration](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Simplified cloning reduces friction for common GitHub workflows.
-    priority: 2
-    estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-latest-commit-hash"
-    feature_id: "feature-git-integration"
-    title: "Implement latest commit hash retrieval"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig git latest` command to get latest commit hash from GitHub.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Latest command queries GitHub API
-      - [ ] Branch specification support
-      - [ ] Commit hash is returned correctly
-      - [ ] Error handling for non-existent branches
-
-      ## 📦 Related Material
-
-      - [README.md - Git commands](./README.md#jig-git)
-      - [PLAN.md - Git latest](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Latest commit retrieval is useful for CI/CD and deployment workflows.
-    priority: 2
+  - id: task-homebrew-tap
+    feature_id: feat-packaging
+    title: Create Homebrew formula
     estimate: 2
-    labels: ["cli-command", "api-integration"]
-
-  - id: "task-github-secrets-management"
-    feature_id: "feature-git-integration"
-    title: "Implement GitHub secrets management"
+    priority: 1
+    labels:
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Implement the `jig git secret` command for managing GitHub Actions secrets.
+      Create Homebrew tap formula for installation.
 
       ## 🧵 It's Done When…
 
-      - [ ] Secret command manages repository secrets
-      - [ ] Create, update, delete operations
-      - [ ] Environment secret support
-      - [ ] Proper encryption handling
+      - Formula created
+      - Tap repository set up
+      - Installation tested
+      - Updates automated
 
-      ## 📦 Related Material
-
-      - [README.md - Git commands](./README.md#jig-git)
-      - [PLAN.md - GitHub secrets](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Secrets management enables secure CI/CD configuration.
-    priority: 2
-    estimate: 4
-    labels: ["cli-command", "api-integration", "security"]
-
-  - id: "task-batch-repo-update"
-    feature_id: "feature-git-integration"
-    title: "Implement batch repo update (yank)"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig git yank` command for batch fetch/pull operations.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Yank command processes all repos in directory
-      - [ ] Fetch and pull operations for each repo
-      - [ ] Progress indicators for batch operations
-      - [ ] Error handling for individual repo failures
-
-      ## 📦 Related Material
-
-      - [README.md - Git commands](./README.md#jig-git)
-      - [PLAN.md - Batch operations](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Batch operations save time when working with multiple repositories.
-    priority: 2
+  - id: task-binary-signing
+    feature_id: feat-packaging
+    title: Implement binary signing
     estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-git-progress-indicators"
-    feature_id: "feature-git-integration"
-    title: "Add progress indicators for long operations"
+    priority: 1
+    labels:
+      - security
+      - Deployment
     description: |
       ## 🩻 Summary
 
-      Implement progress indicators for long-running Git operations.
+      Sign release binaries to prevent security warnings.
 
       ## 🧵 It's Done When…
 
-      - [ ] Progress bars for clone operations
-      - [ ] Status indicators for batch operations
-      - [ ] Time estimates where possible
-      - [ ] Cancellation support
+      - macOS signing works
+      - Windows signing works
+      - Certificates configured
+      - CI integration complete
 
-      ## 📦 Related Material
-
-      - [README.md - Git commands](./README.md#jig-git)
-      - [PLAN.md - Progress indicators](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Progress indicators improve user experience for long operations.
-    priority: 2
-    estimate: 2
-    labels: ["cli-command", "performance"]
-
-  - id: "task-binary-metadata-storage"
-    feature_id: "feature-binary-management"
-    title: "Implement binary metadata storage"
-    description: |
-      ## 🩻 Summary
-
-      Implement metadata storage in ~/.local/share/jig/binaries.yaml for tracking installed binaries.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Metadata file structure is defined
-      - [ ] Binary information is stored correctly
-      - [ ] Version tracking works
-      - [ ] Installation source is recorded
-
-      ## 📦 Related Material
-
-      - [README.md - Binary management](./README.md#jig-git-binary)
-      - [PLAN.md - Binary management](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Metadata storage enables intelligent binary management and updates.
-    priority: 2
-    estimate: 2
-    labels: ["cli-command", "infrastructure"]
-
-  - id: "task-github-release-downloading"
-    feature_id: "feature-binary-management"
-    title: "Implement GitHub release downloading"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig git binary get` command to download and install binaries from GitHub releases.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Get command downloads release assets
-      - [ ] Architecture detection and selection
-      - [ ] Binary extraction and installation
-      - [ ] Checksum verification where available
-
-      ## 📦 Related Material
-
-      - [README.md - Binary management](./README.md#jig-git-binary)
-      - [PLAN.md - Binary downloading](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Binary downloading automates tool installation from GitHub releases.
-    priority: 2
-    estimate: 4
-    labels: ["cli-command", "api-integration"]
-
-  - id: "task-binary-installation"
-    feature_id: "feature-binary-management"
-    title: "Implement binary installation and PATH management"
-    description: |
-      ## 🩻 Summary
-
-      Implement binary installation logic with proper PATH management.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Binaries are installed to appropriate location
-      - [ ] PATH updates are handled correctly
-      - [ ] Permissions are set properly
-      - [ ] Shell integration works
-
-      ## 📦 Related Material
-
-      - [README.md - Binary management](./README.md#jig-git-binary)
-      - [PLAN.md - Binary installation](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Proper installation ensures binaries are immediately available for use.
-    priority: 2
+  # Cross-cutting tasks
+  - id: task-error-types
+    epic_id: phase-1
+    title: Implement comprehensive error types
     estimate: 3
-    labels: ["cli-command", "shell-integration"]
-
-  - id: "task-binary-show"
-    feature_id: "feature-binary-management"
-    title: "Implement binary information display"
+    priority: 1
+    labels:
+      - infrastructure
     description: |
       ## 🩻 Summary
 
-      Implement the `jig git binary show` command to display information about installed binaries.
+      Create consistent error handling across the application.
 
       ## 🧵 It's Done When…
 
-      - [ ] Show command displays binary details
-      - [ ] Version information is shown
-      - [ ] Installation date and source
-      - [ ] Update availability checking
+      - Error types defined
+      - Context preserved
+      - User messages clear
+      - Debug info available
 
-      ## 📦 Related Material
-
-      - [README.md - Binary management](./README.md#jig-git-binary)
-      - [PLAN.md - Binary information](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Binary information helps users manage their installed tools.
-    priority: 2
-    estimate: 2
-    labels: ["cli-command"]
-
-  - id: "task-binary-updates"
-    feature_id: "feature-binary-management"
-    title: "Implement binary updates and removal"
-    description: |
-      ## 🩻 Summary
-
-      Implement the `jig git binary update` and `remove` commands for binary management.
-
-      ## 🧵 It's Done When…
-
-      - [ ] Update command upgrades binaries to latest versions
-      - [ ] Remove command uninstalls binaries cleanly
-      - [ ] Metadata cleanup on removal
-      - [ ] Batch update operations
-
-      ## 📦 Related Material
-
-      - [README.md - Binary management](./README.md#jig-git-binary)
-      - [PLAN.md - Binary updates](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Update and removal capabilities complete the binary management lifecycle.
-    priority: 2
+  - id: task-benchmarks
+    epic_id: phase-9
+    title: Set up benchmarking suite
     estimate: 3
-    labels: ["cli-command"]
-
-  - id: "task-architecture-detection"
-    feature_id: "feature-binary-management"
-    title: "Add architecture detection and binary selection logic"
+    priority: 1
+    labels:
+      - testing
+      - performance
     description: |
       ## 🩻 Summary
 
-      Implement architecture detection and intelligent binary asset selection.
+      Create performance benchmarks for critical paths.
 
       ## 🧵 It's Done When…
 
-      - [ ] System architecture is detected correctly
-      - [ ] Release assets are filtered by architecture
-      - [ ] Naming pattern recognition works
-      - [ ] Fallback strategies for edge cases
+      - Startup time measured
+      - Command performance tracked
+      - Memory usage monitored
+      - Regression detection works
 
-      ## 📦 Related Material
-
-      - [README.md - Binary management](./README.md#jig-git-binary)
-      - [PLAN.md - Architecture detection](./PLAN.md#phase-3-project--git-management)
-
-      ## 🫧 Further Detail
-
-      Accurate architecture detection ensures compatible binary downloads.
-    priority: 2
+  - id: task-security-audit
+    epic_id: phase-9
+    title: Perform security audit
     estimate: 3
-    labels: ["cli-command", "infrastructure"]
+    priority: 1
+    labels:
+      - security
+      - testing
+    description: |
+      ## 🩻 Summary
+
+      Audit code for security vulnerabilities.
+
+      ## 🧵 It's Done When…
+
+      - Dependencies scanned
+      - Code reviewed
+      - Secrets handled safely
+      - Audit trail documented
