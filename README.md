@@ -1639,3 +1639,7 @@ The `jig dance` command uses advanced terminal effects:
 ## Implementation Plan
 
 See [PLAN.md](PLAN.md).
+
+## Idea Scratchpad
+
+- Manage quarantine and binary signing
