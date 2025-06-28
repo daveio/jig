@@ -1091,10 +1091,8 @@ Batch update all Git repositories.
 
 1. Find all `.git` directories recursively
 2. For each repository:
-
-- Run fetch with configured parameters
-- Run pull with configured parameters
-
+    - Run fetch with configured parameters
+    - Run pull with configured parameters
 3. Report success/failure summary
 
 **Notes:**
@@ -1208,16 +1206,12 @@ Update all dependencies to latest versions.
 **Flow:**
 
 1. Scan for package files:
-
-- `Cargo.toml`
-- `package.json`
-- `.github/workflows/*.ya?ml`
-
+    - `Cargo.toml`
+    - `package.json`
+    - `.github/workflows/*.ya?ml`
 2. For each dependency:
-
-- Fetch latest version
-- Update version specification
-
+    - Fetch latest version
+    - Update version specification
 3. For GitHub Actions:
 
 - Pin to latest commit SHA
@@ -1313,10 +1307,8 @@ Update existing project with template changes.
 2. Fetch latest template version
 3. Compare with applied version
 4. For each changed file:
-
-- Show diff
-- Prompt for action (unless `--clobber`)
-
+    - Show diff
+    - Prompt for action (unless `--clobber`)
 5. Update `.jig.yaml` metadata
 
 #### `jig project template`
@@ -1530,22 +1522,17 @@ Switch active workspace.
 10. New workspace is active
 
 ```mermaid
-graph LR
-    A[OLD is active]
-    A --> B(jig workspace switch NEW)
+graph TD
+    A{OLD}
+    A --> B[jig workspace switch NEW]
     B --> C('before-down' hook)
     C --> D(OLD 'down' commands)
     D --> E('after-down' hook)
     E --> F('before-up' hook)
     F --> G(NEW 'up' commands)
     G --> H('after-up' hook)
-    H --> I[NEW is active]
-    classDef state fill: #ff6, stroke: #333, stroke-width: 2px;
-    classDef action fill: #fbb, stroke: #333, stroke-width: 2px;
-    classDef execution fill: #bbf, stroke: #333, stroke-width: 2px;
-class A, I state
-class B action
-class C, D, E, F, G, H execution
+    H --> I
+    I{NEW}
 ```
 
 #### `jig workspace hook`
