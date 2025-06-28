@@ -86,33 +86,7 @@ class LinearAPI:
         }
 
         try:
-            response = self.session.post(self.base_url, json=payload, timeout=30)
-
-            # Try to get JSON response even on error
-            try:
-                result = response.json()
-            except json.JSONDecodeError:
-                response.raise_for_status()
-                raise Exception(f"Invalid JSON response from API")
-
-            # Check for GraphQL errors
-            if "errors" in result:
-                error_messages = []
-                for error in result["errors"]:
-                    msg = error.get("message", "Unknown error")
-                    if "extensions" in error:
-                        msg += f" ({error['extensions']})"
-                    error_messages.append(msg)
-                raise Exception(f"GraphQL errors: {'; '.join(error_messages)}")
-
-            # Check HTTP status
-            response.raise_for_status()
-
-            if "data" not in result:
-                raise Exception(f"No data in response: {result}")
-
-            return result["data"]
-
+            return self.handle_graphql_query(payload)
         except requests.exceptions.RequestException as e:
             if hasattr(e, 'response') and e.response is not None:
                 try:
@@ -122,6 +96,34 @@ class LinearAPI:
                 except:
                     pass
             raise Exception(f"API request failed: {e}")
+
+    def handle_graphql_query(self, payload):
+        response = self.session.post(self.base_url, json=payload, timeout=30)
+
+            # Try to get JSON response even on error
+        try:
+            result = response.json()
+        except json.JSONDecodeError:
+            response.raise_for_status()
+            raise Exception("Invalid JSON response from API")
+
+        # Check for GraphQL errors
+        if "errors" in result:
+            error_messages = []
+            for error in result["errors"]:
+                msg = error.get("message", "Unknown error")
+                if "extensions" in error:
+                    msg += f" ({error['extensions']})"
+                error_messages.append(msg)
+            raise Exception(f"GraphQL errors: {'; '.join(error_messages)}")
+
+        # Check HTTP status
+        response.raise_for_status()
+
+        if "data" not in result:
+            raise Exception(f"No data in response: {result}")
+
+        return result["data"]
 
     def get_viewer(self) -> Dict[str, Any]:
         """Get current user information"""
@@ -415,7 +417,7 @@ class TicketsManager:
                     description=description,
                     estimate=estimate,
                     priority=priority,
-                    label_ids=label_ids if label_ids else None
+                    label_ids=label_ids or None
                 )
                 if not success:
                     raise Exception(f"Failed to update issue: {title}")
@@ -522,27 +524,7 @@ def main():
         print("Make sure you're using a personal API key from Linear settings")
 
     try:
-        # Initialize API client
-        api = LinearAPI(api_key)
-
-        # Test connection
-        viewer = api.get_viewer()
-        print(f"Connected to Linear as: {viewer['name']} ({viewer['email']})")
-
-        # Load tickets configuration
-        tickets_data = load_tickets_yaml()
-        print(f"Loaded tickets configuration: {len(tickets_data.get('epics', []))} epics, "
-              f"{len(tickets_data.get('features', []))} features, {len(tickets_data.get('tasks', []))} tasks")
-
-        # Process tickets
-        manager = TicketsManager(api, dry_run=args.dry_run, verbose=args.verbose)
-        manager.process_tickets(tickets_data)
-
-        if args.dry_run:
-            print("\nDry run completed. No changes were made.")
-        else:
-            print("\nTickets processed successfully!")
-
+        process(api_key, args)
     except KeyboardInterrupt:
         print("\nOperation cancelled by user")
         sys.exit(1)
@@ -552,6 +534,29 @@ def main():
             import traceback
             traceback.print_exc()
         sys.exit(1)
+
+
+def process(api_key, args):
+    # Initialize API client
+    api = LinearAPI(api_key)
+
+    # Test connection
+    viewer = api.get_viewer()
+    print(f"Connected to Linear as: {viewer['name']} ({viewer['email']})")
+
+    # Load tickets configuration
+    tickets_data = load_tickets_yaml()
+    print(f"Loaded tickets configuration: {len(tickets_data.get('epics', []))} epics, "
+          f"{len(tickets_data.get('features', []))} features, {len(tickets_data.get('tasks', []))} tasks")
+
+    # Process tickets
+    manager = TicketsManager(api, dry_run=args.dry_run, verbose=args.verbose)
+    manager.process_tickets(tickets_data)
+
+    if args.dry_run:
+        print("\nDry run completed. No changes were made.")
+    else:
+        print("\nTickets processed successfully!")
 
 if __name__ == "__main__":
     main()
