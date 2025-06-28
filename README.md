@@ -1292,7 +1292,7 @@ Create new project from template.
 
 Update existing project with template changes.
 
-**Summary:** Applies template updates while preserving local modifications.
+**Summary:** Applies template updates. Attempts to preserve local modifications.
 
 **Parameters:**
 
