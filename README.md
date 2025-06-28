@@ -4,7 +4,8 @@
 
 ## Overview
 
-`jig` is a comprehensive CLI toolbox that consolidates various utilities into a single, unified command-line interface. Built with Rust, it provides a consistent experience for common development, security, and administrative tasks.
+`jig` is a comprehensive CLI toolbox that consolidates various utilities into a single, unified command-line interface.
+Built with Rust, it provides a consistent experience for common development, security, and administrative tasks.
 
 ## Installation
 
@@ -21,7 +22,8 @@ The shell plugin is strongly recommended. It is required for:
 - Automatic template updates
 - `jig workspace` commands
 
-For additional features, install it åusing your preferred package manager. The following shell plugin managers are tested and supported:
+For additional features, install it åusing your preferred package manager. The following shell plugin managers are
+tested and supported:
 
 **Fish Shell:**
 
@@ -46,7 +48,8 @@ For additional features, install it åusing your preferred package manager. The 
 
 Other shell plugin managers may work, but are not explicitly tested.
 
-When you run `jig init`, it will tell you how to install the plugin for your shell. You don't strictly have to, of course.
+When you run `jig init`, it will tell you how to install the plugin for your shell. You don't strictly have to, of
+course.
 
 ### Shell Plugin Features
 
@@ -84,83 +87,83 @@ config:
   theme: dark
 ---
 graph LR
-  jig[jig]
+    jig[jig]
     jig --> init(init)
     jig --> crypto(crypto)
-      crypto --> cryptoEncrypt(encrypt)
-      crypto --> cryptoDecrypt(decrypt)
-      crypto --> cryptoPublic(public)
+    crypto --> cryptoEncrypt(encrypt)
+    crypto --> cryptoDecrypt(decrypt)
+    crypto --> cryptoPublic(public)
     jig --> generate(generate)
-      generate --> generateHex(hex)
-      generate --> generatePassword(password)
-      generate --> generateKey(key)
-      generateKey --> generateKeyCrypto(crypto)
-      generateKey --> generateKeyWireguard(wireguard)
-      generate --> generateJwt(jwt)
+    generate --> generateHex(hex)
+    generate --> generatePassword(password)
+    generate --> generateKey(key)
+    generateKey --> generateKeyCrypto(crypto)
+    generateKey --> generateKeyWireguard(wireguard)
+    generate --> generateJwt(jwt)
     jig --> network(network)
-      network --> networkDns(dns)
-        networkDns --> networkDnsFlush(flush)
-        networkDns --> networkDnsLookup(lookup)
-        networkDns --> networkDnsSec(sec)
+    network --> networkDns(dns)
+    networkDns --> networkDnsFlush(flush)
+    networkDns --> networkDnsLookup(lookup)
+    networkDns --> networkDnsSec(sec)
     jig --> domain(domain)
-      domain --> domainCheck(check)
-      domain --> domainExpiry(expiry)
-      domain --> domainNs(ns)
+    domain --> domainCheck(check)
+    domain --> domainExpiry(expiry)
+    domain --> domainNs(ns)
     jig --> tls(tls)
-      tls --> tlsCert(cert)
-      tls --> tlsCiphers(ciphers)
+    tls --> tlsCert(cert)
+    tls --> tlsCiphers(ciphers)
     jig --> api(api)
-      api --> apiTicket(ticket)
-        apiTicket --> apiTicketTitle(title)
-        apiTicket --> apiTicketDescription(description)
-        apiTicket --> apiTicketEnrich(enrich)
-      api --> apiImage(image)
-        apiImage --> apiImageAlt(alt)
-        apiImage --> apiImageOptimise(optimise)
-      api --> apiToken(token)
-        apiToken --> apiTokenInfo(info)
-        apiToken --> apiTokenRevoke(revoke)
-        apiToken --> apiTokenUsage(usage)
-      api --> apiPing(ping)
+    api --> apiTicket(ticket)
+    apiTicket --> apiTicketTitle(title)
+    apiTicket --> apiTicketDescription(description)
+    apiTicket --> apiTicketEnrich(enrich)
+    api --> apiImage(image)
+    apiImage --> apiImageAlt(alt)
+    apiImage --> apiImageOptimise(optimise)
+    api --> apiToken(token)
+    apiToken --> apiTokenInfo(info)
+    apiToken --> apiTokenRevoke(revoke)
+    apiToken --> apiTokenUsage(usage)
+    api --> apiPing(ping)
     jig --> mcp(mcp)
     jig --> dance(dance)
     jig --> terminal(terminal)
-      terminal --> terminalSysinfo(sysinfo)
-      terminal --> terminalXKCD(xkcd)
+    terminal --> terminalSysinfo(sysinfo)
+    terminal --> terminalXKCD(xkcd)
     jig --> project(project)
-      project --> projectNew(new)
-      project --> projectUpdate(update)
-      project --> projectBump(bump)
-      project --> projectDependabot(dependabot)
-      project --> projectTemplate(template)
-        projectTemplate --> projectTemplateList(list)
-        projectTemplate --> projectTemplateNew(new)
-        projectTemplate --> projectTemplateUpdate(update)
+    project --> projectNew(new)
+    project --> projectUpdate(update)
+    project --> projectBump(bump)
+    project --> projectDependabot(dependabot)
+    project --> projectTemplate(template)
+    projectTemplate --> projectTemplateList(list)
+    projectTemplate --> projectTemplateNew(new)
+    projectTemplate --> projectTemplateUpdate(update)
     jig --> git(git)
-      git --> gitClone(clone)
-      git --> gitBinary(binary)
-        gitBinary --> gitBinaryGet(get)
-        gitBinary --> gitBinaryUpdate(update)
-        gitBinary --> gitBinaryShow(show)
-        gitBinary --> gitBinaryRemove(remove)
-      git --> gitSecrets(secrets)
-      git --> gitCommit(commit)
-      git --> gitYank(yank)
-      git --> gitLatest(latest)
+    git --> gitClone(clone)
+    git --> gitBinary(binary)
+    gitBinary --> gitBinaryGet(get)
+    gitBinary --> gitBinaryUpdate(update)
+    gitBinary --> gitBinaryShow(show)
+    gitBinary --> gitBinaryRemove(remove)
+    git --> gitSecrets(secrets)
+    git --> gitCommit(commit)
+    git --> gitYank(yank)
+    git --> gitLatest(latest)
     jig --> workspace(workspace)
-      workspace --> workspaceSwitch(switch)
-      workspace --> workspaceList(list)
-      workspace --> workspaceHook(hook)
+    workspace --> workspaceSwitch(switch)
+    workspace --> workspaceList(list)
+    workspace --> workspaceHook(hook)
     jig --> ai(ai)
-      ai --> aiRename(rename)
-        aiRename --> aiRenameImage(image)
-
-  style dance stroke-dasharray: 2 3,stroke-width: 5px
+    ai --> aiRename(rename)
+    aiRename --> aiRenameImage(image)
+    style dance stroke-dasharray: 2 3, stroke-width: 5px
 ```
 
 ## Configuration
 
-`jig` uses YAML configuration files for its configuration. The configuration system is built with `saphyr` and `serde` for robust YAML operations.
+`jig` uses YAML configuration files for its configuration. The configuration system is built with `saphyr` and `serde`
+for robust YAML operations.
 
 ### Configuration File Location
 
@@ -173,92 +176,92 @@ The bare minimum configuration requires only an encryption key:
 
 ```yaml
 secret:
-  key: AGE-SECRET-KEY-[...]
+    key: AGE-SECRET-KEY-[...]
 ```
 
 ### Complete Configuration Reference
 
 ```yaml
 dns:
-  nameserver: 8.8.8.8
+    nameserver: 8.8.8.8
 generate:
-  password:
-    emoji: true
+    password:
+        emoji: true
 git:
-  commit:
-    after: null
-    before: null
-    prefixes:
-      - docs
-      - feat
-      - fix
-      - perf
-      - refactor
-      - style
-      - test
-  internal: true
-  user: daveio
+    commit:
+        after: null
+        before: null
+        prefixes:
+            - docs
+            - feat
+            - fix
+            - perf
+            - refactor
+            - style
+            - test
+    internal: true
+    user: daveio
 project:
-  dependabot:
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 100
-    assignees:
-      - daveio
-    groups:
-      all-dependencies:
-        patterns:
-          - "*"
+    dependabot:
+        schedule:
+            interval: daily
+        open-pull-requests-limit: 100
+        assignees:
+            - daveio
+        groups:
+            all-dependencies:
+                patterns:
+                    - "*"
 secret:
-  file: ~/.jig.secret.yaml # ignores all other secret configuration if set, even if the file doesn't exist
-  api:
-    domainr:
-      env: DOMAINR_API_KEY
-      key:
-  main:
-    env: JIG_SECRET_KEY
-    file: ~/.jig.secret.key
-    key: AGE-SECRET-KEY-[...]
-    order:
-      - env
-      - file
-      - key
-  jwt:
-    env: JIG_JWT_SECRET
-    file: ~/.jig.jwt.key
-    key: JWT_SECRET_VALUE
-    order:
-      - env
-      - file
-      - key
+    file: ~/.jig.secret.yaml # ignores all other secret configuration if set, even if the file doesn't exist
+    api:
+        domainr:
+            env: DOMAINR_API_KEY
+            key:
+    main:
+        env: JIG_SECRET_KEY
+        file: ~/.jig.secret.key
+        key: AGE-SECRET-KEY-[...]
+        order:
+            - env
+            - file
+            - key
+    jwt:
+        env: JIG_JWT_SECRET
+        file: ~/.jig.jwt.key
+        key: JWT_SECRET_VALUE
+        order:
+            - env
+            - file
+            - key
 template:
-  branch: template
-  repository: daveio/jig
+    branch: template
+    repository: daveio/jig
 workspace:
-  current: example
-  create: false
-  hooks:
-    before-up: []
-    after-up:
-      - echo "hello example"
-    before-down: []
-    after-down:
-      - echo "bye example"
-  workspaces:
-    example:
-      up:
-        - gcloud config configurations activate example
-        - gcloud config set project example_project
-        - kubectx example_cluster
-      down: []
-      env:
-        EXAMPLE_VAR: abc123
-        ANOTHER_VAR: "true"
-        YET_ANOTHER_VAR: "12345"
+    current: example
+    create: false
+    hooks:
+        before-up: []
+        after-up:
+            - echo "hello example"
+        before-down: []
+        after-down:
+            - echo "bye example"
+    workspaces:
+        example:
+            up:
+                - gcloud config configurations activate example
+                - gcloud config set project example_project
+                - kubectx example_cluster
+            down: []
+            env:
+                EXAMPLE_VAR: abc123
+                ANOTHER_VAR: "true"
+                YET_ANOTHER_VAR: "12345"
 yank:
-  dir: ~/src
-  fetch: --prune --tags --prune-tags --recurse-submodules=yes
-  pull: --all --tags --prune --jobs=8 --recurse-submodules=yes
+    dir: ~/src
+    fetch: --prune --tags --prune-tags --recurse-submodules=yes
+    pull: --all --tags --prune --jobs=8 --recurse-submodules=yes
 ```
 
 ### Minimal Configuration Example
@@ -267,7 +270,7 @@ For a quick start, use this minimal configuration:
 
 ```yaml
 secret:
-  key: AGE-SECRET-KEY-[...]
+    key: AGE-SECRET-KEY-[...]
 ```
 
 ## Global Command Options
@@ -292,7 +295,8 @@ All `jig` commands support these universal options:
 
 Initialize jig configuration and set up the environment.
 
-**Summary:** Creates necessary directories, fetches templates, generates configuration with encryption keys, and sets up shell integration.
+**Summary:** Creates necessary directories, fetches templates, generates configuration with encryption keys, and sets up
+shell integration.
 
 **Parameters:**
 
@@ -303,9 +307,9 @@ Initialize jig configuration and set up the environment.
 **Flow:**
 
 1. Create required directories:
-   - `~/.local/share/jig`
-   - `~/.local/share/jig/bin`
-   - `~/.local/share/jig/templates`
+    - `~/.local/share/jig`
+        - `~/.local/share/jig/bin`
+        - `~/.local/share/jig/templates`
 2. Clone template repository from GitHub
 3. Generate new encryption key if creating config
 4. Create configuration file (prompts if exists unless `--clobber`)
@@ -314,7 +318,7 @@ Initialize jig configuration and set up the environment.
 
 **Notes:**
 
-- Uses `git` CLI or `gix` based on `git.internal` config
+- Uses `git` CLI or `gix` library based on `git.internal` config
 - Templates default to `templates` branch of `jig` repository
 - Can be customized via `template.repository` and `template.branch`
 
@@ -334,7 +338,8 @@ Automatically rename image files using AI-generated descriptive names.
 
 **Parameters:**
 
-- `[FILENAME_OR_GLOB]`: File or glob pattern to rename (defaults to all `*.jpg`, `*.jpeg`, `*.png`, `*.webp` in current directory)
+- `[FILENAME_OR_GLOB]`: File or glob pattern to rename (defaults to all `*.jpg`, `*.jpeg`, `*.png`, `*.webp` in current
+  directory)
 - Multiple filenames/globs can be specified
 
 **Configuration:** None.
@@ -648,7 +653,36 @@ Check domain name availability across TLDs.
 
 - Requires Domainr API key in configuration
 - Limited to Cloudflare-supported TLDs:
-  `ac` `academy` `accountant` `accountants` `actor` `adult` `agency` `ai` `airforce` `apartments` `app` `army` `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz` `black` `blog` `blue` `boo` `boston` `boutique` `broker` `build` `builders` `business` `cab` `cafe` `cam` `camera` `camp` `capital` `cards` `care` `careers` `casa` `cash` `casino` `catering` `cc` `center` `ceo` `chat` `cheap` `christmas` `church` `city` `claims` `cleaning` `clinic` `clothing` `cloud` `club` `co` `co.uk` `coach` `codes` `coffee` `college` `com` `com.ai` `com.co` `community` `company` `compare` `computer` `condos` `construction` `consulting` `contact` `contractors` `cooking` `cool` `coupons` `credit` `creditcard` `cricket` `cruises` `dad` `dance` `date` `dating` `day` `dealer` `deals` `degree` `delivery` `democrat` `dental` `dentist` `design` `dev` `diamonds` `diet` `digital` `direct` `directory` `discount` `doctor` `dog` `domains` `download` `education` `email` `energy` `engineer` `engineering` `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed` `express` `fail` `faith` `family` `fan` `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing` `fit` `fitness` `flights` `florist` `flowers` `fm` `foo` `football` `forex` `forsale` `forum` `foundation` `fun` `fund` `furniture` `futbol` `fyi` `gallery` `game` `games` `garden` `gifts` `gives` `glass` `global` `gmbh` `gold` `golf` `graphics` `gratis` `green` `gripe` `group` `guide` `guitars` `guru` `haus` `health` `healthcare` `help` `hockey` `holdings` `holiday` `horse` `hospital` `host` `hosting` `house` `how` `icu` `immo` `immobilien` `inc` `industries` `info` `ink` `institute` `insure` `international` `investments` `io` `irish` `jetzt` `jewelry` `kaufen` `kim` `kitchen` `land` `lawyer` `lease` `legal` `lgbt` `life` `lighting` `limited` `limo` `link` `live` `loan` `loans` `lol` `love` `ltd` `luxe` `maison` `management` `market` `marketing` `markets` `mba` `me` `me.uk` `media` `memorial` `men` `miami` `mobi` `moda` `mom` `money` `monster` `mortgage` `mov` `movie` `navy` `net` `net.ai` `net.co` `net.uk` `network` `new` `news` `nexus` `ngo` `ninja` `nom.co` `observer` `off.ai` `ong` `online` `org` `org.ai` `org.uk` `organic` `page` `partners` `parts` `party` `pet` `phd` `photography` `photos` `pics` `pictures` `pink` `pizza` `place` `plumbing` `plus` `porn` `press` `pro` `productions` `prof` `promo` `properties` `protection` `pub` `racing` `realty` `recipes` `red` `rehab` `reise` `reisen` `rent` `rentals` `repair` `report` `republican` `rest` `restaurant` `review` `reviews` `rip` `rocks` `rodeo` `rsvp` `run` `sale` `salon` `sarl` `school` `schule` `science` `security` `select` `services` `sex` `sh` `shoes` `shop` `shopping` `show` `singles` `site` `ski` `soccer` `social` `software` `solar` `solutions` `soy` `space` `storage` `store` `stream` `studio` `style` `supplies` `supply` `support` `surf` `surgery` `systems` `tax` `taxi` `team` `tech` `technology` `tennis` `theater` `theatre` `tienda` `tips` `tires` `today` `tools` `tours` `town` `toys` `trade` `trading` `training` `travel` `tv` `uk` `university` `uno` `us` `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision` `vodka` `voyage` `watch` `webcam` `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz` `yoga` `zone`
+  `ac` `academy` `accountant` `accountants` `actor` `adult` `agency` `ai` `airforce` `apartments` `app` `army`
+  `associates` `attorney` `auction` `audio` `baby` `band` `bar` `bargains` `beer` `bet` `bid` `bike` `bingo` `biz`
+  `black` `blog` `blue` `boo` `boston` `boutique` `broker` `build` `builders` `business` `cab` `cafe` `cam` `camera`
+  `camp` `capital` `cards` `care` `careers` `casa` `cash` `casino` `catering` `cc` `center` `ceo` `chat` `cheap`
+  `christmas` `church` `city` `claims` `cleaning` `clinic` `clothing` `cloud` `club` `co` `co.uk` `coach` `codes`
+  `coffee` `college` `com` `com.ai` `com.co` `community` `company` `compare` `computer` `condos` `construction`
+  `consulting` `contact` `contractors` `cooking` `cool` `coupons` `credit` `creditcard` `cricket` `cruises` `dad`
+  `dance` `date` `dating` `day` `dealer` `deals` `degree` `delivery` `democrat` `dental` `dentist` `design` `dev`
+  `diamonds` `diet` `digital` `direct` `directory` `discount` `doctor` `dog` `domains` `download` `education` `email`
+  `energy` `engineer` `engineering` `enterprises` `equipment` `esq` `estate` `events` `exchange` `expert` `exposed`
+  `express` `fail` `faith` `family` `fan` `fans` `farm` `fashion` `feedback` `finance` `financial` `fish` `fishing`
+  `fit` `fitness` `flights` `florist` `flowers` `fm` `foo` `football` `forex` `forsale` `forum` `foundation` `fun`
+  `fund` `furniture` `futbol` `fyi` `gallery` `game` `games` `garden` `gifts` `gives` `glass` `global` `gmbh` `gold`
+  `golf` `graphics` `gratis` `green` `gripe` `group` `guide` `guitars` `guru` `haus` `health` `healthcare` `help`
+  `hockey` `holdings` `holiday` `horse` `hospital` `host` `hosting` `house` `how` `icu` `immo` `immobilien` `inc`
+  `industries` `info` `ink` `institute` `insure` `international` `investments` `io` `irish` `jetzt` `jewelry` `kaufen`
+  `kim` `kitchen` `land` `lawyer` `lease` `legal` `lgbt` `life` `lighting` `limited` `limo` `link` `live` `loan` `loans`
+  `lol` `love` `ltd` `luxe` `maison` `management` `market` `marketing` `markets` `mba` `me` `me.uk` `media` `memorial`
+  `men` `miami` `mobi` `moda` `mom` `money` `monster` `mortgage` `mov` `movie` `navy` `net` `net.ai` `net.co` `net.uk`
+  `network` `new` `news` `nexus` `ngo` `ninja` `nom.co` `observer` `off.ai` `ong` `online` `org` `org.ai` `org.uk`
+  `organic` `page` `partners` `parts` `party` `pet` `phd` `photography` `photos` `pics` `pictures` `pink` `pizza`
+  `place` `plumbing` `plus` `porn` `press` `pro` `productions` `prof` `promo` `properties` `protection` `pub` `racing`
+  `realty` `recipes` `red` `rehab` `reise` `reisen` `rent` `rentals` `repair` `report` `republican` `rest` `restaurant`
+  `review` `reviews` `rip` `rocks` `rodeo` `rsvp` `run` `sale` `salon` `sarl` `school` `schule` `science` `security`
+  `select` `services` `sex` `sh` `shoes` `shop` `shopping` `show` `singles` `site` `ski` `soccer` `social` `software`
+  `solar` `solutions` `soy` `space` `storage` `store` `stream` `studio` `style` `supplies` `supply` `support` `surf`
+  `surgery` `systems` `tax` `taxi` `team` `tech` `technology` `tennis` `theater` `theatre` `tienda` `tips` `tires`
+  `today` `tools` `tours` `town` `toys` `trade` `trading` `training` `travel` `tv` `uk` `university` `uno` `us`
+  `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision` `vodka` `voyage` `watch` `webcam`
+  `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz` `yoga` `zone`
 
 #### `jig domain expiry`
 
@@ -745,7 +779,8 @@ Generate secure passwords with customizable complexity.
 **Notes:**
 
 - Base alphabet: `A-Z`, `a-z`, `0-9`, `@%^-_,.~`
-- Emoji alphabet: 😀😃😄😁😆😅😂🤣😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯🤠🥳😎🤓🧐😕😟🙁☹️😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬😈👿💀☠️💩🤡👹👺👻
+- Emoji alphabet:
+  😀😃😄😁😆😅😂🤣😊😇🙂🙃😉😌😍🥰😘😗😙😚😋😛😜🤪😝🤑🤗🤭🤫🤔🤐🤨😐😑😶😏😒🙄😬🤥😌😔😪🤤😴😷🤒🤕🤢🤮🤧🥵🥶🥴😵🤯🤠🥳😎🤓🧐😕😟🙁☹️😮😯😲😳🥺😦😧😨😰😥😢😭😱😖😣😞😓😩😫🥱😤😡😠🤬😈👿💀☠️💩🤡👹👺👻
 
 #### `jig generate key`
 
@@ -1056,8 +1091,10 @@ Batch update all Git repositories.
 
 1. Find all `.git` directories recursively
 2. For each repository:
-   - Run fetch with configured parameters
-   - Run pull with configured parameters
+
+- Run fetch with configured parameters
+- Run pull with configured parameters
+
 3. Report success/failure summary
 
 **Notes:**
@@ -1105,9 +1142,10 @@ Clear local DNS cache.
 
 1. Detect operating system
 2. Execute appropriate flush command:
-   - macOS: `dscacheutil -flushcache`
-   - Linux: `systemd-resolve --flush-caches`
-   - Windows: `ipconfig /flushdns`
+
+- macOS: `dscacheutil -flushcache`
+- Linux: `systemd-resolve --flush-caches`
+- Windows: `ipconfig /flushdns`
 
 ##### `jig network dns lookup`
 
@@ -1170,14 +1208,19 @@ Update all dependencies to latest versions.
 **Flow:**
 
 1. Scan for package files:
-   - `Cargo.toml`
-   - `package.json`
-   - `.github/workflows/*.ya?ml`
+
+- `Cargo.toml`
+- `package.json`
+- `.github/workflows/*.ya?ml`
+
 2. For each dependency:
-   - Fetch latest version
-   - Update version specification
+
+- Fetch latest version
+- Update version specification
+
 3. For GitHub Actions:
-   - Pin to latest commit SHA
+
+- Pin to latest commit SHA
 
 **Notes:**
 
@@ -1201,10 +1244,11 @@ Generate Dependabot configuration.
 1. Scan project for package files
 2. Identify ecosystems (npm, cargo, pip, etc.)
 3. Generate config with:
-   - Ecosystem type
-   - Directory location
-   - Update schedule
-   - Configured options
+
+- Ecosystem type
+- Directory location
+- Update schedule
+- Configured options
 
 ```mermaid
 graph LR
@@ -1244,11 +1288,11 @@ Create new project from template.
 **Notes:**
 
 - Creates `.jig.yaml` tracking file with:
-  - Template repository
-  - Branch name
-  - Template path
-  - Applied commit
-  - Creation/update timestamps
+    - Template repository
+    - Branch name
+    - Template path
+    - Applied commit
+    - Creation/update timestamps
 
 #### `jig project update`
 
@@ -1269,8 +1313,10 @@ Update existing project with template changes.
 2. Fetch latest template version
 3. Compare with applied version
 4. For each changed file:
-   - Show diff
-   - Prompt for action (unless `--clobber`)
+
+- Show diff
+- Prompt for action (unless `--clobber`)
+
 5. Update `.jig.yaml` metadata
 
 #### `jig project template`
@@ -1485,22 +1531,21 @@ Switch active workspace.
 
 ```mermaid
 graph LR
-  A[OLD is active]
-  A --> B(jig workspace switch NEW)
-  B --> C('before-down' hook)
-  C --> D(OLD 'down' commands)
-  D --> E('after-down' hook)
-  E --> F('before-up' hook)
-  F --> G(NEW 'up' commands)
-  G --> H('after-up' hook)
-  H --> I[NEW is active]
-
-  classDef state fill:#ff6,stroke:#333,stroke-width:2px;
-  classDef action fill:#fbb,stroke:#333,stroke-width:2px;
-  classDef execution fill:#bbf,stroke:#333,stroke-width:2px;
-  class A,I state
-  class B action
-  class C,D,E,F,G,H execution
+    A[OLD is active]
+    A --> B(jig workspace switch NEW)
+    B --> C('before-down' hook)
+    C --> D(OLD 'down' commands)
+    D --> E('after-down' hook)
+    E --> F('before-up' hook)
+    F --> G(NEW 'up' commands)
+    G --> H('after-up' hook)
+    H --> I[NEW is active]
+    classDef state fill: #ff6, stroke: #333, stroke-width: 2px;
+    classDef action fill: #fbb, stroke: #333, stroke-width: 2px;
+    classDef execution fill: #bbf, stroke: #333, stroke-width: 2px;
+class A, I state
+class B action
+class C, D, E, F, G, H execution
 ```
 
 #### `jig workspace hook`
@@ -1603,3 +1648,162 @@ The `jig dance` command uses advanced terminal effects:
 - **Explosions:** Particle-based firework simulations
 - **Progress:** 80+ spinner variants with custom colors
 - **Text Effects:** Typewriter, wiggle, and Matrix text animations
+
+## Implementation Plan
+
+This document outlines the phased implementation plan for the `jig` CLI toolbox, based on the features described in the
+`README.md`. The project is broken down into logical phases to ensure a structured development process, starting with
+core infrastructure and progressively adding more complex features.
+
+## Phase 1: Core Infrastructure & Project Setup
+
+**Goal:** Establish the foundational components of the application. This includes the command-line argument parsing,
+configuration management, and essential shared utilities that all other commands will rely on.
+
+- [ ] **CLI Framework (`clap`):**
+    - [ ] Set up the main `jig` command structure with subcommands.
+    - [ ] Implement all global options: `--version`, `--help`, `--yes`, `--json`, `--verbose`, `--quiet`, `--silent`.
+    - [ ] Configure `clap` to allow command abbreviation.
+- [ ] **Configuration (`saphyr`, `serde`):**
+    - [ ] Implement loading of `~/.jig.yaml`.
+    - [ ] Implement loading and merging of the optional `~/.jig.secret.yaml`.
+    - [ ] Implement the hierarchical secret resolution logic (`secret.main`, `secret.jwt`) supporting `key`, `file`,
+          and `env` sources.
+- [ ] **Core Utilities:**
+    - [ ] Create a shared module for common utilities.
+    - [ ] Implement the Git abstraction layer to allow switching between the `git` CLI and the `gix` library based on
+          `git.internal` config.
+    - [ ] Set up a consistent error handling and logging strategy.
+    - [ ] Implement the `resolve_github_username` utility.
+
+## Phase 2: Foundational Command Groups
+
+**Goal:** Implement the core, self-contained utility commands that provide immediate value and do not have significant
+external dependencies.
+
+- [ ] **`jig crypto`:**
+    - [ ] `encrypt`: Implement `age` encryption for files and stdin.
+    - [ ] `decrypt`: Implement `age` decryption for files and stdin.
+    - [ ] `public`: Implement public key derivation from a private key.
+- [ ] **`jig generate`:**
+    - [ ] `hex`: Implement cryptographically secure hex string generation.
+    - [ ] `password`: Implement secure password generation, including `xkcd` mode and entropy validation with
+          `zxcvbn`.
+    - [ ] `key crypto`: Implement `age` key pair generation.
+    - [ ] `key wireguard`: Implement WireGuard key pair generation.
+    - [ ] `jwt`: Implement JWT generation with configurable claims, expiry, and secret handling.
+- [ ] **`jig network` & `jig tls`:**
+    - [ ] `network dns flush`: Implement OS-aware DNS cache flushing.
+    - [ ] `network dns lookup`: Implement DNS queries with custom server support.
+    - [ ] `network dns sec`: Implement DNSSEC validation checks.
+    - [ ] `tls cert`: Implement TLS certificate retrieval.
+    - [ ] `tls ciphers`: Implement listing of supported TLS cipher suites.
+
+## Phase 3: Project & Git Management
+
+**Goal:** Build the commands for managing projects and interacting with Git repositories. These are more complex and
+involve filesystem manipulation and external process execution.
+
+- [ ] **`jig project template`:**
+    - [ ] `list`: List available templates from the local cache.
+    - [ ] `update`: Update the local template cache from the configured Git repository.
+    - [ ] `new`: Create a new, empty template structure with a `.jig.template.yaml`.
+- [ ] **`jig project`:**
+    - [ ] `new`: Scaffold a new project from a Tera template, including `.jig.yaml` tracking file creation.
+    - [ ] `update`: Apply updates from a template to an existing project, showing diffs.
+    - [ ] `dependabot`: Generate `.github/dependabot.yml` based on detected project ecosystems.
+    - [ ] `bump`: Implement dependency version bumping for `Cargo.toml`, `package.json`, and GitHub Actions.
+- [ ] **`jig git`:**
+    - [ ] `clone`: Implement simplified `username/repo` cloning.
+    - [ ] `latest`: Get the latest commit hash for a branch from GitHub.
+    - [ ] `secret`: Manage GitHub Actions secrets via the API.
+    - [ ] `yank`: Implement batch fetch/pull for all repos in a directory.
+- [ ] **`jig git binary`:**
+    - [ ] Implement metadata storage in `~/.local/share/jig/binaries.yaml`.
+    - [ ] `get`: Download, install, and record binary releases from GitHub.
+    - [ ] `show`: Display information about installed binaries.
+    - [ ] `update`: Update binaries to their latest versions.
+    - [ ] `remove`: Uninstall binaries and clean up metadata.
+
+## Phase 4: External API Integration
+
+**Goal:** Implement features that rely on external APIs (`dave.io`, Domainr, RDAP).
+
+- [ ] **`jig api` (Core):**
+    - [ ] Create a base API client for `https://dave.io/`.
+    - [ ] `ping`: Implement the API health check.
+    - [ ] `token info`: Retrieve token details.
+    - [ ] `token revoke`: Revoke an API token.
+    - [ ] `token usage`: View token usage statistics.
+- [ ] **`jig domain`:**
+    - [ ] `check`: Implement domain availability check using the Domainr API.
+    - [ ] `expiry`: Implement domain expiration check using an RDAP client.
+    - [ ] `ns`: Implement nameserver lookup using RDAP with a DNS fallback.
+
+## Phase 5: AI-Powered Features
+
+**Goal:** Integrate with AI services (Claude) to deliver intelligent automation features.
+
+- [ ] **Shared AI Utilities:**
+    - [ ] Implement the `prepare_image_for_claude` utility for image resizing and optimization.
+    - [ ] Implement the `ask_claude` helper function for sending prompts and data.
+- [ ] **AI Commands:**
+    - [ ] `jig ai rename image`: Implement AI-powered image renaming.
+    - [ ] `jig git commit`: Implement AI-generated conventional commit messages from diffs.
+    - [ ] `jig api image alt`: Generate alt text for images.
+    - [ ] `jig api image optimise`: Optimize images via the API.
+    - [ ] `jig api ticket title`: Generate ticket titles from descriptions.
+    - [ ] `jig api ticket description`: Generate ticket descriptions from titles.
+    - [ ] `jig api ticket enrich`: (TBD - marked as "Flow: None" in README).
+
+## Phase 6: Advanced Shell & System Integration
+
+**Goal:** Implement features that require deep integration with the user's shell and local environment.
+
+- [ ] **`jig init`:**
+    - [ ] Implement the full initialization flow: directory creation, template cloning, config generation, and shell
+          integration checks.
+- [ ] **`jig workspace`:**
+    - [ ] `list`: Implement listing of configured workspaces.
+    - [ ] `switch`: Implement the complete state transition logic, including running `up`/`down` commands and managing
+          environment variables.
+    - [ ] `hook`: Implement the shell-specific hook for prompt integration and automatic environment management. This
+          is a critical feature that will require separate logic for `bash`, `zsh`, and `fish`.
+- [ ] **`jig terminal`:**
+    - [ ] `sysinfo`: Display system info gauges using `viuer`.
+    - [ ] `xkcd`: Fetch and display XKCD comics in the terminal.
+
+## Phase 7: Polish & Easter Eggs
+
+**Goal:** Add features that enhance the user experience but are not critical to core functionality.
+
+- [ ] **`jig dance`:**
+    - [ ] Integrate the various terminal effects libraries (`tachyonfx`, `tui-rain`, etc.).
+    - [ ] Design and implement the animation sequence.
+    - [ ] Hide the command from `--help` output.
+
+## Phase 8: Future & Protocol Implementation
+
+**Goal:** Implement forward-looking features planned for after the initial release.
+
+- [ ] **`jig mcp`:**
+    - [ ] Implement the Model Context Protocol server using `rmcp`.
+    - [ ] Define and document the protocol for exposing `jig` commands to AI agents.
+    - [ ] (Note: This is a post-v1.0 feature as per the README).
+
+## Phase 9: Testing, Documentation & Release
+
+**Goal:** Finalize the application for a public release.
+
+- [ ] **Testing:**
+    - [ ] Write unit tests for all core logic (crypto, generation, etc.).
+    - [ ] Write integration tests for the CLI to validate command execution and output.
+- [ ] **CI/CD:**
+    - [ ] Configure `ci.yaml` to run tests, `rustfmt`, and `clippy` on all pushes.
+    - [ ] Create a release workflow to build cross-platform binaries and publish them to GitHub Releases.
+- [ ] **Documentation:**
+    - [ ] Thoroughly review and update the `README.md` to ensure it is accurate.
+    - [ ] Verify that all `--help` messages are clear, correct, and comprehensive.
+- [ ] **Packaging:**
+    - [ ] Ensure the project is correctly configured for `cargo install`.
+    - [ ] Create and test the Homebrew tap formula.
