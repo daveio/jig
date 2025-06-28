@@ -14,7 +14,14 @@
 
 ### Shell Plugin Installation
 
-Alternatively, install as a shell plugin using your preferred package manager:
+The shell plugin is strongly recommended. It is required for:
+
+- Automatic `jig` installation and updates
+- Automatic `$PATH` configuration
+- Automatic template updates
+- `jig workspace` commands
+
+For additional features, install it åusing your preferred package manager. The following shell plugin managers are tested and supported:
 
 **Fish Shell:**
 
@@ -37,6 +44,10 @@ Alternatively, install as a shell plugin using your preferred package manager:
 - `bash-it`
 - `oh-my-bash`
 
+Other shell plugin managers may work, but are not explicitly tested.
+
+When you run `jig init`, it will tell you how to install the plugin for your shell. You don't strictly have to, of course.
+
 ### Shell Plugin Features
 
 - Automatic directory creation and management
@@ -48,8 +59,14 @@ Alternatively, install as a shell plugin using your preferred package manager:
 ## Quick Start
 
 ```bash
-# Install jig
+# Install using Cargo if you have Rust installed
 cargo install jig
+
+# Or install with Homebrew on macOS
+brew install daveio/tap/jig
+
+# Or just grab the latest release
+# <https://github.com/daveio/jig/releases/latest>
 
 # Initialize configuration
 jig init
@@ -143,12 +160,12 @@ graph LR
 
 ## Configuration
 
-`jig` uses YAML configuration files for customization. The configuration system is built with `saphyr` and `serde` for robust YAML operations.
+`jig` uses YAML configuration files for its configuration. The configuration system is built with `saphyr` and `serde` for robust YAML operations.
 
 ### Configuration File Location
 
 - Primary: `~/.jig.yaml`
-- Secrets (optional): `~/.jig.secrets`
+- Secrets (optional): `~/.jig.secret.yaml` (configurable via `secret.file`)
 
 ### Minimal Configuration
 
@@ -193,7 +210,7 @@ project:
         patterns:
           - "*"
 secret:
-  file: ~/.jig.secrets # ignores all other secret configuration if set, even if the file doesn't exist
+  file: ~/.jig.secret.yaml # ignores all other secret configuration if set, even if the file doesn't exist
   api:
     domainr:
       env: DOMAINR_API_KEY
