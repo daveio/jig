@@ -1635,3 +1635,7 @@ The `jig dance` command uses advanced terminal effects:
 - **Explosions:** Particle-based firework simulations
 - **Progress:** 80+ spinner variants with custom colors
 - **Text Effects:** Typewriter, wiggle, and Matrix text animations
+
+## Implementation Plan
+
+See [PLAN.md](PLAN.md).
