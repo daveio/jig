@@ -1,6 +1,6 @@
 # `CLAUDE.md` / `AGENTS.md` / `.github/copilot-instructions.md`
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI agents such as Claude Code (<claude.ai/code>) when working with code in this repository.
 
 This file is symlinked to `AGENTS.md` and `.github/copilot-instructions.md` in the root of the repository. When you read them, you will notice that they are exact duplicates. You only need to edit one to change them all.
 
