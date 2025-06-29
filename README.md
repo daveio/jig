@@ -1955,4 +1955,5 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 
 ## Idea Scratchpad
 
-- Manage quarantine and binary signing
+- Manage quarantine with [`xattr`](https://lib.rs/crates/xattr) and binary signing with [`apple-codesign`](https://lib.rs/crates/apple-codesign)
+- Cross platform `pbcopy` / `pbpaste` using [`clipboard-rs`](https://lib.rs/crates/clipboard-rs)
