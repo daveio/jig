@@ -16,7 +16,7 @@ tab_width = 2
 trim_trailing_whitespace = true
 
 # 4 space indentation, spaces
-[*.{py,rs,fish,md}]
+[*.{py,rs,fish}]
 ij_continuation_indent_size = 4
 indent_size = 4
 indent_style = space
