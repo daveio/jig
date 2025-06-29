@@ -1,6 +1,8 @@
-# CLAUDE.md
+# `CLAUDE.md` / `AGENTS.md`
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+This file is symlinked to `AGENTS.md` in the root of the repository. You only need to edit one to change both.
 
 ## Commands
 
