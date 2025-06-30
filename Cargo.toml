@@ -145,4 +145,25 @@ readme = "README.md"
 publish = false
 categories = ["command-line-utilities", "security", "cryptography"]
 keywords = ["jig", "cli", "command-line", "cryptography", "security"]
-include = ["src/**"]
+include = [
+  ".editorconfig",
+  ".env.example",
+  ".gitignore",
+  "AGENTS.md",
+  "assets/**",
+  "Cargo.lock",
+  "Cargo.toml",
+  "CHANGELOG.md",
+  "CLAUDE.md",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "data/**",
+  "Dockerfile",
+  "LICENSE",
+  "mise.toml",
+  "README.md",
+  "SECURITY.md",
+  "src/**",
+  "target/**",
+  "vendor/**",
+]
