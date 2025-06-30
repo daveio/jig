@@ -5171,7 +5171,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "jig"
+name = "jig-cli"
 version = "0.1.0"
 dependencies = [
  "age",

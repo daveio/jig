@@ -133,6 +133,26 @@ xattr = "1.5.1"
 zxcvbn = { version = "3.1.0", features = ["ser"] }
 
 [package]
-name = "jig"
+name = "jig-cli"
 version = "0.1.0"
 edition = "2024"
+description = "jig - A command line toolbox"
+license = "MIT"
+repository = "https://github.com/daveio/jig"
+authors = ["Dave Williams <dave@dave.io>"]
+readme = "README.md"
+publish = false
+categories = [
+  "command-line-utilities",
+  "security",
+  "cryptography",
+  "data-management",
+]
+keywords = [
+  "jig",
+  "cli",
+  "command-line",
+  "cryptography",
+  "data-management",
+  "security",
+]
