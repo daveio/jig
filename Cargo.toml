@@ -148,12 +148,5 @@ categories = [
   "cryptography",
   "data-management",
 ]
-keywords = [
-  "jig",
-  "cli",
-  "command-line",
-  "cryptography",
-  "data-management",
-  "security",
-]
+keywords = ["jig", "cli", "command-line", "cryptography", "security"]
 include = ["src/**"]
