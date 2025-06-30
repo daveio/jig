@@ -141,7 +141,7 @@ license = "MIT"
 repository = "https://github.com/daveio/jig"
 authors = ["Dave Williams <dave@dave.io>"]
 readme = "README.md"
-publish = false
+publish = true
 categories = [
   "command-line-utilities",
   "security",
