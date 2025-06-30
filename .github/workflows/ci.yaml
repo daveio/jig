@@ -66,12 +66,12 @@ jobs:
           name: jig-${{ matrix.os }}-${{ matrix.toolchain }}.exe
       - name: attestation
         if: success() && matrix.os != 'windows-2025'
-        uses: actions/attest-build-provenance@0e115cf485910f93daeddbda6d514da773493f27
+        uses: actions/attest-build-provenance@f923cf69427d7ac614fbcc05e12232908c3f031b
         with:
           subject-path: target/debug/jig
       - name: attestation:windows
         if: success() && matrix.os == 'windows-2025'
-        uses: actions/attest-build-provenance@0e115cf485910f93daeddbda6d514da773493f27
+        uses: actions/attest-build-provenance@f923cf69427d7ac614fbcc05e12232908c3f031b
         with:
           subject-path: target/debug/jig.exe
   trunk:
