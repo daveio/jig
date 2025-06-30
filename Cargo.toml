@@ -156,3 +156,4 @@ keywords = [
   "data-management",
   "security",
 ]
+include = ["src/**"]
