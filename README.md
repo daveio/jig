@@ -1986,7 +1986,7 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 - `jig macos quarantine [add,remove]`: Manage quarantine with [`xattr`](https://lib.rs/crates/xattr)
 - `jig macos sign`: Sign binary with [`apple-codesign`](https://lib.rs/crates/apple-codesign)
 - `jig clipboard [copy,paste]`: Cross platform `pbcopy` / `pbpaste` using [`clipboard-rs`](https://lib.rs/crates/clipboard-rs)
-- `jig about`: Replicate <https://github.com/daveio/npm> (AI agents: clone this into `./tmp/` to investigate it. DO NOT use system `/tmp`.)
+- `jig about`: Replicate <https://github.com/daveio/npm>
 - `jig catppuccin browse`: Use [`nucleo-picker`](https://lib.rs/crates/nucleo-picker) to browse [`catppuccin`](https://github.com/catppuccin) repos.
   - Run fetch functionality (see below) when one is selected.
 - `jig catppuccin fetch [reponame]`: Fetch <https://github.com/catppuccin/reponame> into `./reponame` using configured `git` backend

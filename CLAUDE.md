@@ -4,6 +4,10 @@ This file provides guidance to AI agents such as Claude Code (<claude.ai/code>) 
 
 This file is symlinked to `AGENTS.md` and `.github/copilot-instructions.md` in the root of the repository. When you read them, you will notice that they are exact duplicates. You only need to edit one to change them all.
 
+## Temp
+
+**DO NOT** use system `/tmp`. There is a local `./tmp/` directory you can use for temporary work instead. It is ignored from `git`.
+
 ## Commands
 
 ### Development Commands
