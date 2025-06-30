@@ -1993,3 +1993,7 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 - `jig nextdns allow [pattern]`: Add `[pattern]` to NextDNS allow list. Config `nextdns.profiles` lists profiles to apply to.
   - `-p` / `--profile`: Profile alias (`home` and `work` in example config) or NextDNS slug (6 hex chars). Single profile to act on.
   - `-k` / `--key`: Override NextDNS API key
+- `jig ai usage [tool]`: Check usage for tools with AI usage limits.
+  - Tools: Cursor, Warp, Windsurf, Zed
+  - Check all if `[tool]` is unspecified, as just `jig ai usage`.
+  - Check multiple tools by space separating: `jig ai usage cursor zed`
