@@ -142,11 +142,6 @@ repository = "https://github.com/daveio/jig"
 authors = ["Dave Williams <dave@dave.io>"]
 readme = "README.md"
 publish = true
-categories = [
-  "command-line-utilities",
-  "security",
-  "cryptography",
-  "data-management",
-]
+categories = ["command-line-utilities", "security", "cryptography"]
 keywords = ["jig", "cli", "command-line", "cryptography", "security"]
 include = ["src/**"]
