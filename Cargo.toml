@@ -67,6 +67,7 @@ jwt-simple = { version = "0.12.12", default-features = false, features = [
   "wasi-abi2",
 ] }
 lofty = "0.22.4"
+nucleo-picker = { version = "0.8.1", features = ["serde"] }
 octocrab = { version = "0.44.1", features = ["rustls", "stream"] }
 rascii_art = "0.4.5"
 ratatui = { version = "0.29.0", features = [
@@ -134,14 +135,14 @@ zxcvbn = { version = "3.1.0", features = ["ser"] }
 
 [package]
 name = "jig-cli"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "jig - A command line toolbox"
 license = "MIT"
 repository = "https://github.com/daveio/jig"
 authors = ["Dave Williams <dave@dave.io>"]
 readme = "README.md"
-publish = true
+publish = false
 categories = ["command-line-utilities", "security", "cryptography"]
 keywords = ["jig", "cli", "command-line", "cryptography", "security"]
 include = ["src/**"]
