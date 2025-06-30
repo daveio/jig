@@ -176,92 +176,117 @@ The bare minimum configuration requires only an encryption key:
 
 ```yaml
 secret:
-    key: AGE-SECRET-KEY-[...]
+  key: AGE-SECRET-KEY-[...]
 ```
 
 ### Complete Configuration Reference
 
 ```yaml
 dns:
-    nameserver: 8.8.8.8
+  nameserver: 8.8.8.8
 generate:
-    password:
-        emoji: true
+  password:
+    emoji: true
 git:
-    commit:
-        after: null
-        before: null
-        prefixes:
-            - docs
-            - feat
-            - fix
-            - perf
-            - refactor
-            - style
-            - test
-    internal: true
-    user: daveio
+  commit:
+    after: null
+    before: null
+    prefixes:
+      - docs
+      - feat
+      - fix
+      - perf
+      - refactor
+      - style
+      - test
+  internal: true
+github:
+  user: daveio
+nextdns:
+  profiles:
+    home: ff33bb
+    work: bbff33
 project:
-    dependabot:
-        schedule:
-            interval: daily
-        open-pull-requests-limit: 100
-        assignees:
-            - daveio
-        groups:
-            all-dependencies:
-                patterns:
-                    - "*"
+  dependabot:
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 100
+    assignees:
+      - daveio
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 secret:
-    file: ~/.jig.secret.yaml # ignores all other secret configuration if set, even if the file doesn't exist
-    api:
-        domainr:
-            env: DOMAINR_API_KEY
-            key:
-    main:
-        env: JIG_SECRET_KEY
-        file: ~/.jig.secret.key
-        key: AGE-SECRET-KEY-[...]
-        order:
-            - env
-            - file
-            - key
-    jwt:
-        env: JIG_JWT_SECRET
-        file: ~/.jig.jwt.key
-        key: JWT_SECRET_VALUE
-        order:
-            - env
-            - file
-            - key
+  file: ~/.jig.secret.yaml # ignores all other secret configuration if set, even if the file doesn't exist
+  domainr:
+    env: DOMAINR_API_KEY
+    file: ~/.jig.domainr.key
+    key: xxxxxxx
+    order:
+      - env
+      - file
+      - key
+  github:
+    env: GITHUB_API_KEY
+    file: ~/.jig.github.key
+    key: xxxxxxx
+    order:
+      - env
+      - file
+      - key
+  nextdns:
+    env: NEXTDNS_API_KEY
+    file: ~/.jig.nextdns.key
+    key: xxxxxxx
+    order:
+      - env
+      - file
+      - key
+  main:
+    env: JIG_SECRET_KEY
+    file: ~/.jig.secret.key
+    key: AGE-SECRET-KEY-[...]
+    order:
+      - env
+      - file
+      - key
+  jwt:
+    env: JIG_JWT_SECRET
+    file: ~/.jig.jwt.key
+    key: JWT_SECRET_VALUE
+    order:
+      - env
+      - file
+      - key
 template:
-    branch: template
-    repository: daveio/jig
+  branch: template
+  repository: daveio/jig
 workspace:
-    current: example
-    create: false
-    hooks:
-        before-up: []
-        after-up:
-            - echo "hello example"
-        before-down: []
-        after-down:
-            - echo "bye example"
-    workspaces:
-        example:
-            up:
-                - gcloud config configurations activate example
-                - gcloud config set project example_project
-                - kubectx example_cluster
-            down: []
-            env:
-                EXAMPLE_VAR: abc123
-                ANOTHER_VAR: "true"
-                YET_ANOTHER_VAR: "12345"
+  current: example
+  create: false
+  hooks:
+    before-up: []
+    after-up:
+      - echo "hello example"
+    before-down: []
+    after-down:
+      - echo "bye example"
+  workspaces:
+    example:
+      up:
+        - gcloud config configurations activate example
+        - gcloud config set project example_project
+        - kubectx example_cluster
+      down: []
+      env:
+        EXAMPLE_VAR: abc123
+        ANOTHER_VAR: "true"
+        YET_ANOTHER_VAR: "12345"
 yank:
-    dir: ~/src
-    fetch: --prune --tags --prune-tags --recurse-submodules=yes
-    pull: --all --tags --prune --jobs=8 --recurse-submodules=yes
+  dir: ~/src
+  fetch: --prune --tags --prune-tags --recurse-submodules=yes
+  pull: --all --tags --prune --jobs=8 --recurse-submodules=yes
 ```
 
 ### Minimal Configuration Example
@@ -270,7 +295,7 @@ For a quick start, use this minimal configuration:
 
 ```yaml
 secret:
-    key: AGE-SECRET-KEY-[...]
+  key: AGE-SECRET-KEY-[...]
 ```
 
 ## Global Command Options
@@ -307,9 +332,9 @@ shell integration.
 **Flow:**
 
 1. Create required directories:
-    - `~/.local/share/jig`
-        - `~/.local/share/jig/bin`
-        - `~/.local/share/jig/templates`
+   - `~/.local/share/jig`
+     - `~/.local/share/jig/bin`
+     - `~/.local/share/jig/templates`
 2. Clone template repository from GitHub
 3. Generate new encryption key if creating config
 4. Create configuration file (prompts if exists unless `--clobber`)
@@ -683,6 +708,7 @@ Check domain name availability across TLDs.
   `today` `tools` `tours` `town` `toys` `trade` `trading` `training` `travel` `tv` `uk` `university` `uno` `us`
   `vacations` `ventures` `vet` `viajes` `video` `villas` `vin` `vip` `vision` `vodka` `voyage` `watch` `webcam`
   `website` `wedding` `wiki` `win` `wine` `work` `works` `world` `wtf` `xxx` `xyz` `yoga` `zone`
+- Can we fetch this list programmatically?
 
 #### `jig domain expiry`
 
@@ -974,7 +1000,7 @@ Clone GitHub repositories with simplified syntax.
 **Configuration:**
 
 - `git.internal`: Use gix library by default (true)
-- `git.user`: Default GitHub username
+- `github.user`: Default GitHub username
 
 **Flow:**
 
@@ -1059,7 +1085,7 @@ Manage GitHub repository secrets.
 
 **Configuration:**
 
-- `git.user`: Default GitHub username
+- `github.user`: Default GitHub username
 
 **Flow:**
 
@@ -1091,8 +1117,8 @@ Batch update all Git repositories.
 
 1. Find all `.git` directories recursively
 2. For each repository:
-    - Run fetch with configured parameters
-    - Run pull with configured parameters
+   - Run fetch with configured parameters
+   - Run pull with configured parameters
 3. Report success/failure summary
 
 **Notes:**
@@ -1206,12 +1232,12 @@ Update all dependencies to latest versions.
 **Flow:**
 
 1. Scan for package files:
-    - `Cargo.toml`
-    - `package.json`
-    - `.github/workflows/*.ya?ml`
+   - `Cargo.toml`
+   - `package.json`
+   - `.github/workflows/*.ya?ml`
 2. For each dependency:
-    - Fetch latest version
-    - Update version specification
+   - Fetch latest version
+   - Update version specification
 3. For GitHub Actions:
 
 - Pin to latest commit SHA
@@ -1282,11 +1308,11 @@ Create new project from template.
 **Notes:**
 
 - Creates `.jig.yaml` tracking file with:
-    - Template repository
-    - Branch name
-    - Template path
-    - Applied commit
-    - Creation/update timestamps
+  - Template repository
+  - Branch name
+  - Template path
+  - Applied commit
+  - Creation/update timestamps
 
 #### `jig project update`
 
@@ -1307,8 +1333,8 @@ Update existing project with template changes.
 2. Fetch latest template version
 3. Compare with applied version
 4. For each changed file:
-    - Show diff
-    - Prompt for action (unless `--clobber`)
+   - Show diff
+   - Prompt for action (unless `--clobber`)
 5. Update `.jig.yaml` metadata
 
 #### `jig project template`
@@ -1586,7 +1612,9 @@ Determines current GitHub username.
 
 **Priority:**
 
-1. `git.user` configuration
+As configured. Default:
+
+1. `github.user` configuration
 2. `gh api user --jq .login` command
 3. Error if unavailable
 
@@ -1714,22 +1742,22 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Dependencies:** None
 
 - [ ] **CLI Framework (`clap`):**
-    - [ ] Set up the main `jig` command structure with subcommands
-    - [ ] Implement all global options: `--version`, `--help`, `--yes`, `--json`, `--verbose`, `--quiet`, `--silent`
-    - [ ] Configure `clap` to allow command abbreviation
-    - [ ] Set up proper error propagation with `anyhow` or custom error types
+  - [ ] Set up the main `jig` command structure with subcommands
+  - [ ] Implement all global options: `--version`, `--help`, `--yes`, `--json`, `--verbose`, `--quiet`, `--silent`
+  - [ ] Configure `clap` to allow command abbreviation
+  - [ ] Set up proper error propagation with `anyhow` or custom error types
 - [ ] **Configuration (`saphyr`, `serde`):**
-    - [ ] Implement loading of `~/.jig.yaml`
-    - [ ] Implement loading and merging of the optional `~/.jig.secret.yaml`
-    - [ ] Implement the hierarchical secret resolution logic (`secret.main`, `secret.jwt`) supporting `key`, `file`, and `env` sources
-    - [ ] Create configuration validation layer
-    - [ ] Implement configuration defaults
+  - [ ] Implement loading of `~/.jig.yaml`
+  - [ ] Implement loading and merging of the optional `~/.jig.secret.yaml`
+  - [ ] Implement the hierarchical secret resolution logic (`secret.main`, `secret.jwt`) supporting `key`, `file`, and `env` sources
+  - [ ] Create configuration validation layer
+  - [ ] Implement configuration defaults
 - [ ] **Core Utilities:**
-    - [ ] Create a shared module for common utilities
-    - [ ] Implement the Git abstraction layer to allow switching between the `git` CLI and the `gix` library based on `git.internal` config
-    - [ ] Set up a consistent error handling and logging strategy using `tracing`
-    - [ ] Implement the `resolve_github_username` utility
-    - [ ] Create output formatting utilities for JSON/human-readable output
+  - [ ] Create a shared module for common utilities
+  - [ ] Implement the Git abstraction layer to allow switching between the `git` CLI and the `gix` library based on `git.internal` config
+  - [ ] Set up a consistent error handling and logging strategy using `tracing`
+  - [ ] Implement the `resolve_github_username` utility
+  - [ ] Create output formatting utilities for JSON/human-readable output
 
 ### Phase 2: Foundational Command Groups
 
@@ -1740,25 +1768,25 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Dependencies:** Phase 1 complete
 
 - [ ] **`jig crypto`:**
-    - [ ] `encrypt`: Implement `age` encryption for files and stdin
-    - [ ] `decrypt`: Implement `age` decryption for files and stdin
-    - [ ] `public`: Implement public key derivation from a private key
-    - [ ] Add comprehensive error handling for invalid keys
-    - [ ] Support binary input/output handling
+  - [ ] `encrypt`: Implement `age` encryption for files and stdin
+  - [ ] `decrypt`: Implement `age` decryption for files and stdin
+  - [ ] `public`: Implement public key derivation from a private key
+  - [ ] Add comprehensive error handling for invalid keys
+  - [ ] Support binary input/output handling
 - [ ] **`jig generate`:**
-    - [ ] `hex`: Implement cryptographically secure hex string generation
-    - [ ] `password`: Implement secure password generation, including `xkcd` mode and entropy validation with `zxcvbn`
-    - [ ] `key crypto`: Implement `age` key pair generation
-    - [ ] `key wireguard`: Implement WireGuard key pair generation
-    - [ ] `jwt`: Implement JWT generation with configurable claims, expiry, and secret handling
-    - [ ] Add deterministic generation support with `--keyed` and `--seed` options
+  - [ ] `hex`: Implement cryptographically secure hex string generation
+  - [ ] `password`: Implement secure password generation, including `xkcd` mode and entropy validation with `zxcvbn`
+  - [ ] `key crypto`: Implement `age` key pair generation
+  - [ ] `key wireguard`: Implement WireGuard key pair generation
+  - [ ] `jwt`: Implement JWT generation with configurable claims, expiry, and secret handling
+  - [ ] Add deterministic generation support with `--keyed` and `--seed` options
 - [ ] **`jig network` & `jig tls`:**
-    - [ ] `network dns flush`: Implement OS-aware DNS cache flushing
-    - [ ] `network dns lookup`: Implement DNS queries with custom server support
-    - [ ] `network dns sec`: Implement DNSSEC validation checks
-    - [ ] `tls cert`: Implement TLS certificate retrieval
-    - [ ] `tls ciphers`: Implement listing of supported TLS cipher suites
-    - [ ] Add timeout handling for network operations
+  - [ ] `network dns flush`: Implement OS-aware DNS cache flushing
+  - [ ] `network dns lookup`: Implement DNS queries with custom server support
+  - [ ] `network dns sec`: Implement DNSSEC validation checks
+  - [ ] `tls cert`: Implement TLS certificate retrieval
+  - [ ] `tls ciphers`: Implement listing of supported TLS cipher suites
+  - [ ] Add timeout handling for network operations
 
 ### Phase 3: Project & Git Management
 
@@ -1769,29 +1797,29 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Dependencies:** Phase 1 complete
 
 - [ ] **`jig project template`:**
-    - [ ] `list`: List available templates from the local cache
-    - [ ] `update`: Update the local template cache from the configured Git repository
-    - [ ] `new`: Create a new, empty template structure with a `.jig.template.yaml`
-    - [ ] Implement `_shared` template support
+  - [ ] `list`: List available templates from the local cache
+  - [ ] `update`: Update the local template cache from the configured Git repository
+  - [ ] `new`: Create a new, empty template structure with a `.jig.template.yaml`
+  - [ ] Implement `_shared` template support
 - [ ] **`jig project`:**
-    - [ ] `new`: Scaffold a new project from a Tera template, including `.jig.yaml` tracking file creation
-    - [ ] `update`: Apply updates from a template to an existing project, showing diffs
-    - [ ] `dependabot`: Generate `.github/dependabot.yml` based on detected project ecosystems
-    - [ ] `bump`: Implement dependency version bumping for `Cargo.toml`, `package.json`, and GitHub Actions
-    - [ ] Add Tera template context with project metadata
+  - [ ] `new`: Scaffold a new project from a Tera template, including `.jig.yaml` tracking file creation
+  - [ ] `update`: Apply updates from a template to an existing project, showing diffs
+  - [ ] `dependabot`: Generate `.github/dependabot.yml` based on detected project ecosystems
+  - [ ] `bump`: Implement dependency version bumping for `Cargo.toml`, `package.json`, and GitHub Actions
+  - [ ] Add Tera template context with project metadata
 - [ ] **`jig git`:**
-    - [ ] `clone`: Implement simplified `username/repo` cloning
-    - [ ] `latest`: Get the latest commit hash for a branch from GitHub
-    - [ ] `secret`: Manage GitHub Actions secrets via the API
-    - [ ] `yank`: Implement batch fetch/pull for all repos in a directory
-    - [ ] Add progress indicators for long operations
+  - [ ] `clone`: Implement simplified `username/repo` cloning
+  - [ ] `latest`: Get the latest commit hash for a branch from GitHub
+  - [ ] `secret`: Manage GitHub Actions secrets via the API
+  - [ ] `yank`: Implement batch fetch/pull for all repos in a directory
+  - [ ] Add progress indicators for long operations
 - [ ] **`jig git binary`:**
-    - [ ] Implement metadata storage in `~/.local/share/jig/binaries.yaml`
-    - [ ] `get`: Download, install, and record binary releases from GitHub
-    - [ ] `show`: Display information about installed binaries
-    - [ ] `update`: Update binaries to their latest versions
-    - [ ] `remove`: Uninstall binaries and clean up metadata
-    - [ ] Add architecture detection and binary selection logic
+  - [ ] Implement metadata storage in `~/.local/share/jig/binaries.yaml`
+  - [ ] `get`: Download, install, and record binary releases from GitHub
+  - [ ] `show`: Display information about installed binaries
+  - [ ] `update`: Update binaries to their latest versions
+  - [ ] `remove`: Uninstall binaries and clean up metadata
+  - [ ] Add architecture detection and binary selection logic
 
 ### Phase 4: External API Integration
 
@@ -1804,18 +1832,18 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Can run in parallel with:** Phase 3
 
 - [ ] **`jig api` (Core):**
-    - [ ] Create a base API client for `https://dave.io/` with retry logic
-    - [ ] `ping`: Implement the API health check
-    - [ ] `token info`: Retrieve token details
-    - [ ] `token revoke`: Revoke an API token
-    - [ ] `token usage`: View token usage statistics
-    - [ ] Add proper authentication header handling
+  - [ ] Create a base API client for `https://dave.io/` with retry logic
+  - [ ] `ping`: Implement the API health check
+  - [ ] `token info`: Retrieve token details
+  - [ ] `token revoke`: Revoke an API token
+  - [ ] `token usage`: View token usage statistics
+  - [ ] Add proper authentication header handling
 - [ ] **`jig domain`:**
-    - [ ] `check`: Implement domain availability check using the Domainr API
-    - [ ] `expiry`: Implement domain expiration check using an RDAP client
-    - [ ] `ns`: Implement nameserver lookup using RDAP with a DNS fallback
-    - [ ] Add caching layer for API responses
-    - [ ] Implement Cloudflare TLD filtering
+  - [ ] `check`: Implement domain availability check using the Domainr API
+  - [ ] `expiry`: Implement domain expiration check using an RDAP client
+  - [ ] `ns`: Implement nameserver lookup using RDAP with a DNS fallback
+  - [ ] Add caching layer for API responses
+  - [ ] Implement Cloudflare TLD filtering
 
 ### Phase 5: AI-Powered Features
 
@@ -1826,18 +1854,18 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Dependencies:** Phase 4 complete (for API client)
 
 - [ ] **Shared AI Utilities:**
-    - [ ] Implement the `prepare_image_for_claude` utility for image resizing and optimization
-    - [ ] Implement the `ask_claude` helper function for sending prompts and data
-    - [ ] Add retry logic and error handling for AI API calls
+  - [ ] Implement the `prepare_image_for_claude` utility for image resizing and optimization
+  - [ ] Implement the `ask_claude` helper function for sending prompts and data
+  - [ ] Add retry logic and error handling for AI API calls
 - [ ] **AI Commands:**
-    - [ ] `jig ai rename image`: Implement AI-powered image renaming
-    - [ ] `jig git commit`: Implement AI-generated conventional commit messages from diffs
-    - [ ] `jig api image alt`: Generate alt text for images
-    - [ ] `jig api image optimise`: Optimize images via the API
-    - [ ] `jig api ticket title`: Generate ticket titles from descriptions
-    - [ ] `jig api ticket description`: Generate ticket descriptions from titles
-    - [ ] `jig api ticket enrich`: Design and implement enrichment logic
-    - [ ] Add rate limiting and quota management
+  - [ ] `jig ai rename image`: Implement AI-powered image renaming
+  - [ ] `jig git commit`: Implement AI-generated conventional commit messages from diffs
+  - [ ] `jig api image alt`: Generate alt text for images
+  - [ ] `jig api image optimise`: Optimize images via the API
+  - [ ] `jig api ticket title`: Generate ticket titles from descriptions
+  - [ ] `jig api ticket description`: Generate ticket descriptions from titles
+  - [ ] `jig api ticket enrich`: Design and implement enrichment logic
+  - [ ] Add rate limiting and quota management
 
 ### Phase 6: Advanced Shell & System Integration
 
@@ -1848,21 +1876,21 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Dependencies:** Phases 1-3 complete
 
 - [ ] **`jig init`:**
-    - [ ] Implement the full initialization flow: directory creation, template cloning, config generation, and shell integration checks
-    - [ ] Add shell detection logic
-    - [ ] Generate shell-specific installation instructions
+  - [ ] Implement the full initialization flow: directory creation, template cloning, config generation, and shell integration checks
+  - [ ] Add shell detection logic
+  - [ ] Generate shell-specific installation instructions
 - [ ] **`jig workspace`:**
-    - [ ] `list`: Implement listing of configured workspaces
-    - [ ] `switch`: Implement the complete state transition logic, including running `up`/`down` commands and managing environment variables
-    - [ ] `hook`: Implement the shell-specific hook for prompt integration and automatic environment management
-    - [ ] Add fish shell support with proper variable handling
-    - [ ] Add bash/zsh compatibility layer
-    - [ ] Implement environment variable isolation
+  - [ ] `list`: Implement listing of configured workspaces
+  - [ ] `switch`: Implement the complete state transition logic, including running `up`/`down` commands and managing environment variables
+  - [ ] `hook`: Implement the shell-specific hook for prompt integration and automatic environment management
+  - [ ] Add fish shell support with proper variable handling
+  - [ ] Add bash/zsh compatibility layer
+  - [ ] Implement environment variable isolation
 - [ ] **`jig terminal`:**
-    - [ ] `sysinfo`: Display system info gauges using `viuer`
-    - [ ] `xkcd`: Fetch and display XKCD comics in the terminal
-    - [ ] Add terminal capability detection
-    - [ ] Implement fallback rendering modes
+  - [ ] `sysinfo`: Display system info gauges using `viuer`
+  - [ ] `xkcd`: Fetch and display XKCD comics in the terminal
+  - [ ] Add terminal capability detection
+  - [ ] Implement fallback rendering modes
 
 ### Phase 7: Polish & Easter Eggs
 
@@ -1873,11 +1901,11 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Dependencies:** Phase 6 complete
 
 - [ ] **`jig dance`:**
-    - [ ] Integrate the various terminal effects libraries (`tachyonfx`, `tui-rain`, etc.)
-    - [ ] Design and implement the animation sequence
-    - [ ] Hide the command from `--help` output
-    - [ ] Add interrupt handling for clean exit
-    - [ ] Implement multiple animation modes
+  - [ ] Integrate the various terminal effects libraries (`tachyonfx`, `tui-rain`, etc.)
+  - [ ] Design and implement the animation sequence
+  - [ ] Hide the command from `--help` output
+  - [ ] Add interrupt handling for clean exit
+  - [ ] Implement multiple animation modes
 
 ### Phase 8: Future & Protocol Implementation
 
@@ -1888,11 +1916,11 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Dependencies:** Most other phases complete
 
 - [ ] **`jig mcp`:**
-    - [ ] Implement the Model Context Protocol server using `rmcp`
-    - [ ] Define and document the protocol for exposing `jig` commands to AI agents
-    - [ ] Create security boundaries for MCP access
-    - [ ] Add command filtering and permission system
-    - [ ] (Note: This is a post-v1.0 feature as per the README)
+  - [ ] Implement the Model Context Protocol server using `rmcp`
+  - [ ] Define and document the protocol for exposing `jig` commands to AI agents
+  - [ ] Create security boundaries for MCP access
+  - [ ] Add command filtering and permission system
+  - [ ] (Note: This is a post-v1.0 feature as per the README)
 
 ### Phase 9: Testing, Documentation & Release
 
@@ -1905,28 +1933,28 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 **Should run continuously:** Throughout development
 
 - [ ] **Testing:**
-    - [ ] Write unit tests for all core logic (crypto, generation, etc.)
-    - [ ] Write integration tests for the CLI to validate command execution and output
-    - [ ] Add property-based testing for generation utilities
-    - [ ] Create end-to-end test scenarios
-    - [ ] Add performance benchmarks
+  - [ ] Write unit tests for all core logic (crypto, generation, etc.)
+  - [ ] Write integration tests for the CLI to validate command execution and output
+  - [ ] Add property-based testing for generation utilities
+  - [ ] Create end-to-end test scenarios
+  - [ ] Add performance benchmarks
 - [ ] **CI/CD:**
-    - [ ] Configure `ci.yaml` to run tests, `rustfmt`, and `clippy` on all pushes
-    - [ ] Create a release workflow to build cross-platform binaries and publish them to GitHub Releases
-    - [ ] Add code coverage reporting
-    - [ ] Set up dependency vulnerability scanning
+  - [ ] Configure `ci.yaml` to run tests, `rustfmt`, and `clippy` on all pushes
+  - [ ] Create a release workflow to build cross-platform binaries and publish them to GitHub Releases
+  - [ ] Add code coverage reporting
+  - [ ] Set up dependency vulnerability scanning
 - [ ] **Documentation:**
-    - [ ] Thoroughly review and update the `README.md` to ensure it is accurate
-    - [ ] Verify that all `--help` messages are clear, correct, and comprehensive
-    - [ ] Create man pages for each command
-    - [ ] Add example usage documentation
-    - [ ] Create troubleshooting guide
+  - [ ] Thoroughly review and update the `README.md` to ensure it is accurate
+  - [ ] Verify that all `--help` messages are clear, correct, and comprehensive
+  - [ ] Create man pages for each command
+  - [ ] Add example usage documentation
+  - [ ] Create troubleshooting guide
 - [ ] **Packaging:**
-    - [ ] Ensure the project is correctly configured for `cargo install`
-    - [ ] Create and test the Homebrew tap formula
-    - [ ] Add shell completion files
-    - [ ] Create Docker image (optional)
-    - [ ] Set up binary signing for releases
+  - [ ] Ensure the project is correctly configured for `cargo install`
+  - [ ] Create and test the Homebrew tap formula
+  - [ ] Add shell completion files
+  - [ ] Create Docker image (optional)
+  - [ ] Set up binary signing for releases
 
 ### Risk Mitigation Strategies
 
@@ -1955,5 +1983,13 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
 
 ## Idea Scratchpad
 
-- Manage quarantine with [`xattr`](https://lib.rs/crates/xattr) and binary signing with [`apple-codesign`](https://lib.rs/crates/apple-codesign)
-- Cross platform `pbcopy` / `pbpaste` using [`clipboard-rs`](https://lib.rs/crates/clipboard-rs)
+- `jig macos quarantine [add,remove]`: Manage quarantine with [`xattr`](https://lib.rs/crates/xattr)
+- `jig macos sign`: Sign binary with [`apple-codesign`](https://lib.rs/crates/apple-codesign)
+- `jig clipboard [copy,paste]`: Cross platform `pbcopy` / `pbpaste` using [`clipboard-rs`](https://lib.rs/crates/clipboard-rs)
+- `jig about`: Replicate <https://github.com/daveio/npm> (AI agents: clone this into `./tmp/` to investigate it. DO NOT use system `/tmp`.)
+- `jig catppuccin browse`: Use [`nucleo-picker`](https://lib.rs/crates/nucleo-picker) to browse [`catppuccin`](https://github.com/catppuccin) repos.
+  - Run fetch functionality (see below) when one is selected.
+- `jig catppuccin fetch [reponame]`: Fetch <https://github.com/catppuccin/reponame> into `./reponame` using configured `git` backend
+- `jig nextdns allow [pattern]`: Add `[pattern]` to NextDNS allow list. Config `nextdns.profiles` lists profiles to apply to.
+  - `-p` / `--profile`: Profile alias (`home` and `work` in example config) or NextDNS slug (6 hex chars). Single profile to act on.
+  - `-k` / `--key`: Override NextDNS API key
