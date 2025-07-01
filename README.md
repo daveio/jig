@@ -1997,3 +1997,4 @@ This document outlines the phased implementation plan for the `jig` CLI toolbox,
   - Tools: Cursor, Warp, Windsurf, Zed
   - Check all if `[tool]` is unspecified, as just `jig ai usage`.
   - Check multiple tools by space separating: `jig ai usage cursor zed`
+- Decentralised chat and file transfer
