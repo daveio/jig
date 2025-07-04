@@ -46,7 +46,7 @@ image = { version = "0.25.6", default-features = false, features = [
   "serde",
 ] }
 image-webp = "0.2.3"
-indicatif = { version = "0.17.11", features = [
+indicatif = { version = "0.18.0", features = [
   "rayon",
   "tokio",
   "improved_unicode",
@@ -125,7 +125,7 @@ tera = { version = "1.20.0", features = [
   "date-locale",
   "preserve_order",
 ] }
-tokio = { version = "1.46.0", features = ["full"] }
+tokio = { version = "1.46.1", features = ["full"] }
 toml = { version = "0.8.23", features = ["preserve_order"] }
 tui-rain = "1.0.1"
 uuid = { version = "1.17.0", features = ["v1"] }
