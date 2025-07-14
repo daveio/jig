@@ -1149,7 +1149,9 @@ Model Context Protocol proxy. Configure a single MCP in your clients, subset you
 **Notes:**
 
 - I believe Claude Code has a length limit for tool names, hence the name adjustment capability.
+  - Toolbase is currently set to a limit of 40.
 - `jig` will manage tool name collisions.
+- Logs will be automatically written.
 
 #### `jig mcp serve`
 
