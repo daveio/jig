@@ -213,19 +213,17 @@ mcp:
         - example-sse
         - example-stdio
   servers:
-    json: ~/.mcp.json
-    list:
-      - command: uvx some-mcp-server
-        env:
-          MCP_ENV_VAR: value
-        name: example-stdio
-        type: stdio
-      - name: example-sse
-        type: sse
-        url: https://mcp.example.com/sse
-      - name: example-http
-        type: http
-        url: https://mcp.example.com/http
+    example-stdio:
+      command: uvx some-mcp-server
+      env:
+        MCP_ENV_VAR: value
+      type: stdio
+    example-sse:
+      type: sse
+      url: https://mcp.example.com/sse
+    example-http:
+      type: http
+      url: https://mcp.example.com/http
 nextdns:
   profiles:
     home: ff33bb
