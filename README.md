@@ -126,6 +126,8 @@ graph LR
     apiToken --> apiTokenUsage(usage)
     api --> apiPing(ping)
     jig --> mcp(mcp)
+    mcp --> mcpProxy(proxy)
+    mcp --> mcpServe(serve)
     jig --> dance(dance)
     jig --> terminal(terminal)
     terminal --> terminalSysinfo(sysinfo)
@@ -1127,6 +1129,29 @@ Batch update all Git repositories.
 - SSH operations may require `--cli`
 
 ### `jig mcp`
+
+Model Context Protocol functionality.
+
+#### `jig mcp proxy`
+
+Model Context Protocol proxy. Configure a single MCP in your clients, subset your configured MCPs and tools (if desired) for client names, and adjust tool names for certain clients.
+
+**Summary:** Provides a stdio MCP server proxying requests to other MCPs.
+
+**Parameters:**
+
+- `[CLIENT_NAME]`: The client name to subset MCPs and tools, and adjust tool names for. See configuration.
+
+**Configuration:** TODO
+
+**Flow:** TODO
+
+**Notes:**
+
+- I believe Claude Code has a length limit for tool names, hence the name adjustment capability.
+- `jig` will manage tool name collisions.
+
+#### `jig mcp serve`
 
 Model Context Protocol server for AI agent integration.
 
