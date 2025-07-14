@@ -206,7 +206,7 @@ github:
   user: daveio
 mcp:
   clients:
-    cursor:
+    example-client:
       length: 40
       servers:
         - example-http
