@@ -5213,6 +5213,7 @@ version = "0.1.1"
 dependencies = [
  "age",
  "anthropic-ai-sdk",
+ "anyhow",
  "apple-codesign",
  "argon2",
  "base64ct",

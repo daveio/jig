@@ -1,6 +1,7 @@
 [dependencies]
 age = { version = "0.11.1", features = ["armor", "async", "ssh", "plugin"] }
 anthropic-ai-sdk = "0.2.25"
+anyhow = "1.0.98"
 apple-codesign = "0.29.0"
 argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
 base64ct = { version = "1.8.0", features = ["std"] }
