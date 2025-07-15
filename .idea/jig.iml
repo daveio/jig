@@ -9,6 +9,11 @@
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/.trunk/plugins" />
       <excludeFolder url="file://$MODULE_DIR$/vendor" />
+      <excludeFolder url="file://$MODULE_DIR$/.trunk/actions" />
+      <excludeFolder url="file://$MODULE_DIR$/.trunk/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/.trunk/notifications" />
+      <excludeFolder url="file://$MODULE_DIR$/.trunk/out" />
+      <excludeFolder url="file://$MODULE_DIR$/.trunk/tools" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
