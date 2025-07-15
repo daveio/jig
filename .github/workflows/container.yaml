@@ -1,5 +1,5 @@
 name: container
-# TODO: Tag images with tag name if present
+# TODO: Tag images with tag name if present, match \d+\.\d+\.\d+
 on:
   push: null
   pull_request: null

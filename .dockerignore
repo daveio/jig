@@ -1,0 +1,8 @@
+.cursor/
+.git/
+.github/
+.idea/
+.trunk/
+.vscode/
+target/
+tmp/
