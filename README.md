@@ -1156,7 +1156,7 @@ Model Context Protocol functionality.
 
 Model Context Protocol proxy. Configure a single MCP in your clients, subset your configured MCPs and tools (if desired) for client names, and adjust tool names for certain clients.
 
-**Summary:** Provides a stdio MCP server proxying requests to other MCPs.
+**Summary:** Provides a `stdio` MCP server proxying requests to other MCPs.
 
 **Parameters:**
 
@@ -1177,7 +1177,7 @@ Model Context Protocol proxy. Configure a single MCP in your clients, subset you
 
 Model Context Protocol server for AI agent integration.
 
-**Summary:** Provides a stdio MCP server allowing AI agents to interact with jig functionality.
+**Summary:** Provides a `stdio` MCP server allowing AI agents to interact with jig functionality.
 
 **Parameters:** None.
 
