@@ -24,14 +24,14 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
-      - name: cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: ci-${{ matrix.toolchain }}
       - name: rustup
         run: |
           rustup update ${{ matrix.toolchain }}
           rustup default ${{ matrix.toolchain }}
+      - name: cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ci-${{ matrix.toolchain }}
       - name: build
         run: cargo build
       - name: test
