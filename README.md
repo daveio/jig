@@ -7,6 +7,8 @@
 `jig` is a comprehensive CLI toolbox that consolidates various utilities into a single, unified command-line interface.
 Built with Rust, it provides a consistent experience for common development, security, and administrative tasks.
 
+It's a collection of things I felt like implementing. It's not a framework, it's not a library, it's just a bunch of utilities.
+
 ## Installation
 
 ### Standalone Installation
