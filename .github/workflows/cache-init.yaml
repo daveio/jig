@@ -64,9 +64,7 @@ jobs:
       - name: Setup Rust cache for release builds
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          shared-key: release-${{ matrix.target }}
-          cache-on-failure: true
-          save-if: ${{ github.ref == 'refs/heads/main' }}
+          prefix-key: release-${{ matrix.target }}
 
       - name: Warm cache with release build
         run: |
@@ -110,9 +108,7 @@ jobs:
       - name: Setup Rust cache for crate
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          shared-key: crate
-          cache-on-failure: true
-          save-if: ${{ github.ref == 'refs/heads/main' }}
+          prefix-key: crate
 
       - name: Warm cache with package operations
         run: |
@@ -136,9 +132,7 @@ jobs:
       - name: Setup Rust cache for CI
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          shared-key: ci-stable
-          cache-on-failure: true
-          save-if: ${{ github.ref == 'refs/heads/main' }}
+          prefix-key: ci-stable
 
       - name: Warm cache with debug build
         run: |
