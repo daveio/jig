@@ -27,15 +27,9 @@ jobs:
       - name: checkout
         uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
       - name: cache
-        uses: actions/cache@640a1c2554105b57832a23eea0b4672fc7a790d5
+        uses: Swatinem/rust-cache@v2
         with:
-          path: |
-            target/debug/deps
-            target/debug/build
-            target/debug/.fingerprint
-          key: cargo-ubuntu-latest-${{ matrix.toolchain }}-${{ hashFiles('Cargo.lock') }}
-          restore-keys: |
-            cargo-ubuntu-latest-${{ matrix.toolchain }}-
+          key: ci-${{ matrix.toolchain }}
       - name: rustup
         run: |
           rustup update ${{ matrix.toolchain }}
@@ -44,10 +38,7 @@ jobs:
         run: cargo build
       - name: test
         run: cargo test
-      - name: cleanup
-        run: |
-          rm -rf target/debug/deps/jig-*
-          rm -rf target/debug/.fingerprint/jig-*
+
       - name: artifact
         if: success()
         uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
