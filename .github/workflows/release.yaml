@@ -47,7 +47,7 @@ jobs:
           #   archive_name: jig-aarch64-windows
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -63,7 +63,7 @@ jobs:
           fi
 
       - name: Setup Rust cache
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
           key: release-${{ matrix.target }}
 
@@ -129,14 +129,14 @@ jobs:
         shell: bash
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
         with:
           name: binaries-${{ matrix.target }}
           path: artifacts/*
           retention-days: 1
 
       - name: Generate attestation
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@f923cf69427d7ac614fbcc05e12232908c3f031b
         with:
           subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-2025' && '.exe' || '' }}
 
@@ -146,10 +146,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@448e3f862ab3ef47aa50ff917776823c9946035b
         with:
           path: artifacts
           pattern: binaries-*
@@ -188,7 +188,7 @@ jobs:
           echo '```' >> RELEASE-NOTES.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@f0b3259de20cfa7751a020162b49d79d4fd66a77
         with:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
