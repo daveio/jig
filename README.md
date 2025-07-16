@@ -1597,7 +1597,7 @@ The project uses GitHub Actions for continuous integration and deployment:
 For maintainers, the following GitHub secrets must be configured:
 
 - **`CARGO_REGISTRY_TOKEN`**: API token for publishing to crates.io
-  - Generate at: https://crates.io/me
+  - Generate at: <https://crates.io/me>
   - Permissions: "Publish new crates and new versions of existing crates"
 
 ### Cache Strategy
