@@ -7,7 +7,62 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: jig
 jobs:
-  build:
+  build-binaries:
+    name: Build binaries for container
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            platform: linux/amd64
+          - target: aarch64-unknown-linux-gnu
+            platform: linux/arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install cross-compilation dependencies
+        run: |
+          sudo apt-get update
+          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu
+          fi
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: container-${{ matrix.target }}
+
+      - name: Build release binary
+        run: |
+          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
+            export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+            export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+            export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+            export AR_aarch64_unknown_linux_gnu=aarch64-linux-gnu-ar
+          fi
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Prepare binary for Docker
+        run: |
+          mkdir -p docker-context/${{ matrix.target }}
+          cp "target/${{ matrix.target }}/release/jig" "docker-context/${{ matrix.target }}/jig"
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.target }}
+          path: docker-context/${{ matrix.target }}/jig
+          retention-days: 1
+
+  build-container:
+    name: Build container images
+    needs: build-binaries
     runs-on: ubuntu-latest
     outputs:
       image: ${{ steps.metadata.outputs.tags }}
@@ -23,6 +78,20 @@ jobs:
       - name: checkout
         id: checkout
         uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+
+      - name: Download all binaries
+        uses: actions/download-artifact@v4
+        with:
+          pattern: binary-*
+          path: docker-context
+          merge-multiple: false
+
+      - name: Inspect downloaded binaries
+        run: |
+          echo "Downloaded binaries:"
+          find docker-context -type f -name "jig" -exec ls -la {} \;
+          # Make binaries executable
+          find docker-context -type f -name "jig" -exec chmod +x {} \;
       - name: buildx
         id: buildx
         uses: docker/setup-buildx-action@3f1544eb9eff0b4d4d279b33f704a06fcf8d0e43
@@ -85,7 +154,7 @@ jobs:
         run: |
           # Get the version from the tag
           VERSION=${GITHUB_REF_NAME}
-          echo "Multi-arch images created:"
+          echo "Multi-arch images created using prebuilt binaries:"
           echo "  - ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest"
           echo "  - ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${VERSION}"
           echo "Platforms: linux/amd64, linux/arm64"

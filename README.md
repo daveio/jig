@@ -78,6 +78,69 @@ jig init
 jig --help
 ```
 
+## Container Images
+
+Multi-architecture container images are automatically built and published to GitHub Container Registry for every tagged release.
+
+### Available Images
+
+- `ghcr.io/daveio/jig:latest` - Latest release
+- `ghcr.io/daveio/jig:x.y.z` - Specific version
+
+### Supported Architectures
+
+- `linux/amd64` (x86_64)
+- `linux/arm64` (aarch64)
+
+### Usage
+
+```bash
+# Run the latest version
+docker run --rm ghcr.io/daveio/jig:latest --help
+
+# Run a specific version
+docker run --rm ghcr.io/daveio/jig:1.0.0 --version
+
+# Mount current directory and run with config
+docker run --rm -v "$(pwd):/workspace" -w /workspace \
+  -v "$HOME/.jig.yaml:/root/.jig.yaml:ro" \
+  ghcr.io/daveio/jig:latest crypto encrypt file.txt
+```
+
+### Build Process
+
+The container build process is optimized for speed and efficiency:
+
+1. **Native Binary Building**: Rust binaries are compiled natively on Ubuntu runners using cross-compilation targets
+2. **Multi-stage Docker Build**: A lightweight Alpine-based image selects the appropriate precompiled binary for each architecture
+3. **Artifact Caching**: GitHub Actions caches Rust dependencies and build artifacts between runs
+4. **Parallel Builds**: Both architectures are built simultaneously for maximum efficiency
+
+This approach significantly reduces build times compared to compiling Rust code inside Docker containers.
+
+#### Architecture
+
+```plaintext
+┌─────────────────┐    ┌─────────────────┐
+│   build-binaries│    │   build-binaries│
+│   (x86_64)      │    │   (aarch64)     │
+│                 │    │                 │
+│ • Rust cache    │    │ • Rust cache    │
+│ • Native build  │    │ • Cross compile │
+│ • Upload binary │    │ • Upload binary │
+└─────────┬───────┘    └─────────┬───────┘
+          │                      │
+          └──────────┬───────────┘
+                     │
+            ┌────────▼────────┐
+            │ build-container │
+            │                 │
+            │ • Download bins │
+            │ • Multi-arch    │
+            │ • Fast build    │
+            └─────────────────┘
+```
+
 ## Command Structure
 
 ```mermaid
@@ -1160,7 +1223,7 @@ Model Context Protocol proxy. Configure a single MCP in your clients, subset you
 
 **Parameters:**
 
-- `[CLIENT_NAME]`: The client name to subset MCPs and tools, and adjust tool names for. See configuration.
+- `[CLIENT_NAME]`: The client name to subset MCPs and tools, and adjust tool names. See configuration.
 
 **Configuration:** TODO
 
@@ -1453,420 +1516,6 @@ Update template repository.
 
 1. Pull latest from template repository
 2. Update local template cache
-
-### `jig terminal`
-
-Terminal utilities and visual enhancements.
-
-#### `jig terminal sysinfo`
-
-Display system information visually.
-
-**Summary:** Shows system metrics as graphical gauges in the terminal.
-
-**Parameters:** None.
-
-**Configuration:** None.
-
-**Flow:**
-
-1. Gather system metrics (CPU, memory, disk)
-2. Generate gauge visualization (SVG/raster)
-3. Detect terminal capabilities
-4. Resize image for terminal dimensions
-5. Display using appropriate protocol (sixel, kitty, iTerm2)
-
-**Notes:** Uses `viuer` for terminal detection and display.
-
-#### `jig terminal xkcd`
-
-Display XKCD comics in terminal.
-
-**Summary:** Fetches and displays XKCD comics with terminal-appropriate rendering.
-
-**Parameters:**
-
-- `[NUMBER]`: Specific comic number (latest if omitted)
-
-**Configuration:** None.
-
-**Flow:**
-
-1. Fetch comic metadata from XKCD API
-2. Download comic image
-3. Resize for terminal display
-4. Render using terminal graphics protocol
-
-### `jig tls`
-
-TLS/SSL certificate and security utilities.
-
-#### `jig tls cert`
-
-Retrieve TLS certificates.
-
-**Summary:** Fetches and displays TLS certificates from remote hosts.
-
-**Parameters:**
-
-- `[HOSTNAME]`: Target host (required)
-- `[PORT]`: Target port (default: 443)
-- `-c`, `--chain`: Include full certificate chain
-
-**Configuration:** None.
-
-**Flow:**
-
-1. Establish TLS connection
-2. Retrieve certificate(s)
-3. Output in PEM format to stdout
-
-#### `jig tls ciphers`
-
-List supported cipher suites.
-
-**Summary:** Shows enabled TLS cipher suites for a host.
-
-**Parameters:**
-
-- `[HOSTNAME]`: Target host (required)
-- `[PORT]`: Target port (default: 443)
-
-**Configuration:** None.
-
-**Flow:**
-
-1. Connect with various cipher suites
-2. Record successful handshakes
-3. Display supported ciphers with strength ratings
-
-### `jig workspace`
-
-Workspace environment management.
-
-**Summary:** Manage multiple work environments with different configurations.
-
-**Alias:** `ws`
-
-#### `jig workspace list`
-
-List configured workspaces.
-
-**Summary:** Shows all available workspace configurations.
-
-**Parameters:** None.
-
-**Configuration:**
-
-- `workspace.workspaces`: Workspace definitions
-
-**Flow:**
-
-1. Read workspace configurations
-2. Display names and current indicator
-
-#### `jig workspace switch`
-
-Switch active workspace.
-
-**Summary:** Changes environment variables and runs transition commands.
-
-**Parameters:**
-
-- `[WORKSPACE]`: Target workspace name (required)
-
-**Configuration:**
-
-- `workspace.current`: Current workspace
-- `workspace.create`: Auto-create if missing
-- `workspace.workspaces.[name]`: Workspace definitions
-
-**Flow:**
-
-1. Old workspace is active
-2. Execute global `before-down` hooks
-3. Run old workspace `down` commands
-4. Remove old workspace's environment variables
-5. Execute global `after-down` hooks
-6. Execute global `before-up` hooks
-7. Set new environment's environment variables
-8. Run new workspace `up` commands
-9. Execute global `after-up` hooks
-10. New workspace is active
-
-```mermaid
-graph TD
-    A{OLD}
-    A --> B[jig workspace switch NEW]
-    B --> C('before-down' hook)
-    C --> D(OLD 'down' commands)
-    D --> E('after-down' hook)
-    E --> F('before-up' hook)
-    F --> G(NEW 'up' commands)
-    G --> H('after-up' hook)
-    H --> I
-    I{NEW}
-```
-
-#### `jig workspace hook`
-
-Shell integration hook.
-
-**Summary:** Internal command for shell prompt integration.
-
-**Parameters:**
-
-- `[SHELL]`: Shell type (bash, zsh, fish)
-
-**Configuration:** None.
-
-**Flow:**
-
-1. Export workspace environment variables
-2. Update PATH if needed
-3. Display workspace indicator
-
-**Notes:** Called automatically by shell integration.
-
-## Technical Implementation
-
-### Shared Utilities
-
-#### `prepare_image_for_claude`
-
-Optimizes images for Claude API compatibility.
-
-**Process:**
-
-1. Resize images over 2048px on long edge
-2. Convert to WebP format
-3. Apply compression levels (lossless → 90% → 75% → 50% → 25%)
-4. Ensure final size under 5MB
-
-#### `ask_claude`
-
-Sends prompts with optional data/images to Claude.
-
-**Parameters:**
-
-- `PROMPT`: Main prompt text
-- `ASSOCIATED_DATA`: Additional context (optional)
-- `IMAGE`/`FILENAME`: Image data (optional)
-
-#### `resolve_github_username`
-
-Determines current GitHub username.
-
-**Priority:**
-
-As configured. Default:
-
-1. `github.user` configuration
-2. `gh api user --jq .login` command
-3. Error if unavailable
-
-### Git Abstraction
-
-Unified interface supporting both `git` CLI and `gix` library based on configuration.
-
-### Library Dependencies
-
-- **YAML Processing:** `saphyr` with `serde`
-- **Spinner Effects:** `spinoff` (noise/aesthetic modes)
-- **Hashing:** `blake3` (native), `sha2` (verification)
-- **Model Context Protocol:** `rmcp`
-- **Additional formats:** See [serde.rs](https://serde.rs/#data-formats)
-
-## Vendoring
-
-Vendoring is disabled by default. To enable, create `.cargo/config.toml`:
-
-```toml
-[source.crates-io]
-replace-with = "vendored-sources"
-
-[source.vendored-sources]
-directory = "vendor"
-```
-
-## Theming
-
-We pull in the [`catppuccin`](https://lib.rs/crates/catppuccin) crate.
-
-### Integration with [`ratatui`](https://lib.rs/crates/ratatui)
-
-```rust
-//! Example demonstrating integration with the `ratatui` crate.
-use std::io::{self, stdout};
-use catppuccin::PALETTE;
-use ratatui::{
-    backend::CrosstermBackend,
-    layout::Rect,
-    style::Stylize as _,
-    text::{Line, Span},
-    widgets::{Paragraph, Widget},
-    Terminal, TerminalOptions, Viewport,
-};
-
-fn main() -> io::Result<()> {
-    let mut terminal = Terminal::with_options(
-        CrosstermBackend::new(stdout()),
-        TerminalOptions {
-            viewport: Viewport::Inline(0),
-        },
-    )?;
-    for flavor in &PALETTE {
-        terminal.insert_before(8, |buf| {
-            let analogous: Vec<Span> = flavor
-                .colors
-                .into_iter()
-                .filter(|c| c.accent)
-                .map(|c| "██".fg(*c)) // fg accepts any type that implements Into<Color>
-                .collect::<Vec<Span>>();
-            let monochromatic: Vec<Span> = flavor
-                .colors
-                .into_iter()
-                .filter(|c| !c.accent)
-                .map(|c| "██".fg(*c)) // fg accepts any type that implements Into<Color>
-                .collect();
-            let ansi_normals: Vec<Span> = flavor
-                .ansi_colors
-                .into_iter()
-                .filter(|c| c.code < 8)
-                .map(|c| "██".fg(*c)) // fg accepts any type that implements Into<Color>
-                .collect::<Vec<Span>>();
-            let ansi_brights: Vec<Span> = flavor
-                .ansi_colors
-                .into_iter()
-                .filter(|c| c.code >= 8)
-                .map(|c| "██".fg(*c)) // fg accepts any type that implements Into<Color>
-                .collect::<Vec<Span>>();
-            let width = buf.area.width;
-            Paragraph::new(flavor.name.to_string()).render(Rect::new(0, 0, width, 1), buf);
-            Paragraph::new(Line::from(analogous)).render(Rect::new(0, 1, width, 1), buf);
-            Paragraph::new(Line::from(monochromatic)).render(Rect::new(0, 2, width, 1), buf);
-            Paragraph::new(format!("{} ANSI", flavor.name)).render(Rect::new(0, 4, width, 1), buf);
-            Paragraph::new(Line::from(ansi_normals)).render(Rect::new(0, 5, width, 1), buf);
-            Paragraph::new(Line::from(ansi_brights)).render(Rect::new(0, 6, width, 1), buf);
-        })?;
-    }
-    Ok(())
-}
-```
-
-## Easter Egg Implementation
-
-The `jig dance` command uses advanced terminal effects:
-
-### Effects Libraries
-
-- **`tachyonfx`**: Primary shader-like effects engine for ratatui
-- **`tui-rain`**: Matrix rain and atmospheric effects
-- **`firework-rs`**: ASCII firework animations
-- **`rascii_art`**: Image to ASCII/emoji conversion
-- **`rusty-termcolor`**: Typewriter and text effects
-- **`spinoff`**: Loading spinners and indicators
-
-### Implementation Details
-
-- **ASCII Art:** Advanced image conversion with color and emoji support
-- **Atmospheric:** Rain, snow, and Matrix effects
-- **Core Engine:** Complex shader-like terminal transformations
-- **Explosions:** Particle-based firework simulations
-- **Progress:** 80+ spinner variants with custom colors
-- **Text Effects:** Typewriter, wiggle, and Matrix text animations
-
-## Implementation Plan
-
-This document outlines the phased implementation plan for the `jig` CLI toolbox, based on the features described in the `README.md`. The project is broken down into logical phases to ensure a structured development process, starting with core infrastructure and progressively adding more complex features.
-
-### Phase 1: Core Infrastructure & Project Setup
-
-**Goal:** Establish the foundational components of the application. This includes the command-line argument parsing, configuration management, and essential shared utilities that all other commands will rely on.
-
-**Duration:** 2 weeks
-
-**Dependencies:** None
-
-- [ ] **CLI Framework (`clap`):**
-  - [ ] Set up the main `jig` command structure with subcommands
-  - [ ] Implement all global options: `--version`, `--help`, `--yes`, `--json`, `--verbose`, `--quiet`, `--silent`
-  - [ ] Configure `clap` to allow command abbreviation
-  - [ ] Set up proper error propagation with `anyhow` or custom error types
-- [ ] **Configuration (`saphyr`, `serde`):**
-  - [ ] Implement loading of `~/.jig.yaml`
-  - [ ] Implement loading and merging of the optional `~/.jig.secret.yaml`
-  - [ ] Implement the hierarchical secret resolution logic (`secret.main`, `secret.jwt`) supporting `key`, `file`, and `env` sources
-  - [ ] Create configuration validation layer
-  - [ ] Implement configuration defaults
-- [ ] **Core Utilities:**
-  - [ ] Create a shared module for common utilities
-  - [ ] Implement the Git abstraction layer to allow switching between the `git` CLI and the `gix` library based on `git.internal` config
-  - [ ] Set up a consistent error handling and logging strategy using `tracing`
-  - [ ] Implement the `resolve_github_username` utility
-  - [ ] Create output formatting utilities for JSON/human-readable output
-
-### Phase 2: Foundational Command Groups
-
-**Goal:** Implement the core, self-contained utility commands that provide immediate value and do not have significant external dependencies.
-
-**Duration:** 3 weeks
-
-**Dependencies:** Phase 1 complete
-
-- [ ] **`jig crypto`:**
-  - [ ] `encrypt`: Implement `age` encryption for files and stdin
-  - [ ] `decrypt`: Implement `age` decryption for files and stdin
-  - [ ] `public`: Implement public key derivation from a private key
-  - [ ] Add comprehensive error handling for invalid keys
-  - [ ] Support binary input/output handling
-- [ ] **`jig generate`:**
-  - [ ] `hex`: Implement cryptographically secure hex string generation
-  - [ ] `password`: Implement secure password generation, including `xkcd` mode and entropy validation with `zxcvbn`
-  - [ ] `key crypto`: Implement `age` key pair generation
-  - [ ] `key wireguard`: Implement WireGuard key pair generation
-  - [ ] `jwt`: Implement JWT generation with configurable claims, expiry, and secret handling
-  - [ ] Add deterministic generation support with `--keyed` and `--seed` options
-- [ ] **`jig network` & `jig tls`:**
-  - [ ] `network dns flush`: Implement OS-aware DNS cache flushing
-  - [ ] `network dns lookup`: Implement DNS queries with custom server support
-  - [ ] `network dns sec`: Implement DNSSEC validation checks
-  - [ ] `tls cert`: Implement TLS certificate retrieval
-  - [ ] `tls ciphers`: Implement listing of supported TLS cipher suites
-  - [ ] Add timeout handling for network operations
-
-### Phase 3: Project & Git Management
-
-**Goal:** Build the commands for managing projects and interacting with Git repositories. These are more complex and involve filesystem manipulation and external process execution.
-
-**Duration:** 3 weeks
-
-**Dependencies:** Phase 1 complete
-
-- [ ] **`jig project template`:**
-  - [ ] `list`: List available templates from the local cache
-  - [ ] `update`: Update the local template cache from the configured Git repository
-  - [ ] `new`: Create a new, empty template structure with a `.jig.template.yaml`
-  - [ ] Implement `_shared` template support
-- [ ] **`jig project`:**
-  - [ ] `new`: Scaffold a new project from a Tera template, including `.jig.yaml` tracking file creation
-  - [ ] `update`: Apply updates from a template to an existing project, showing diffs
-  - [ ] `dependabot`: Generate `.github/dependabot.yml` based on detected project ecosystems
-  - [ ] `bump`: Implement dependency version bumping for `Cargo.toml`, `package.json`, and GitHub Actions
-  - [ ] Add Tera template context with project metadata
-- [ ] **`jig git`:**
-  - [ ] `clone`: Implement simplified `username/repo` cloning
-  - [ ] `latest`: Get the latest commit hash for a branch from GitHub
-  - [ ] `secret`: Manage GitHub Actions secrets via the API
-  - [ ] `yank`: Implement batch fetch/pull for all repos in a directory
-  - [ ] Add progress indicators for long operations
-- [ ] **`jig git binary`:**
-  - [ ] Implement metadata storage in `~/.local/share/jig/binaries.yaml`
-  - [ ] `get`: Download, install, and record binary releases from GitHub
-  - [ ] `show`: Display information about installed binaries
-  - [ ] `update`: Update binaries to their latest versions
-  - [ ] `remove`: Uninstall binaries and clean up metadata
-  - [ ] Add architecture detection and binary selection logic
 
 ### Phase 4: External API Integration
 

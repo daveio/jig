@@ -1,18 +1,23 @@
-# Build stage
-FROM rust:1.88.0-alpine3.22 AS builder
+# Multi-architecture Dockerfile using prebuilt binaries
+FROM --platform=$BUILDPLATFORM alpine:3.22.0 AS binary-selector
 
-# Install build dependencies
-RUN apk add --no-cache \
-  alpine-sdk=1.1-r0 \
-  openssl-dev=3.5.1-r0 \
-  perl-dev=5.40.2-r0
+# Map platform to target architecture
+ARG TARGETPLATFORM
+RUN case "$TARGETPLATFORM" in \
+  "linux/amd64") echo "x86_64-unknown-linux-gnu" > /tmp/target ;; \
+  "linux/arm64") echo "aarch64-unknown-linux-gnu" > /tmp/target ;; \
+  *) echo "Unsupported platform: $TARGETPLATFORM" && exit 1 ;; \
+  esac
 
-# Create a new empty project
-WORKDIR /usr/src/jig
-COPY . .
+# Copy all binaries from the build context
+COPY docker-context/ /binaries/
 
-# Build the application in release mode
-RUN cargo build --release
+# Select the correct binary for the target platform
+RUN TARGET=$(cat /tmp/target) && \
+    echo "Selecting binary for target: $TARGET" && \
+    ls -la /binaries/ && \
+    cp "/binaries/binary-$TARGET/jig" /jig && \
+    chmod +x /jig
 
 # Runtime stage
 FROM alpine:3.22.0
@@ -24,8 +29,8 @@ FROM alpine:3.22.0
 RUN addgroup -g 1001 jig && \
     adduser -D -u 1001 -G jig jig
 
-# Copy the binary from the build stage
-COPY --from=builder /usr/src/jig/target/release/jig /jig
+# Copy the binary from the selector stage
+COPY --from=binary-selector /jig /jig
 RUN chown jig:jig /jig && chmod +x /jig
 
 USER jig
@@ -37,5 +42,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 # Set the binary as the entrypoint
 ENTRYPOINT ["/jig"]
 # Default command arguments if none provided
-# Note: The application requires a path argument, so we provide /home/jig as default
 CMD ["--help"]
