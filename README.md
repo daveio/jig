@@ -9,8 +9,6 @@ Built with Rust, it provides a consistent experience for common development, sec
 
 It's a collection of things I felt like implementing. It's not a framework, it's not a library, it's just a bunch of utilities.
 
-If it's helpful to you, great!
-
 ## Installation
 
 ### Standalone Installation
