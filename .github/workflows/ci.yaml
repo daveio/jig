@@ -4,8 +4,14 @@ permissions:
   contents: read
   attestations: write
 on:
-  push: null
-  pull_request: null
+  push:
+    branches:
+      - main
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+*"
+  pull_request:
+    branches:
+      - main
 env:
   CARGO_TERM_COLOR: always
 jobs:
