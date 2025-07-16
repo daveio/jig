@@ -42,21 +42,26 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
         shell: bash
 
-      - name: Update Cargo.toml for publishing
+      - name: Validate Cargo.toml for publishing
         run: |
-          # Update version and enable publishing
-          if ! sed -i.bak "s/^version = .*/version = \"$VERSION\"/" Cargo.toml; then
-            echo "❌ Failed to update version in Cargo.toml"
-            exit 1
-          fi
-          if ! sed -i.bak "s/^publish = false/publish = true/" Cargo.toml; then
-            echo "❌ Failed to enable publishing in Cargo.toml"
+          # Check that version matches the tag
+          CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+          if [[ "$CARGO_VERSION" != "$VERSION" ]]; then
+            echo "❌ Version mismatch: Cargo.toml has '$CARGO_VERSION' but tag is '$VERSION'"
+            echo "Please update Cargo.toml version to match the tag"
             exit 1
           fi
 
-          # Verify changes
-          echo "✅ Updated Cargo.toml version and publish settings:"
-          grep -E "^version|^publish" Cargo.toml
+          # Check that publish is enabled
+          if ! grep -q '^publish = true' Cargo.toml; then
+            echo "❌ publish = true not found in Cargo.toml"
+            echo "Please set publish = true in Cargo.toml"
+            exit 1
+          fi
+
+          echo "✅ Cargo.toml validation successful:"
+          echo "  Version: $CARGO_VERSION"
+          echo "  Publish: enabled"
         shell: bash
 
       - name: Install Rust toolchain
@@ -75,7 +80,7 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          key: release-${{ matrix.target }}
+          shared-key: release-${{ matrix.target }}
 
       - name: Verify build
         run: |
@@ -104,21 +109,26 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Publishing version: $VERSION"
 
-      - name: Update Cargo.toml for publishing
+      - name: Validate Cargo.toml for publishing
         run: |
-          # Update version and enable publishing
-          if ! sed -i.bak "s/^version = .*/version = \"$VERSION\"/" Cargo.toml; then
-            echo "❌ Failed to update version in Cargo.toml"
-            exit 1
-          fi
-          if ! sed -i.bak "s/^publish = false/publish = true/" Cargo.toml; then
-            echo "❌ Failed to enable publishing in Cargo.toml"
+          # Check that version matches the tag
+          CARGO_VERSION=$(grep '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
+          if [[ "$CARGO_VERSION" != "$VERSION" ]]; then
+            echo "❌ Version mismatch: Cargo.toml has '$CARGO_VERSION' but tag is '$VERSION'"
+            echo "Please update Cargo.toml version to match the tag before creating the release"
             exit 1
           fi
 
-          # Verify changes
-          echo "✅ Updated Cargo.toml for publishing:"
-          grep -E "^version|^publish" Cargo.toml
+          # Check that publish is enabled
+          if ! grep -q '^publish = true' Cargo.toml; then
+            echo "❌ publish = true not found in Cargo.toml"
+            echo "Please set publish = true in Cargo.toml before creating the release"
+            exit 1
+          fi
+
+          echo "✅ Cargo.toml validation successful:"
+          echo "  Version: $CARGO_VERSION"
+          echo "  Publish: enabled"
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -126,14 +136,14 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          key: crate
+          shared-key: crate
 
       - name: Verify package
         run: |
           echo "📦 Verifying package contents..."
-          cargo package --list --allow-dirty
+          cargo package --list
           echo "📦 Creating package..."
-          if ! cargo package --no-verify --allow-dirty; then
+          if ! cargo package --no-verify; then
             echo "❌ Failed to create package"
             exit 1
           fi
