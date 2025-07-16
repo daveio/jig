@@ -1,14 +1,15 @@
 name: cache-init
+# checkov:skip=CKV_GHA_7:Workflow inputs are needed to selectively initialize caches
 on:
   workflow_dispatch:
     inputs:
       cache_rust:
-        description: "Initialize Rust caches"
+        description: Initialize Rust caches
         required: false
         default: true
         type: boolean
       cache_docker:
-        description: "Initialize Docker caches"
+        description: Initialize Docker caches
         required: false
         default: true
         type: boolean
