@@ -1,0 +1,177 @@
+name: release
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+*"
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux targets
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            binary_name: jig
+            archive_name: jig-x86_64-linux
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            binary_name: jig
+            archive_name: jig-aarch64-linux
+          # macOS targets
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            binary_name: jig
+            archive_name: jig-x86_64-macos
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            binary_name: jig
+            archive_name: jig-aarch64-macos
+          # Windows targets
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            binary_name: jig.exe
+            archive_name: jig-x86_64-windows
+          - target: aarch64-pc-windows-msvc
+            os: windows-latest
+            binary_name: jig.exe
+            archive_name: jig-aarch64-windows
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install cross-compilation dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu
+          fi
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Build release binary
+        run: |
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
+              export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+              export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+              export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+              export AR_aarch64_unknown_linux_gnu=aarch64-linux-gnu-ar
+            fi
+          fi
+          cargo build --release --target ${{ matrix.target }}
+        shell: bash
+
+      - name: Prepare binary
+        run: |
+          mkdir -p artifacts
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            cp "target/${{ matrix.target }}/release/${{ matrix.binary_name }}" "artifacts/${{ matrix.archive_name }}.exe"
+          else
+            cp "target/${{ matrix.target }}/release/${{ matrix.binary_name }}" "artifacts/${{ matrix.archive_name }}"
+          fi
+        shell: bash
+
+      - name: Install zstd
+        run: |
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            sudo apt-get install -y zstd
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            brew install zstd
+          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            choco install zstandard -y
+          fi
+        shell: bash
+
+      - name: Compress binary with zstd
+        run: |
+          cd artifacts
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            zstd -9 "${{ matrix.archive_name }}.exe" -o "${{ matrix.archive_name }}.exe.zst"
+          else
+            zstd -9 "${{ matrix.archive_name }}" -o "${{ matrix.archive_name }}.zst"
+          fi
+        shell: bash
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            sha256sum "${{ matrix.archive_name }}.exe" > "${{ matrix.archive_name }}.exe.sha256"
+            sha256sum "${{ matrix.archive_name }}.exe.zst" > "${{ matrix.archive_name }}.exe.zst.sha256"
+          else
+            if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+              shasum -a 256 "${{ matrix.archive_name }}" > "${{ matrix.archive_name }}.sha256"
+              shasum -a 256 "${{ matrix.archive_name }}.zst" > "${{ matrix.archive_name }}.zst.sha256"
+            else
+              sha256sum "${{ matrix.archive_name }}" > "${{ matrix.archive_name }}.sha256"
+              sha256sum "${{ matrix.archive_name }}.zst" > "${{ matrix.archive_name }}.zst.sha256"
+            fi
+          fi
+        shell: bash
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.target }}
+          path: artifacts/*
+          retention-days: 1
+
+      - name: Generate attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-latest' && '.exe' || '' }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: binaries-*
+          merge-multiple: true
+
+      - name: Create checksums file
+        run: |
+          cd artifacts
+          cat *.sha256 > checksums.txt
+          echo "### Checksums" >> release_notes.md
+          echo '```' >> release_notes.md
+          cat checksums.txt >> release_notes.md
+          echo '```' >> release_notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: true
+          files: |
+            artifacts/*
+          body_path: artifacts/release_notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
