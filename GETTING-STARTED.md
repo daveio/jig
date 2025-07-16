@@ -1,6 +1,6 @@
 # Building CLI Applications in Rust with Clap's Derive API
 
-Welcome! You're an experienced developer diving into Rust. This guide assumes you understand programming concepts but are new to Rust's unique approach. We'll build a file organization CLI tool while learning Rust's philosophy, with occasional Ruby parallels to help connect concepts.
+You're an experienced developer diving into Rust. This guide assumes you understand programming concepts but are new to Rust's unique approach. We'll build a file organization CLI tool while learning Rust's philosophy, with occasional Ruby parallels to help connect concepts.
 
 ## Why Rust for CLI tools?
 
