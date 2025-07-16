@@ -65,6 +65,8 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
+          env-vars: ""
+          prefix-key: rust
           shared-key: release-${{ matrix.target }}
 
       - name: Build release binary

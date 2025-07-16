@@ -24,7 +24,9 @@ jobs:
       - name: cache
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          shared-key: ci-stable
+          env-vars: ""
+          prefix-key: rust
+          shared-key: ci
       - name: build
         run: cargo build
       - name: test

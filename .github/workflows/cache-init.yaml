@@ -64,6 +64,8 @@ jobs:
       - name: Setup Rust cache for release builds
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
+          env-vars: ""
+          prefix-key: rust
           shared-key: release-${{ matrix.target }}
 
       - name: Warm cache with release build
@@ -108,6 +110,8 @@ jobs:
       - name: Setup Rust cache for crate
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
+          env-vars: ""
+          prefix-key: rust
           shared-key: crate
 
       - name: Warm cache with package operations
@@ -132,7 +136,9 @@ jobs:
       - name: Setup Rust cache for CI
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          shared-key: ci-stable
+          env-vars: ""
+          prefix-key: rust
+          shared-key: ci
 
       - name: Warm cache with debug build
         run: |
