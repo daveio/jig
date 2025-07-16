@@ -163,6 +163,12 @@ jobs:
           # Create release notes with Docker information
           echo "## Installation" >> RELEASE-NOTES.md
           echo "" >> RELEASE-NOTES.md
+          echo "### Cargo Install" >> RELEASE-NOTES.md
+          echo "You can install jig directly from crates.io using cargo:" >> RELEASE-NOTES.md
+          echo '```bash' >> RELEASE-NOTES.md
+          echo "cargo install jig-cli" >> RELEASE-NOTES.md
+          echo '```' >> RELEASE-NOTES.md
+          echo "" >> RELEASE-NOTES.md
           echo "### Binary Downloads" >> RELEASE-NOTES.md
           echo "Download the appropriate binary for your platform from the assets below." >> RELEASE-NOTES.md
           echo "" >> RELEASE-NOTES.md
