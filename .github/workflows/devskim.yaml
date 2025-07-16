@@ -13,7 +13,7 @@ permissions:
 jobs:
   devskim:
     name: devskim
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout
         uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f

@@ -20,29 +20,29 @@ jobs:
         include:
           # Linux targets
           - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
+            os: ubuntu-24.04
             binary_name: jig
             archive_name: jig-x86_64-linux
           - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
+            os: ubuntu-24.04
             binary_name: jig
             archive_name: jig-aarch64-linux
           # macOS targets
           - target: x86_64-apple-darwin
-            os: macos-latest
+            os: macos-15
             binary_name: jig
             archive_name: jig-x86_64-macos
           - target: aarch64-apple-darwin
-            os: macos-latest
+            os: macos-15
             binary_name: jig
             archive_name: jig-aarch64-macos
           # Windows targets disabled due to build failure
           # - target: x86_64-pc-windows-msvc
-          #   os: windows-latest
+          #   os: windows-2025
           #   binary_name: jig.exe
           #   archive_name: jig-x86_64-windows
           # - target: aarch64-pc-windows-msvc
-          #   os: windows-latest
+          #   os: windows-2025
           #   binary_name: jig.exe
           #   archive_name: jig-aarch64-windows
     steps:
@@ -55,7 +55,7 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: Install cross-compilation dependencies (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           sudo apt-get update
           if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
@@ -69,7 +69,7 @@ jobs:
 
       - name: Build release binary
         run: |
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          if [[ "${{ matrix.os }}" == "ubuntu-24.04" ]]; then
             if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
               export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
               export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
@@ -83,7 +83,7 @@ jobs:
       - name: Prepare binary
         run: |
           mkdir -p artifacts
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          if [[ "${{ matrix.os }}" == "windows-2025" ]]; then
             cp "target/${{ matrix.target }}/release/${{ matrix.binary_name }}" "artifacts/${{ matrix.archive_name }}.exe"
           else
             cp "target/${{ matrix.target }}/release/${{ matrix.binary_name }}" "artifacts/${{ matrix.archive_name }}"
@@ -92,11 +92,11 @@ jobs:
 
       - name: Install zstd
         run: |
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          if [[ "${{ matrix.os }}" == "ubuntu-24.04" ]]; then
             sudo apt-get install -y zstd
-          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          elif [[ "${{ matrix.os }}" == "macos-15" ]]; then
             brew install zstd
-          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          elif [[ "${{ matrix.os }}" == "windows-2025" ]]; then
             choco install zstandard -y
           fi
         shell: bash
@@ -104,7 +104,7 @@ jobs:
       - name: Compress binary with zstd
         run: |
           cd artifacts
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          if [[ "${{ matrix.os }}" == "windows-2025" ]]; then
             zstd -9 "${{ matrix.archive_name }}.exe" -o "${{ matrix.archive_name }}.exe.zst"
           else
             zstd -9 "${{ matrix.archive_name }}" -o "${{ matrix.archive_name }}.zst"
@@ -114,11 +114,11 @@ jobs:
       - name: Generate checksums
         run: |
           cd artifacts
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          if [[ "${{ matrix.os }}" == "windows-2025" ]]; then
             sha256sum "${{ matrix.archive_name }}.exe" > "${{ matrix.archive_name }}.exe.sha256"
             sha256sum "${{ matrix.archive_name }}.exe.zst" > "${{ matrix.archive_name }}.exe.zst.sha256"
           else
-            if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            if [[ "${{ matrix.os }}" == "macos-15" ]]; then
               shasum -a 256 "${{ matrix.archive_name }}" > "${{ matrix.archive_name }}.sha256"
               shasum -a 256 "${{ matrix.archive_name }}.zst" > "${{ matrix.archive_name }}.zst.sha256"
             else
@@ -138,12 +138,12 @@ jobs:
       - name: Generate attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-latest' && '.exe' || '' }}
+          subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-2025' && '.exe' || '' }}
 
   release:
     name: Create Release
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -14,7 +14,7 @@ env:
   CARGO_TERM_COLOR: always
 jobs:
   cargo:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         toolchain:
@@ -42,14 +42,14 @@ jobs:
         uses: actions/upload-artifact@de65e23aa2b7e23d713bb51fbfcb6d502f8667d8
         with:
           path: target/debug/jig
-          name: jig-ubuntu-latest-${{ matrix.toolchain }}
+          name: jig-ubuntu-24.04-${{ matrix.toolchain }}
       - name: attestation
         if: success()
         uses: actions/attest-build-provenance@f923cf69427d7ac614fbcc05e12232908c3f031b
         with:
           subject-path: target/debug/jig
   trunk:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout
         uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
