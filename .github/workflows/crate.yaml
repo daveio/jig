@@ -75,7 +75,9 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          key: release-${{ matrix.target }}
+          shared-key: release-${{ matrix.target }}
+          cache-on-failure: true
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Verify build
         run: |
@@ -126,7 +128,9 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
         with:
-          key: crate
+          shared-key: crate
+          cache-on-failure: true
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Verify package
         run: |
