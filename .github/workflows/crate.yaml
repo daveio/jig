@@ -131,9 +131,9 @@ jobs:
       - name: Verify package
         run: |
           echo "📦 Verifying package contents..."
-          cargo package --list
+          cargo package --list --allow-dirty
           echo "📦 Creating package..."
-          if ! cargo package --no-verify; then
+          if ! cargo package --no-verify --allow-dirty; then
             echo "❌ Failed to create package"
             exit 1
           fi
