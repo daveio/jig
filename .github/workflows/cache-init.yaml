@@ -13,6 +13,11 @@ on:
         required: false
         default: true
         type: boolean
+      cache_ci:
+        description: Initialize CI caches
+        required: false
+        default: true
+        type: boolean
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
@@ -113,6 +118,43 @@ jobs:
           cargo package --list --allow-dirty || true
         shell: bash
 
+  init-ci-cache:
+    name: Initialize CI Cache ${{ matrix.toolchain }}
+    if: ${{ inputs.cache_ci }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain:
+          - stable
+          - beta
+          - nightly
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust cache for CI
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ci-${{ matrix.toolchain }}
+
+      - name: Install Rust toolchain
+        run: |
+          rustup update ${{ matrix.toolchain }}
+          rustup default ${{ matrix.toolchain }}
+
+      - name: Warm cache with debug build
+        run: |
+          echo "🔥 Warming cache for ${{ matrix.toolchain }} debug build..."
+          cargo build
+        shell: bash
+
+      - name: Warm cache with tests
+        run: |
+          echo "🔥 Warming cache for ${{ matrix.toolchain }} tests..."
+          cargo test
+        shell: bash
+
   init-docker-cache:
     name: Initialize Docker Cache
     if: ${{ inputs.cache_docker }}
@@ -164,7 +206,7 @@ jobs:
   summary:
     name: Cache Initialization Summary
     if: always()
-    needs: [init-rust-cache, init-publish-cache, init-docker-cache]
+    needs: [init-rust-cache, init-publish-cache, init-ci-cache, init-docker-cache]
     runs-on: ubuntu-latest
     steps:
       - name: Generate summary
@@ -195,6 +237,21 @@ jobs:
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### CI Caches" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ inputs.cache_ci }}" == "true" ]]; then
+            if [[ "${{ needs.init-ci-cache.result }}" == "success" ]]; then
+              echo "✅ **CI debug build caches:** Successfully initialized" >> $GITHUB_STEP_SUMMARY
+              echo "- \`ci-stable\`" >> $GITHUB_STEP_SUMMARY
+              echo "- \`ci-beta\`" >> $GITHUB_STEP_SUMMARY
+              echo "- \`ci-nightly\`" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **CI debug build caches:** Failed to initialize" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⏭️ **CI caches:** Skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Docker Caches" >> $GITHUB_STEP_SUMMARY
           if [[ "${{ inputs.cache_docker }}" == "true" ]]; then
             if [[ "${{ needs.init-docker-cache.result }}" == "success" ]]; then
@@ -211,6 +268,6 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Benefits" >> $GITHUB_STEP_SUMMARY
           echo "- 🚀 Faster subsequent workflow runs" >> $GITHUB_STEP_SUMMARY
-          echo "- 📦 Shared caches across \`release.yaml\`, \`crate.yaml\`, and \`container.yaml\`" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 Shared caches across \`release.yaml\`, \`crate.yaml\`, \`container.yaml\`, and \`ci.yaml\`" >> $GITHUB_STEP_SUMMARY
           echo "- 🔄 Reduced build times for all target platforms" >> $GITHUB_STEP_SUMMARY
           echo "- 🐳 Optimized Docker layer caching" >> $GITHUB_STEP_SUMMARY
