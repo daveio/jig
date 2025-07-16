@@ -1,0 +1,215 @@
+name: cache-init
+on:
+  workflow_dispatch:
+    inputs:
+      cache_rust:
+        description: "Initialize Rust caches"
+        required: false
+        default: true
+        type: boolean
+      cache_docker:
+        description: "Initialize Docker caches"
+        required: false
+        default: true
+        type: boolean
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  DOCKER_BUILDKIT: 1
+permissions:
+  contents: read
+  packages: write
+jobs:
+  init-rust-cache:
+    name: Initialize Rust Cache ${{ matrix.target }}
+    if: ${{ inputs.cache_rust }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux targets
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+          # macOS targets
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install cross-compilation dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu
+          fi
+
+      - name: Setup Rust cache for release builds
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: release-${{ matrix.target }}
+
+      - name: Warm cache with release build
+        run: |
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
+              export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+              export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+              export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+              export AR_aarch64_unknown_linux_gnu=aarch64-linux-gnu-ar
+            fi
+          fi
+          echo "🔥 Warming cache for ${{ matrix.target }} release build..."
+          cargo build --release --target ${{ matrix.target }}
+        shell: bash
+
+      - name: Warm cache with check
+        run: |
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
+              export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+              export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+              export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+              export AR_aarch64_unknown_linux_gnu=aarch64-linux-gnu-ar
+            fi
+          fi
+          echo "🔥 Warming cache for ${{ matrix.target }} check..."
+          cargo check --release --target ${{ matrix.target }}
+        shell: bash
+
+  init-publish-cache:
+    name: Initialize Publish Cache
+    if: ${{ inputs.cache_rust }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Rust cache for publish
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: publish
+
+      - name: Warm cache with package operations
+        run: |
+          echo "🔥 Warming cache for package operations..."
+          cargo fetch
+          cargo check
+          cargo package --list --allow-dirty || true
+        shell: bash
+
+  init-docker-cache:
+    name: Initialize Docker Cache
+    if: ${{ inputs.cache_docker }}
+    runs-on: ubuntu-latest
+    needs: init-rust-cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            network=host
+            image=moby/buildkit:buildx-stable-1
+          buildkitd-config-inline: |
+            [worker.oci]
+              max-parallelism = 4
+            [worker.containerd]
+              max-parallelism = 4
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create dummy binaries for cache warming
+        run: |
+          echo "🔥 Creating dummy binaries for Docker cache warming..."
+          mkdir -p docker-context/binary-x86_64-unknown-linux-gnu
+          mkdir -p docker-context/binary-aarch64-unknown-linux-gnu
+
+          # Create dummy executables
+          echo '#!/bin/bash\necho "dummy binary"' > docker-context/binary-x86_64-unknown-linux-gnu/jig
+          echo '#!/bin/bash\necho "dummy binary"' > docker-context/binary-aarch64-unknown-linux-gnu/jig
+          chmod +x docker-context/binary-*/jig
+
+      - name: Warm Docker cache
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  summary:
+    name: Cache Initialization Summary
+    if: always()
+    needs: [init-rust-cache, init-publish-cache, init-docker-cache]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 🚀 Cache Initialization Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Rust Caches" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ inputs.cache_rust }}" == "true" ]]; then
+            if [[ "${{ needs.init-rust-cache.result }}" == "success" ]]; then
+              echo "✅ **Rust target caches:** Successfully initialized" >> $GITHUB_STEP_SUMMARY
+              echo "- \`release-x86_64-unknown-linux-gnu\`" >> $GITHUB_STEP_SUMMARY
+              echo "- \`release-aarch64-unknown-linux-gnu\`" >> $GITHUB_STEP_SUMMARY
+              echo "- \`release-x86_64-apple-darwin\`" >> $GITHUB_STEP_SUMMARY
+              echo "- \`release-aarch64-apple-darwin\`" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **Rust target caches:** Failed to initialize" >> $GITHUB_STEP_SUMMARY
+            fi
+
+            if [[ "${{ needs.init-publish-cache.result }}" == "success" ]]; then
+              echo "✅ **Rust publish cache:** Successfully initialized" >> $GITHUB_STEP_SUMMARY
+              echo "- \`publish\`" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **Rust publish cache:** Failed to initialize" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⏭️ **Rust caches:** Skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Docker Caches" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ inputs.cache_docker }}" == "true" ]]; then
+            if [[ "${{ needs.init-docker-cache.result }}" == "success" ]]; then
+              echo "✅ **Docker buildx cache:** Successfully initialized" >> $GITHUB_STEP_SUMMARY
+              echo "- GitHub Actions cache backend" >> $GITHUB_STEP_SUMMARY
+              echo "- Multi-platform (linux/amd64, linux/arm64)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **Docker buildx cache:** Failed to initialize" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⏭️ **Docker caches:** Skipped" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Benefits" >> $GITHUB_STEP_SUMMARY
+          echo "- 🚀 Faster subsequent workflow runs" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 Shared caches across \`release.yaml\`, \`crate.yaml\`, and \`container.yaml\`" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔄 Reduced build times for all target platforms" >> $GITHUB_STEP_SUMMARY
+          echo "- 🐳 Optimized Docker layer caching" >> $GITHUB_STEP_SUMMARY
