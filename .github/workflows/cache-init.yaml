@@ -94,8 +94,8 @@ jobs:
           cargo check --release --target ${{ matrix.target }}
         shell: bash
 
-  init-publish-cache:
-    name: Initialize Publish Cache
+  init-crate-cache:
+    name: Initialize Crate Cache
     if: ${{ inputs.cache_rust }}
     runs-on: ubuntu-24.04
     steps:
@@ -105,14 +105,14 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Setup Rust cache for publish
+      - name: Setup Rust cache for crate
         uses: Swatinem/rust-cache@v2
         with:
-          key: publish
+          key: crate
 
       - name: Warm cache with package operations
         run: |
-          echo "🔥 Warming cache for package operations..."
+          echo "🔥 Warming cache for crate operations..."
           cargo fetch
           cargo check
           cargo package --list --allow-dirty || true
@@ -206,7 +206,7 @@ jobs:
   summary:
     name: Cache Initialization Summary
     if: always()
-    needs: [init-rust-cache, init-publish-cache, init-ci-cache, init-docker-cache]
+    needs: [init-rust-cache, init-crate-cache, init-ci-cache, init-docker-cache]
     runs-on: ubuntu-24.04
     steps:
       - name: Generate summary
@@ -226,11 +226,11 @@ jobs:
               echo "❌ **Rust target caches:** Failed to initialize" >> $GITHUB_STEP_SUMMARY
             fi
 
-            if [[ "${{ needs.init-publish-cache.result }}" == "success" ]]; then
-              echo "✅ **Rust publish cache:** Successfully initialized" >> $GITHUB_STEP_SUMMARY
-              echo "- \`publish\`" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ needs.init-crate-cache.result }}" == "success" ]]; then
+              echo "✅ **Rust crate cache:** Successfully initialized" >> $GITHUB_STEP_SUMMARY
+              echo "- \`crate\`" >> $GITHUB_STEP_SUMMARY
             else
-              echo "❌ **Rust publish cache:** Failed to initialize" >> $GITHUB_STEP_SUMMARY
+              echo "❌ **Rust crate cache:** Failed to initialize" >> $GITHUB_STEP_SUMMARY
             fi
           else
             echo "⏭️ **Rust caches:** Skipped" >> $GITHUB_STEP_SUMMARY
