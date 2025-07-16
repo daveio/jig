@@ -1,5 +1,5 @@
 # Multi-architecture Dockerfile using prebuilt binaries
-FROM --platform=$BUILDPLATFORM alpine:3.22.0 AS binary-selector
+FROM --platform=$BUILDPLATFORM alpine:3.22.1 AS binary-selector
 
 # Map platform to target architecture
 ARG TARGETPLATFORM
@@ -20,7 +20,7 @@ RUN TARGET=$(cat /tmp/target) && \
     chmod +x /jig
 
 # Runtime stage
-FROM alpine:3.22.0
+FROM alpine:3.22.1
 
 # Install runtime dependencies if needed
 # libgcc comes as standard with alpine
