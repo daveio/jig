@@ -159,6 +159,23 @@ jobs:
         run: |
           cd artifacts
           cat *.sha256 > checksums.txt
+
+          # Create release notes with Docker information
+          echo "## Installation" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Binary Downloads" >> release_notes.md
+          echo "Download the appropriate binary for your platform from the assets below." >> release_notes.md
+          echo "" >> release_notes.md
+          echo "### Docker" >> release_notes.md
+          echo "You can also run jig using Docker:" >> release_notes.md
+          echo '```bash' >> release_notes.md
+          echo "# Using the latest version" >> release_notes.md
+          echo "docker run --rm -it ghcr.io/${{ github.repository_owner }}/jig:latest" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "# Using this specific version" >> release_notes.md
+          echo "docker run --rm -it ghcr.io/${{ github.repository_owner }}/jig:${{ github.ref_name }}" >> release_notes.md
+          echo '```' >> release_notes.md
+          echo "" >> release_notes.md
           echo "### Checksums" >> release_notes.md
           echo '```' >> release_notes.md
           cat checksums.txt >> release_notes.md
