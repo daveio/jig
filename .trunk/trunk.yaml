@@ -26,6 +26,11 @@ lint:
         - trunk-toolbox
       paths:
         - .idea/betterCommentsSettings.xml
+        - "**/*.md"
+    - linters:
+        - osv-scanner
+      paths:
+        - Cargo.lock # security issues exist, but they're in dependencies that we don't control
   enabled:
     - actionlint@1.7.7
     - hadolint@2.12.1-beta

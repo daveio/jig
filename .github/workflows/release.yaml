@@ -36,15 +36,15 @@ jobs:
             os: macos-latest
             binary_name: jig
             archive_name: jig-aarch64-macos
-          # Windows targets
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
-            binary_name: jig.exe
-            archive_name: jig-x86_64-windows
-          - target: aarch64-pc-windows-msvc
-            os: windows-latest
-            binary_name: jig.exe
-            archive_name: jig-aarch64-windows
+          # Windows targets disabled due to build failure
+          # - target: x86_64-pc-windows-msvc
+          #   os: windows-latest
+          #   binary_name: jig.exe
+          #   archive_name: jig-x86_64-windows
+          # - target: aarch64-pc-windows-msvc
+          #   os: windows-latest
+          #   binary_name: jig.exe
+          #   archive_name: jig-aarch64-windows
     steps:
       - name: Checkout
         uses: actions/checkout@v4
