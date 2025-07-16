@@ -13,7 +13,9 @@ It's a collection of things I felt like implementing. It's not a framework, it's
 
 ### Standalone Installation
 
-`jig` can be installed as a standalone binary.
+`jig` can be installed as a standalone binary, if you don't want to use the shell plugin.
+
+The shell plugin is, however, **strongly recommended**.
 
 ### Shell Plugin Installation
 
