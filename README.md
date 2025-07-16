@@ -1519,6 +1519,101 @@ Update template repository.
 1. Pull latest from template repository
 2. Update local template cache
 
+## Development
+
+### Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/daveio/jig.git
+cd jig
+
+# Build in debug mode
+cargo build
+
+# Build in release mode
+cargo build --release
+
+# Run tests
+cargo test
+
+# Run with cargo
+cargo run -- --help
+```
+
+### Development Tools
+
+```bash
+# Format code
+cargo fmt
+
+# Lint code
+cargo clippy
+
+# Check code without building
+cargo check
+
+# Watch for changes and rebuild
+cargo watch -x run
+```
+
+### CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration and deployment:
+
+#### **CI Workflow** (`ci.yaml`)
+
+- Runs on every push and pull request to `main`
+- Tests against stable, beta, and nightly Rust toolchains
+- Runs tests, builds, and linting
+- Caches Rust dependencies for faster builds
+
+#### **Release Workflow** (`release.yaml`)
+
+- Triggers on version tags (`v*.*.*`)
+- Builds binaries for multiple platforms:
+  - Linux: `x86_64`, `aarch64`
+  - macOS: `x86_64`, `aarch64`
+  - Windows: `x86_64`, `aarch64` (currently disabled due to build issues)
+- Compresses binaries with zstd
+- Generates checksums and build attestations
+- Creates GitHub releases with all artifacts
+
+#### **Container Workflow** (`container.yaml`)
+
+- Triggers on version tags (`v*.*.*`)
+- Builds multi-architecture Docker images
+- Publishes to GitHub Container Registry (`ghcr.io/daveio/jig`)
+- Supports `linux/amd64` and `linux/arm64`
+
+#### **Publish Workflow** (`publish.yaml`)
+
+- Triggers on version tags (`v*.*.*`)
+- Verifies builds across all supported platforms
+- Publishes to crates.io
+
+### Required Secrets
+
+For maintainers, the following GitHub secrets must be configured:
+
+- **`CARGO_REGISTRY_TOKEN`**: API token for publishing to crates.io
+  - Generate at: https://crates.io/me
+  - Permissions: "Publish new crates and new versions of existing crates"
+
+### Cache Strategy
+
+The CI/CD pipeline uses optimized caching:
+
+- **CI builds**: Separate caches per Rust toolchain (`ci-stable`, `ci-beta`, `ci-nightly`)
+- **Release builds**: Shared cache between container and release workflows (`release-{target}`)
+- **Publish builds**: Separate cache for verification builds (`publish`)
+
+This allows:
+
+- Fast incremental builds
+- Shared caches between workflows building identical artifacts
+- Efficient storage usage
+
 ### Phase 4: External API Integration
 
 **Goal:** Implement features that rely on external APIs (`dave.io`, Domainr, RDAP).
@@ -1637,8 +1732,10 @@ Update template repository.
   - [ ] Create end-to-end test scenarios
   - [ ] Add performance benchmarks
 - [ ] **CI/CD:**
-  - [ ] Configure `ci.yaml` to run tests, `rustfmt`, and `clippy` on all pushes
-  - [ ] Create a release workflow to build cross-platform binaries and publish them to GitHub Releases
+  - [x] Configure `ci.yaml` to run tests, `rustfmt`, and `clippy` on all pushes
+  - [x] Create a release workflow to build cross-platform binaries and publish them to GitHub Releases
+  - [x] Create container workflow to build and publish Docker images
+  - [x] Create publish workflow to publish to crates.io
   - [ ] Add code coverage reporting
   - [ ] Set up dependency vulnerability scanning
 - [ ] **Documentation:**
