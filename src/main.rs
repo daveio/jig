@@ -5,7 +5,7 @@ use std::path::PathBuf;
 #[command(
     about = "Multipurpose CLI toolbox",
     author = "Dave Williams <dave@dave.io>",
-    long_about = "A collection of wonderful things. Tools and utilities which I find useful, and you might too.",
+    long_about = "A collection of wonderful things. Tools and utilities which I find useful.",
     name = "jig",
     version
 )]
