@@ -137,7 +137,7 @@ zxcvbn = { version = "3.1.0", features = ["ser"] }
 
 [package]
 name = "jig-cli"
-version = "0.0.0-pre3"
+version = "0.1.1"
 edition = "2024"
 description = "jig - A command line toolbox"
 license = "MIT"
