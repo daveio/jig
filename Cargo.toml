@@ -68,6 +68,7 @@ jwt-simple = { version = "0.12.12", default-features = false, features = [
   "wasi-abi2",
 ] }
 lofty = "0.22.4"
+names = { version = "0.14.0", default-features = false }
 nucleo-picker = { version = "0.8.1", features = ["serde"] }
 octocrab = { version = "0.44.1", features = ["rustls", "stream"] }
 rascii_art = "0.4.5"
@@ -96,7 +97,7 @@ reqwest = { version = "0.12.22", default-features = false, features = [
   "hickory-dns",
   "multipart",
 ] }
-rmcp = { version = "0.2.1", features = [
+rmcp = { version = "0.3.0", features = [
   "client",
   "transport-async-rw",
   "transport-child-process",
