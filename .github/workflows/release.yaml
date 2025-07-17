@@ -181,7 +181,7 @@ jobs:
           echo "docker run --rm -it ghcr.io/${{ github.repository_owner }}/jig:latest" >> RELEASE-NOTES.md
           echo "" >> RELEASE-NOTES.md
           echo "# Using this specific version" >> RELEASE-NOTES.md
-          echo "docker run --rm -it ghcr.io/${{ github.repository_owner }}/jig:${{ github.ref_name }}" >> RELEASE-NOTES.md
+          echo "docker run --rm -it ghcr.io/${{ github.repository_owner }}/jig:${GITHUB_REF_NAME#v}" >> RELEASE-NOTES.md
           echo '```' >> RELEASE-NOTES.md
           echo "" >> RELEASE-NOTES.md
           echo "### Checksums" >> RELEASE-NOTES.md
