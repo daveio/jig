@@ -24,7 +24,7 @@ FROM alpine:3.22.1
 
 # Install runtime dependencies
 # gcompat allows us to run glibc stuff on Alpine
-RUN apk add --no-cache gcompat=1.1.0-r4 && \
+RUN apk add --no-cache gcompat=1.1.0-r4 libgcc=14.2.0-r6 && \
   rm -rf /var/cache/apk/*
 
 # Create non-root user
