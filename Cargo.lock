@@ -5209,7 +5209,7 @@ dependencies = [
 
 [[package]]
 name = "jig-cli"
-version = "0.0.0-pre1"
+version = "0.0.0-pre2"
 dependencies = [
  "age",
  "anthropic-ai-sdk",

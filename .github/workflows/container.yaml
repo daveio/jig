@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - target: x86_64-unknown-linux-gnu
+          - target: x86_64-unknown-linux-musl
             platform: linux/amd64
-          - target: aarch64-unknown-linux-gnu
+          - target: aarch64-unknown-linux-musl
             platform: linux/arm64
     steps:
       - name: Checkout
@@ -29,8 +29,12 @@ jobs:
       - name: Install cross-compilation dependencies
         run: |
           sudo apt-get update
-          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
-            sudo apt-get install -y gcc-aarch64-linux-gnu
+          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-musl" ]]; then
+            wget -O /tmp/musl.tgz https://musl.cc/aarch64-linux-musl-cross.tgz
+            cd /tmp
+            tar xzf musl.tgz
+            rm aarch64-linux-musl-cross/usr
+            cp -r aarch64-linux-musl-cross/* /usr/
           fi
 
       - name: Setup Rust cache
@@ -38,15 +42,15 @@ jobs:
         with:
           env-vars: ""
           prefix-key: rust
-          shared-key: release-${{ matrix.target }}
+          shared-key: release-musl-${{ matrix.target }}
 
       - name: Build release binary
         run: |
-          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
-            export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
-            export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
-            export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
-            export AR_aarch64_unknown_linux_gnu=aarch64-linux-gnu-ar
+          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-musl" ]]; then
+            export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-musl-gcc
+            export CC_aarch64_unknown_linux_gnu=aarch64-linux-musl-gcc
+            export CXX_aarch64_unknown_linux_gnu=aarch64-linux-musl-g++
+            export AR_aarch64_unknown_linux_gnu=aarch64-linux-musl-ar
           fi
           cargo build --release --target ${{ matrix.target }}
 
