@@ -29,7 +29,7 @@ jobs:
       - name: Install cross-compilation dependencies
         run: |
           sudo apt-get update
-          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-musl" ]]; then
+          if [[ "${{ matrix.target }}" == "aarch64-unknown-linux-gnu" ]]; then
             sudo apt-get install -y gcc-aarch64-linux-gnu
           fi
 
