@@ -1,5 +1,5 @@
 use clap::Parser;
-use std::path::PathBuf;
+use std::process::exit;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -10,9 +10,6 @@ use std::path::PathBuf;
     version
 )]
 struct Cli {
-    /// The directory to operate on
-    path: PathBuf,
-
     /// Run without making changes
     #[arg(short, long)]
     dry_run: bool,
@@ -24,7 +21,7 @@ struct Cli {
 
 fn main() {
     let args = Cli::parse();
-    println!("Path: {}", args.path.display());
     println!("Dry run: {}", args.dry_run);
     println!("Verbosity level: {}", args.verbose);
+    exit(0); // Exit with success
 }
