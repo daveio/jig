@@ -1,12 +1,15 @@
+mod util;
+
 use clap::Parser;
 use std::process::exit;
+use util::constants::{AUTHOR, LONG_ABOUT, NAME, SHORT_ABOUT};
 
 #[derive(Parser, Debug)]
 #[command(
-    about = "Multipurpose CLI toolbox",
-    author = "Dave Williams <dave@dave.io>",
-    long_about = "A collection of wonderful things. Tools and utilities which I find useful.",
-    name = "jig",
+    about = SHORT_ABOUT,
+    author = AUTHOR,
+    long_about = LONG_ABOUT,
+    name = NAME,
     version
 )]
 struct Cli {
