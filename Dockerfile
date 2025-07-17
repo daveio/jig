@@ -22,8 +22,9 @@ RUN TARGET=$(cat /tmp/target) && \
 # Runtime stage
 FROM alpine:3.22.0
 
-# Install runtime dependencies if needed
-# libgcc comes as standard with alpine
+# Install runtime dependencies
+# gcompat allows us to run glibc stuff on Alpine
+RUN apk add gcompat
 
 # Create non-root user
 RUN addgroup -g 1001 jig && \
