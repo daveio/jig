@@ -13,3 +13,5 @@ rust = { version = '1.88.0' }
 'claude' = { run = "bun x @anthropic-ai/claude-code", description = "Invoke the latest Claude Code" }
 'gemini' = { run = "bun x @google/gemini-cli", description = "Invoke the latest Gemini CLI" }
 'codex' = { run = "bun x @openai/codex", description = "Invoke the latest Codex" }
+'reset' = { run = "rm -rf target Cargo.lock && cargo update && cargo build --release", description = "Upgrade dependencies, reset them, and rebuild" }
+'bump' = { run = "cargo upgrade --incompatible", description = "Upgrade all dependencies to the latest versions (including breaking changes)" }

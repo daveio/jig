@@ -44,7 +44,7 @@ lint:
     - prettier@3.6.2
     - rustfmt@1.88.0
     - taplo@0.9.3
-    - trufflehog@3.89.2
+    - trufflehog@3.90.0
 actions:
   enabled:
     - trunk-announce
