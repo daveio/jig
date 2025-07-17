@@ -1,9 +1,0 @@
-# For prebuilt container workflow, we only need the docker-context directory
-# and exclude everything else to minimize build context
-
-# Keep only what we need
-!docker-context/
-
-# Exclude everything else
-*
-!Dockerfile.prebuilt
