@@ -138,7 +138,7 @@ jobs:
           retention-days: 1
 
       - name: Generate attestation
-        uses: actions/attest-build-provenance@f923cf69427d7ac614fbcc05e12232908c3f031b
+        uses: actions/attest-build-provenance@fe74bb2c6cfb0e3de1e4c332832e618de5279cbe
         with:
           subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-2025' && '.exe' || '' }}
 
@@ -190,7 +190,7 @@ jobs:
           echo '```' >> RELEASE-NOTES.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@f0b3259de20cfa7751a020162b49d79d4fd66a77
+        uses: softprops/action-gh-release@f2352b97da0095b4dbbd885a81023e3deabf4fef
         with:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
