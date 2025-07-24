@@ -47,7 +47,7 @@ jobs:
           #   archive_name: jig-aarch64-windows
     steps:
       - name: Checkout
-        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
+        uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -138,7 +138,7 @@ jobs:
           retention-days: 1
 
       - name: Generate attestation
-        uses: actions/attest-build-provenance@fe74bb2c6cfb0e3de1e4c332832e618de5279cbe
+        uses: actions/attest-build-provenance@7a3eb4a84e7d1c943af9ac9bd5fe7e5a0fdfb18f
         with:
           subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-2025' && '.exe' || '' }}
 
@@ -148,7 +148,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
+        uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
 
       - name: Download all artifacts
         uses: actions/download-artifact@448e3f862ab3ef47aa50ff917776823c9946035b

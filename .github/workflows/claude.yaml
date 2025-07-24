@@ -26,13 +26,13 @@ jobs:
       id-token: write
     steps:
       - name: checkout
-        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f
+        uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
         with:
           fetch-depth: 1
 
       - name: claude
         id: claude
-        uses: anthropics/claude-code-action@8f551b358eb856cb921515b1b024d6152edc30aa
+        uses: anthropics/claude-code-action@0763498a5a7dd1778edfb255374e71ce88d91d6b
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
