@@ -22,7 +22,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: cache
-        uses: Swatinem/rust-cache@7e1e2d0a10862b34e5df481373b2b0f295d1a2ef
+        uses: Swatinem/rust-cache@a8b36e3f740d2ae4fa6e44a424a7b296af51cbef
         with:
           env-vars: ""
           prefix-key: rust
@@ -40,7 +40,7 @@ jobs:
           name: jig-ubuntu-24.04-stable
       - name: attestation
         if: success()
-        uses: actions/attest-build-provenance@7a3eb4a84e7d1c943af9ac9bd5fe7e5a0fdfb18f
+        uses: actions/attest-build-provenance@961f313d935b10e1fca509fd19feda1a33a66aff
         with:
           subject-path: target/debug/jig
   trunk:
