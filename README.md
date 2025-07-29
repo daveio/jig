@@ -1795,3 +1795,4 @@ This allows:
   - Check all if `[tool]` is unspecified, as just `jig ai usage`.
   - Check multiple tools by space separating: `jig ai usage cursor zed`
 - Decentralised chat and file transfer
+  - [`iroh`](https://lib.rs/iroh) can help with this
