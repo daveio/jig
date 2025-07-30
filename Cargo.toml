@@ -14,7 +14,7 @@ catppuccin = { version = "2.5.1", features = [
   "serde",
 ] }
 chbs = "0.1.1"
-clap = { version = "4.5.41", features = [
+clap = { version = "4.5.42", features = [
   "derive",
   "cargo",
   "env",
@@ -130,7 +130,7 @@ tera = { version = "1.20.0", features = [
   "preserve_order",
 ] }
 tokio = { version = "1.47.0", features = ["full"] }
-toml = { version = "0.9.3", features = ["preserve_order"] }
+toml = { version = "0.9.4", features = ["preserve_order"] }
 tui-rain = "1.0.1"
 uuid = { version = "1.17.0", features = ["v1"] }
 viuer = { version = "0.9.2", features = ["print-file"] }
