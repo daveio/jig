@@ -32,7 +32,7 @@ jobs:
 
       - name: claude
         id: claude
-        uses: anthropics/claude-code-action@af32fd318a5746954afb2190f98f055799d46e72
+        uses: anthropics/claude-code-action@1f6e3225b088699398302ad624c21c1d780d082f
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
