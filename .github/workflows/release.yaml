@@ -151,7 +151,7 @@ jobs:
         uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
 
       - name: Download all artifacts
-        uses: actions/download-artifact@448e3f862ab3ef47aa50ff917776823c9946035b
+        uses: actions/download-artifact@de96f4613b77ec03b5cf633e7c350c32bd3c5660
         with:
           path: artifacts
           pattern: binaries-*
@@ -190,7 +190,7 @@ jobs:
           echo '```' >> RELEASE-NOTES.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@f2352b97da0095b4dbbd885a81023e3deabf4fef
+        uses: softprops/action-gh-release@f82d31e53e61a962573dd0c5fcd6b446ca78871f
         with:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}

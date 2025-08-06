@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
 
       - name: Download all binaries
-        uses: actions/download-artifact@448e3f862ab3ef47aa50ff917776823c9946035b
+        uses: actions/download-artifact@de96f4613b77ec03b5cf633e7c350c32bd3c5660
         with:
           pattern: binary-*
           path: docker-context
