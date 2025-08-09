@@ -99,7 +99,7 @@ reqwest = { version = "0.12.22", default-features = false, features = [
   "hickory-dns",
   "multipart",
 ] }
-rmcp = { version = "0.4.1", features = [
+rmcp = { version = "0.5.0", features = [
   "client",
   "transport-async-rw",
   "transport-child-process",
