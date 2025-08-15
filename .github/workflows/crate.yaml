@@ -78,7 +78,7 @@ jobs:
           fi
 
       - name: Setup Rust cache
-        uses: Swatinem/rust-cache@267a8a94c98a1d6542d1ea6c13b41d0fa1184dcb
+        uses: Swatinem/rust-cache@cb8ffc21fa260a61d7c314b390985a11fcddf81a
         with:
           env-vars: ""
           prefix-key: rust
@@ -136,7 +136,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Setup Rust cache
-        uses: Swatinem/rust-cache@267a8a94c98a1d6542d1ea6c13b41d0fa1184dcb
+        uses: Swatinem/rust-cache@cb8ffc21fa260a61d7c314b390985a11fcddf81a
         with:
           shared-key: crate
 
