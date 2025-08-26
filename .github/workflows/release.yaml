@@ -138,7 +138,7 @@ jobs:
           retention-days: 1
 
       - name: Generate attestation
-        uses: actions/attest-build-provenance@8bd83f1e055c41368a1664e71c43b9783931c8c7
+        uses: actions/attest-build-provenance@ff19f402b6e212671813b2ebe231d8a7c81ec049
         with:
           subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-2025' && '.exe' || '' }}
 
@@ -151,7 +151,7 @@ jobs:
         uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
 
       - name: Download all artifacts
-        uses: actions/download-artifact@de96f4613b77ec03b5cf633e7c350c32bd3c5660
+        uses: actions/download-artifact@abefc31eafcfbdf6c5336127c1346fdae79ff41c
         with:
           path: artifacts
           pattern: binaries-*
@@ -190,7 +190,7 @@ jobs:
           echo '```' >> RELEASE-NOTES.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@126b1e70939461ae1dc0252ce412cabf99778520
+        uses: softprops/action-gh-release@fbadcc90e88ecface60a0a0d123795b784ceb239
         with:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
