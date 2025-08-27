@@ -14,7 +14,7 @@ catppuccin = { version = "2.5.1", features = [
   "serde",
 ] }
 chbs = "0.1.1"
-clap = { version = "4.5.45", features = [
+clap = { version = "4.5.46", features = [
   "derive",
   "cargo",
   "env",
