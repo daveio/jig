@@ -1500,16 +1500,14 @@ checksum = "387e80962b798815a2b5c4bcfdb6bf626fa922ffe9f74e373103b858738e9f31"
 
 [[package]]
 name = "buildstructor"
-version = "0.5.4"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3907aac66c65520545ae3cb3c195306e20d5ed5c90bfbb992e061cf12a104d0"
+checksum = "caabaaee17b2a78d7aa349a33edc9090c6bb47e6dfb25b0da281df57628bba68"
 dependencies = [
- "lazy_static",
  "proc-macro2",
  "quote",
  "str_inflector",
  "syn 2.0.104",
- "thiserror 1.0.69",
  "try_match",
 ]
 
@@ -5163,9 +5161,9 @@ dependencies = [
 
 [[package]]
 name = "icann-rdap-client"
-version = "0.0.22"
+version = "0.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "58921dab2bb8f2bbde37cb64b9afa7b41785b0d54d814d185a4034a78518c8a0"
+checksum = "68c4b64da9f1f2b558053a9eef77bcfd81e098573e524041f2de187f5deec91f"
 dependencies = [
  "buildstructor",
  "chrono",
@@ -5190,9 +5188,9 @@ dependencies = [
 
 [[package]]
 name = "icann-rdap-common"
-version = "0.0.22"
+version = "0.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49f6ca0c6044f33f8836487b1141b1688dda0260a889438b5eac4fb36918bb74"
+checksum = "329bc6d0f611e36711da13df6943bbb1bb157f261a109de9fe210f7aad9c9b99"
 dependencies = [
  "buildstructor",
  "chrono",
@@ -9891,9 +9889,9 @@ dependencies = [
 
 [[package]]
 name = "tachyonfx"
-version = "0.17.1"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "900bb0ff3284235d2cca959700dc06fe44b8c62b56f551eb598f0f59c186c173"
+checksum = "c849d35ad6c0c08124c757282b7c771ff2efc58f7e211cb7e45a37a5f9a66f8a"
 dependencies = [
  "anpa",
  "bon",
