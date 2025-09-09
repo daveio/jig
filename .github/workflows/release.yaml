@@ -63,7 +63,7 @@ jobs:
           fi
 
       - name: Setup Rust cache
-        uses: Swatinem/rust-cache@cb8ffc21fa260a61d7c314b390985a11fcddf81a
+        uses: Swatinem/rust-cache@94b28bf00e42c2b783e7dd289d30da129b46838b
         with:
           env-vars: ""
           prefix-key: rust
