@@ -2,6 +2,9 @@
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/daveio/jig)
 
+> [!CAUTION]
+> `jig` doesn't actually _do_ any of these things yet. This README is a design document. Please don't be fooled.
+
 ## Overview
 
 `jig` is a comprehensive CLI toolbox that consolidates various utilities into a single, unified command-line interface.
@@ -67,7 +70,7 @@ course.
 
 ```bash
 # Install using Cargo if you have Rust installed
-cargo install jig
+cargo install jig-cli
 
 # Or install with Homebrew on macOS
 brew install daveio/tap/jig
