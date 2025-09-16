@@ -55,7 +55,7 @@ indicatif = { version = "0.18.0", features = [
   "in_memory",
   "futures",
 ] }
-inquire = { version = "0.7.5", features = ["date", "editor"] }
+inquire = { version = "0.8.0", features = ["date", "editor"] }
 jiff = { version = "0.2.15", features = [
   "serde",
   "logging",
@@ -108,8 +108,8 @@ rmcp = { version = "0.6.4", features = [
 ron = "0.11.0"
 rusty-termcolor = "0.1.62"
 saphyr = "0.0.6"
-serde = { version = "1.0.219", features = ["derive", "std", "alloc", "rc"] }
-serde_json = { version = "1.0.143", features = [
+serde = { version = "1.0.224", features = ["derive", "std", "alloc", "rc"] }
+serde_json = { version = "1.0.145", features = [
   "preserve_order",
   "float_roundtrip",
   "arbitrary_precision",
@@ -130,7 +130,7 @@ tera = { version = "1.20.0", features = [
   "preserve_order",
 ] }
 tokio = { version = "1.47.1", features = ["full"] }
-toml = { version = "0.9.5", features = ["preserve_order"] }
+toml = { version = "0.9.6", features = ["preserve_order"] }
 tui-rain = "1.0.1"
 uuid = { version = "1.18.1", features = ["v1"] }
 viuer = { version = "0.9.2", features = ["print-file"] }
