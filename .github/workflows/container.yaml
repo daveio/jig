@@ -146,7 +146,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: generate-artifact-attestation
-        uses: actions/attest-build-provenance@0b6e9809265278d02c58acf52849a95818a5a306
+        uses: actions/attest-build-provenance@3752c92e3bd95a40782ebef53ea5f91088c20e48
         with:
           subject-name: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.build.outputs.digest }}
