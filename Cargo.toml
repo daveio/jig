@@ -55,7 +55,7 @@ indicatif = { version = "0.18.0", features = [
   "in_memory",
   "futures",
 ] }
-inquire = { version = "0.8.0", features = ["date", "editor"] }
+inquire = { version = "0.9.1", features = ["date", "editor"] }
 jiff = { version = "0.2.15", features = [
   "serde",
   "logging",
@@ -108,7 +108,7 @@ rmcp = { version = "0.6.4", features = [
 ron = "0.11.0"
 rusty-termcolor = "0.1.62"
 saphyr = "0.0.6"
-serde = { version = "1.0.224", features = ["derive", "std", "alloc", "rc"] }
+serde = { version = "1.0.225", features = ["derive", "std", "alloc", "rc"] }
 serde_json = { version = "1.0.145", features = [
   "preserve_order",
   "float_roundtrip",
