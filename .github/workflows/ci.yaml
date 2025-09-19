@@ -22,7 +22,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: cache
-        uses: Swatinem/rust-cache@94b28bf00e42c2b783e7dd289d30da129b46838b
+        uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1
         with:
           env-vars: ""
           prefix-key: rust
