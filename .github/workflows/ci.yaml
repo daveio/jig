@@ -40,7 +40,7 @@ jobs:
           name: jig-ubuntu-24.04-stable
       - name: attestation
         if: success()
-        uses: actions/attest-build-provenance@3752c92e3bd95a40782ebef53ea5f91088c20e48
+        uses: actions/attest-build-provenance@bed76f6f806fc6af1c3d142325ca64330160764d
         with:
           subject-path: target/debug/jig
   trunk:
@@ -49,7 +49,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
       - name: trunk
-        uses: trunk-io/trunk-action@f17e4dfbeed80af55e86016f7c04cf128cf76522
+        uses: trunk-io/trunk-action@5c4a3a274e634b65e08939439c81c59ce672f196
         with:
           # trunk-ignore(trunk-toolbox)
           arguments: --filter=-trunk-toolbox/todo
