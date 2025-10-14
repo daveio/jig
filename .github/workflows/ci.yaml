@@ -49,7 +49,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
       - name: trunk
-        uses: trunk-io/trunk-action@5c4a3a274e634b65e08939439c81c59ce672f196
+        uses: trunk-io/trunk-action@bf81325059d2534b31df5365182237788c5e0338
         with:
           # trunk-ignore(trunk-toolbox)
           arguments: --filter=-trunk-toolbox/todo
