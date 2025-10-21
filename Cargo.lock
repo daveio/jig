@@ -1447,9 +1447,9 @@ dependencies = [
 
 [[package]]
 name = "bon"
-version = "3.7.2"
+version = "3.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2529c31017402be841eb45892278a6c21a000c0a17643af326c73a73f83f0fb"
+checksum = "ebeb9aaf9329dff6ceb65c689ca3db33dbf15f324909c60e4e5eef5701ce31b1"
 dependencies = [
  "bon-macros",
  "rustversion",
@@ -1457,9 +1457,9 @@ dependencies = [
 
 [[package]]
 name = "bon-macros"
-version = "3.7.2"
+version = "3.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d82020dadcb845a345591863adb65d74fa8dc5c18a0b6d408470e13b7adc7005"
+checksum = "77e9d642a7e3a318e37c2c9427b5a6a48aa1ad55dcd986f3034ab2239045a645"
 dependencies = [
  "darling 0.21.0",
  "ident_case",
@@ -1860,9 +1860,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.5.49"
+version = "4.5.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f4512b90fa68d3a9932cea5184017c5d200f5921df706d45e853537dea51508f"
+checksum = "0c2cfd7bf8a6017ddaa4e32ffe7403d547790db06bd171c1c53926faab501623"
 dependencies = [
  "clap_builder",
  "clap_derive",
@@ -1870,9 +1870,9 @@ dependencies = [
 
 [[package]]
 name = "clap_builder"
-version = "4.5.49"
+version = "4.5.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0025e98baa12e766c67ba13ff4695a887a1eba19569aad00a472546795bd6730"
+checksum = "0a4c05b9e80c5ccd3a7ef080ad7b6ba7d6fc00a985b8b157197075677c82c7a0"
 dependencies = [
  "anstream",
  "anstyle",
@@ -5291,9 +5291,9 @@ dependencies = [
 
 [[package]]
 name = "icann-rdap-client"
-version = "0.0.24"
+version = "0.0.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b91586aa17d3921e31e5685021b6c9a5712fde661dd7154f7d58adab4733222"
+checksum = "9f86955a85421175f37e1b41bc42c3ebf400c234a049471799bfc458f98f0404"
 dependencies = [
  "buildstructor",
  "chrono",
@@ -5318,9 +5318,9 @@ dependencies = [
 
 [[package]]
 name = "icann-rdap-common"
-version = "0.0.24"
+version = "0.0.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d03d3f193bf93c52488fb62b71b29a581d77399cb4867a0e2be57bf4b44706c5"
+checksum = "2135f42d59bd777360c2ff75273291a2c788fb1a1dc8421feab621d097ab3032"
 dependencies = [
  "buildstructor",
  "chrono",
@@ -10122,9 +10122,9 @@ dependencies = [
 
 [[package]]
 name = "tachyonfx"
-version = "0.19.0"
+version = "0.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d3dedefbe821bfb069724fcb468962681e8d03413f56ff24ae0400d2f1f04d15"
+checksum = "a3d8d12f9a009654ae418254aa361dd61d9f9a581bcc27d024f39cb7ccaee33f"
 dependencies = [
  "anpa",
  "bon",
