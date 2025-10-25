@@ -56,7 +56,7 @@ jobs:
           cp "target/${{ matrix.target }}/release/jig" "docker-context/${{ matrix.target }}/jig"
 
       - name: Upload binary artifact
-        uses: actions/upload-artifact@2d9f9cdfa99fedaddba68e9b5b5c281eca26cc63
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: binary-${{ matrix.target }}
           path: docker-context/${{ matrix.target }}/jig
@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@8edcb1bdb4e267140fa742c62e395cd74f332709
 
       - name: Download all binaries
-        uses: actions/download-artifact@4a24838f3d5601fd639834081e118c2995d51e1c
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
         with:
           pattern: binary-*
           path: docker-context
