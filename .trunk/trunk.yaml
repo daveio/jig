@@ -2,12 +2,12 @@
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
 cli:
-  version: 1.24.0
+  version: 1.25.0
 # Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
 plugins:
   sources:
     - id: trunk
-      ref: v1.7.1
+      ref: v1.7.3
       uri: https://github.com/trunk-io/plugins
 # Many linters and tools depend on runtimes - configure them here. (https://docs.trunk.io/runtimes)
 runtimes:
@@ -32,19 +32,19 @@ lint:
       paths:
         - Cargo.lock # security issues exist, but they're in dependencies that we don't control
   enabled:
-    - actionlint@1.7.7
-    - hadolint@2.12.1-beta
+    - actionlint@1.7.8
+    - hadolint@2.14.0
     - trunk-toolbox@0.5.4
-    - checkov@3.2.451
+    - checkov@3.2.489
     - yamllint@1.37.1
     - clippy@1.88.0
     - git-diff-check
     - markdownlint@0.45.0
-    - osv-scanner@2.0.3
+    - osv-scanner@2.2.4
     - prettier@3.6.2
     - rustfmt@1.88.0
-    - taplo@0.9.3
-    - trufflehog@3.90.0
+    - taplo@0.10.0
+    - trufflehog@3.90.12
 actions:
   enabled:
     - trunk-announce
