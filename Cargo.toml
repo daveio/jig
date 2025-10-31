@@ -48,7 +48,7 @@ image = { version = "0.25.8", default-features = false, features = [
   "serde",
 ] }
 image-webp = "0.2.4"
-indicatif = { version = "0.18.0", features = [
+indicatif = { version = "0.18.0", features = [ # pinned
   "rayon",
   "tokio",
   "improved_unicode",
