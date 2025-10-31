@@ -63,7 +63,7 @@ jiff = { version = "0.2.15", features = [
   "js",
 ] }
 json = "0.12.4"
-jwt-simple = { version = "0.12.12", default-features = false, features = [
+jwt-simple = { version = "0.12.13", default-features = false, features = [
   "pure-rust",
   "cwt",
   "wasi-abi2",
@@ -119,7 +119,7 @@ serde_qs = { version = "0.15.0", features = ["indexmap"] }
 sha2 = { version = "0.10.9", features = ["oid"] }
 spinoff = { version = "0.8.0", features = ["aesthetic", "noise"] }
 tachyonfx = { version = "0.20.1", features = ["sendable", "web-time"] }
-tera = { version = "1.20.0", features = [
+tera = { version = "1.20.1", features = [
   "default",
   "builtins",
   "chrono",
