@@ -5688,9 +5688,9 @@ dependencies = [
 
 [[package]]
 name = "iroh"
-version = "0.95.0"
+version = "0.95.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8e9f1ff6e0dc1bd132b7576ba41f6966b830aa72ac2b570ce80b4b418d49908"
+checksum = "2374ba3cdaac152dc6ada92d971f7328e6408286faab3b7350842b2ebbed4789"
 dependencies = [
  "aead 0.6.0-rc.2",
  "backon",
@@ -5744,9 +5744,9 @@ dependencies = [
 
 [[package]]
 name = "iroh-base"
-version = "0.95.0"
+version = "0.95.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59271b8931eb11bde6e16626deb867774fe198f85598fa2b744076ca24eb7057"
+checksum = "25a8c5fb1cc65589f0d7ab44269a76f615a8c4458356952c9b0ef1c93ea45ff8"
 dependencies = [
  "curve25519-dalek 5.0.0-pre.1",
  "data-encoding",
