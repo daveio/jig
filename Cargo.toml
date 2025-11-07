@@ -56,7 +56,7 @@ indicatif = { version = "0.18.0", features = [ # pinned
   "futures",
 ] }
 inquire = { version = "0.9.1", features = ["date", "editor"] }
-jiff = { version = "0.2.15", features = [
+jiff = { version = "0.2.16", features = [
   "serde",
   "logging",
   "tzdb-bundle-always",
