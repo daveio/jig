@@ -136,7 +136,7 @@ uuid = { version = "1.18.1", features = ["v1"] }
 viuer = { version = "0.9.2", features = ["print-file"] }
 xattr = "1.6.1"
 zxcvbn = { version = "3.1.0", features = ["ser"] }
-iroh = { version = "0.95.0", features = [
+iroh = { version = "0.95.1", features = [
   "discovery-local-network",
   "discovery-pkarr-dht",
 ] }
