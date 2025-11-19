@@ -138,7 +138,7 @@ jobs:
           retention-days: 1
 
       - name: Generate attestation
-        uses: actions/attest-build-provenance@ba965ac88abfc6fa49344893ed19e5bf479a07d6
+        uses: actions/attest-build-provenance@268464dd14307f17143ddd8784cca15db03db05f
         with:
           subject-path: artifacts/${{ matrix.archive_name }}${{ matrix.os == 'windows-2025' && '.exe' || '' }}
 
