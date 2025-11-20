@@ -40,7 +40,7 @@ jobs:
           name: jig-ubuntu-24.04-stable
       - name: attestation
         if: success()
-        uses: actions/attest-build-provenance@268464dd14307f17143ddd8784cca15db03db05f
+        uses: actions/attest-build-provenance@ccf77258feeee1698b18749ace74ad18a9386311
         with:
           subject-path: target/debug/jig
   trunk:
