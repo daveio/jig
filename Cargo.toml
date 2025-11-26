@@ -27,7 +27,7 @@ csv = "1.4.0"
 duct = "1.1.1"
 env_logger = "0.11.8"
 firework-rs = "0.3.1"
-gix = { version = "0.74.1", features = [
+gix = { version = "0.75.0", features = [
   "basic",
   "extras",
   "blocking-network-client",
@@ -99,7 +99,7 @@ reqwest = { version = "0.12.24", default-features = false, features = [
   "hickory-dns",
   "multipart",
 ] }
-rmcp = { version = "0.9.0", features = [
+rmcp = { version = "0.9.1", features = [
   "client",
   "transport-async-rw",
   "transport-child-process",
