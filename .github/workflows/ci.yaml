@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@c2d88d3ecc89a9ef08eebf45d9637801dcee7eb5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: cache
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: checkout
-        uses: actions/checkout@c2d88d3ecc89a9ef08eebf45d9637801dcee7eb5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       - name: trunk
         uses: trunk-io/trunk-action@bf81325059d2534b31df5365182237788c5e0338
         with:
