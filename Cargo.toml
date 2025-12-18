@@ -130,7 +130,7 @@ tera = { version = "1.20.1", features = [
   "preserve_order",
 ] }
 tokio = { version = "1.48.0", features = ["full"] }
-toml = { version = "0.9.9", features = ["preserve_order"] }
+toml = { version = "0.9.10", features = ["preserve_order"] }
 tui-rain = "1.0.1"
 uuid = { version = "1.19.0", features = ["v1"] }
 viuer = { version = "0.11.0", features = ["print-file"] }
