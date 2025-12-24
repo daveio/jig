@@ -56,7 +56,7 @@ indicatif = { version = "0.18.0", features = [ # pinned
   "futures",
 ] }
 inquire = { version = "0.9.1", features = ["date", "editor"] }
-jiff = { version = "0.2.16", features = [
+jiff = { version = "0.2.17", features = [
   "serde",
   "logging",
   "tzdb-bundle-always",
@@ -109,7 +109,7 @@ ron = "0.12.0"
 rusty-termcolor = "0.1.62"
 saphyr = "0.0.6"
 serde = { version = "1.0.228", features = ["derive", "std", "alloc", "rc"] }
-serde_json = { version = "1.0.146", features = [
+serde_json = { version = "1.0.147", features = [
   "preserve_order",
   "float_roundtrip",
   "arbitrary_precision",
