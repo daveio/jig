@@ -109,7 +109,7 @@ ron = "0.12.0"
 rusty-termcolor = "0.1.62"
 saphyr = "0.0.6"
 serde = { version = "1.0.228", features = ["derive", "std", "alloc", "rc"] }
-serde_json = { version = "1.0.147", features = [
+serde_json = { version = "1.0.148", features = [
   "preserve_order",
   "float_roundtrip",
   "arbitrary_precision",
