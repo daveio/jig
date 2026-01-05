@@ -4,7 +4,7 @@ anthropic-ai-sdk = "0.2.26"
 anyhow = "1.0.100"
 apple-codesign = "0.29.0"
 argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
-base64ct = { version = "1.8.1", features = ["std"] }
+base64ct = { version = "1.8.2", features = ["std"] }
 blake3 = { version = "1.8.2", features = ["rayon", "zeroize"] }
 bs58 = { version = "0.5.1", features = ["std", "alloc", "check", "cb58"] }
 catppuccin = { version = "2.6.0", features = [
@@ -14,7 +14,7 @@ catppuccin = { version = "2.6.0", features = [
   "serde",
 ] }
 chbs = "0.1.1"
-clap = { version = "4.5.53", features = [
+clap = { version = "4.5.54", features = [
   "derive",
   "cargo",
   "env",
@@ -129,7 +129,7 @@ tera = { version = "1.20.1", features = [
   "date-locale",
   "preserve_order",
 ] }
-tokio = { version = "1.48.0", features = ["full"] }
+tokio = { version = "1.49.0", features = ["full"] }
 toml = { version = "0.9.10", features = ["preserve_order"] }
 tui-rain = "1.0.1"
 uuid = { version = "1.19.0", features = ["v1"] }
