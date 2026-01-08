@@ -5,7 +5,7 @@ anyhow = "1.0.100"
 apple-codesign = "0.29.0"
 argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
 base64ct = { version = "1.8.2", features = ["std"] }
-blake3 = { version = "1.8.2", features = ["rayon", "zeroize"] }
+blake3 = { version = "1.8.3", features = ["rayon", "zeroize"] }
 bs58 = { version = "0.5.1", features = ["std", "alloc", "check", "cb58"] }
 catppuccin = { version = "2.6.0", features = [
   "ansi-term",
