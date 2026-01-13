@@ -1,10 +1,10 @@
 [dependencies]
 age = { version = "0.11.2", features = ["armor", "async", "ssh", "plugin"] }
-anthropic-ai-sdk = "0.2.26"
+anthropic-ai-sdk = "0.2.27"
 anyhow = "1.0.100"
 apple-codesign = "0.29.0"
 argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
-base64ct = { version = "1.8.2", features = ["std"] }
+base64ct = { version = "1.8.3", features = ["std"] }
 blake3 = { version = "1.8.3", features = ["rayon", "zeroize"] }
 bs58 = { version = "0.5.1", features = ["std", "alloc", "check", "cb58"] }
 catppuccin = { version = "2.6.0", features = [
@@ -34,7 +34,7 @@ gix = { version = "0.77.0", features = [
   "blocking-http-transport-reqwest-rust-tls",
   "serde",
 ] }
-icann-rdap-client = "0.0.25"
+icann-rdap-client = "0.0.26"
 image = { version = "0.25.9", default-features = false, features = [
   "gif",
   "hdr",
