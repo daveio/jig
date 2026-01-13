@@ -1,12 +1,54 @@
+[package]
+name = "jig-cli"
+version = "0.0.0-dev"
+edition = "2024"
+description = "jig - A command line toolbox"
+readme = "README.md"
+repository = "https://github.com/daveio/jig"
+license = "MIT"
+keywords = ["cli", "command-line", "cryptography", "jig", "security"]
+categories = ["command-line-utilities", "cryptography"]
+include = [
+  ".editorconfig",
+  ".env.example",
+  ".gitignore",
+  "AGENTS.md",
+  "CHANGELOG.md",
+  "CLAUDE.md",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "Cargo.lock",
+  "Cargo.toml",
+  "Dockerfile",
+  "LICENSE",
+  "README.md",
+  "SECURITY.md",
+  "assets/**",
+  "data/**",
+  "mise.toml",
+  "src/**",
+  "target/**",
+  "vendor/**",
+]
+publish = false
+
+[package.metadata]
+authors = ["Dave Williams <dave@dave.io>"]
+
+[[bin]]
+name = "jig"
+path = "src/main.rs"
+
 [dependencies]
-age = { version = "0.11.2", features = ["armor", "async", "ssh", "plugin"] }
-anthropic-ai-sdk = "0.2.27"
+# age = { version = "0.11.2", features = ["armor", "async", "ssh", "plugin"] } # temporarily disabled due to build
+# issues
+anthropic-ai-sdk = "0.2.26"
 anyhow = "1.0.100"
 apple-codesign = "0.29.0"
 argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
 base64ct = { version = "1.8.3", features = ["std"] }
 blake3 = { version = "1.8.3", features = ["rayon", "zeroize"] }
-bs58 = { version = "0.5.1", features = ["std", "alloc", "check", "cb58"] }
+bs58 = { version = "0.5.1", features = ["alloc", "cb58", "check", "std"] }
 catppuccin = { version = "2.6.0", features = [
   "ansi-term",
   "css-colors",
@@ -15,12 +57,12 @@ catppuccin = { version = "2.6.0", features = [
 ] }
 chbs = "0.1.1"
 clap = { version = "4.5.54", features = [
-  "derive",
   "cargo",
+  "derive",
   "env",
+  "string",
   "unicode",
   "wrap_help",
-  "string",
 ] }
 clipboard-rs = "0.3.1"
 csv = "1.4.0"
@@ -29,75 +71,81 @@ env_logger = "0.11.8"
 firework-rs = "0.3.1"
 gix = { version = "0.77.0", features = [
   "basic",
-  "extras",
-  "blocking-network-client",
   "blocking-http-transport-reqwest-rust-tls",
+  "blocking-network-client",
+  "extras",
   "serde",
 ] }
-icann-rdap-client = "0.0.26"
+# icann-rdap-client = "0.0.25" # temporarily disabled due to build issues
 image = { version = "0.25.9", default-features = false, features = [
+  "color_quant",
   "gif",
   "hdr",
   "ico",
   "jpeg",
   "png",
+  "rayon",
+  "serde",
   "tiff",
   "webp",
-  "rayon",
-  "color_quant",
-  "serde",
 ] }
 image-webp = "0.2.4"
-indicatif = { version = "0.18.0", features = [ # pinned
-  "rayon",
-  "tokio",
+indicatif = { version = "0.18.0", features = [
+  "futures",
   "improved_unicode",
   "in_memory",
-  "futures",
+  # pinned
+  "rayon",
+  "tokio",
 ] }
 inquire = { version = "0.9.1", features = ["date", "editor"] }
+iroh = { version = "0.95.1", features = [
+  "discovery-local-network",
+  "discovery-pkarr-dht",
+] }
+iroh-base = { version = "0.95.0", features = ["key"] }
 jiff = { version = "0.2.18", features = [
-  "serde",
-  "logging",
-  "tzdb-bundle-always",
   "js",
+  "logging",
+  "serde",
+  "tzdb-bundle-always",
 ] }
 json = "0.12.4"
 jwt-simple = { version = "0.12.13", default-features = false, features = [
-  "pure-rust",
   "cwt",
+  "pure-rust",
   "wasi-abi2",
 ] }
-log = "0.4.29"
 lofty = "0.22.4"
+log = "0.4.29"
 names = { version = "0.14.0", default-features = false }
 nucleo-picker = { version = "0.10.1", features = ["serde"] }
 # octocrab = { version = "0.44.1", features = ["rustls", "stream"] }
 rascii_art = "0.4.5"
 ratatui = { version = "0.30.0", features = [
+  "all-widgets",
   "crossterm",
-  "serde",
+  "document-features",
   "macros",
   "palette",
-  "all-widgets",
-  "underline-color",
-  "document-features",
   "scrolling-regions",
+  "serde",
+  "underline-color",
 ] }
 reqwest = { version = "0.12.28", default-features = false, features = [
-  "json",
-  "rustls-tls",
   "blocking",
-  "cookies",
-  "gzip",
   "brotli",
+  "cookies",
   "deflate",
-  "zstd",
+  "gzip",
+  "hickory-dns",
   "http2",
+  "json",
+  "multipart",
+  "rustls-tls",
   "socks",
   "stream",
-  "hickory-dns",
-  "multipart",
+  "zstd",
 ] }
 rmcp = { version = "0.12.0", features = [
   "client",
@@ -108,11 +156,11 @@ rmcp = { version = "0.12.0", features = [
 ron = "0.12.0"
 rusty-termcolor = "0.1.62"
 saphyr = "0.0.6"
-serde = { version = "1.0.228", features = ["derive", "std", "alloc", "rc"] }
+serde = { version = "1.0.228", features = ["alloc", "derive", "rc", "std"] }
 serde_json = { version = "1.0.149", features = [
-  "preserve_order",
-  "float_roundtrip",
   "arbitrary_precision",
+  "float_roundtrip",
+  "preserve_order",
   "raw_value",
 ] }
 serde_qs = { version = "0.15.0", features = ["indexmap"] }
@@ -123,11 +171,11 @@ tera = { version = "1.20.1", features = [
   "default",
   "builtins",
   "chrono",
-  "urlencode",
-  "humansize",
-  "slug",
   "date-locale",
+  "humansize",
   "preserve_order",
+  "slug",
+  "urlencode",
 ] }
 tokio = { version = "1.49.0", features = ["full"] }
 toml = { version = "0.9.11", features = ["preserve_order"] }
@@ -136,51 +184,7 @@ uuid = { version = "1.19.0", features = ["v1"] }
 viuer = { version = "0.11.0", features = ["print-file"] }
 xattr = "1.6.1"
 zxcvbn = { version = "3.1.0", features = ["ser"] }
-iroh = { version = "0.95.1", features = [
-  "discovery-local-network",
-  "discovery-pkarr-dht",
-] }
-iroh-base = { version = "0.95.0", features = ["key"] }
 
 [dev-dependencies]
 assert_cmd = { version = "2.1.2", features = ["color", "color-auto"] }
 predicates = "3.1.3"
-
-[package]
-name = "jig-cli"
-version = "0.0.0-dev"
-edition = "2024"
-description = "jig - A command line toolbox"
-license = "MIT"
-repository = "https://github.com/daveio/jig"
-authors = ["Dave Williams <dave@dave.io>"]
-readme = "README.md"
-publish = false
-categories = ["command-line-utilities", "cryptography"]
-keywords = ["jig", "cli", "command-line", "cryptography", "security"]
-include = [
-  ".editorconfig",
-  ".env.example",
-  ".gitignore",
-  "AGENTS.md",
-  "assets/**",
-  "Cargo.lock",
-  "Cargo.toml",
-  "CHANGELOG.md",
-  "CLAUDE.md",
-  "CODE_OF_CONDUCT.md",
-  "CONTRIBUTING.md",
-  "data/**",
-  "Dockerfile",
-  "LICENSE",
-  "mise.toml",
-  "README.md",
-  "SECURITY.md",
-  "src/**",
-  "target/**",
-  "vendor/**",
-]
-
-[[bin]]
-name = "jig"
-path = "src/main.rs"
