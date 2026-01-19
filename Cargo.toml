@@ -98,7 +98,7 @@ indicatif = { version = "0.18.0", features = [
   "rayon",
   "tokio",
 ] }
-inquire = { version = "0.9.1", features = ["date", "editor"] }
+inquire = { version = "0.9.2", features = ["date", "editor"] }
 iroh = { version = "0.95.1", features = [
   "discovery-local-network",
   "discovery-pkarr-dht",
