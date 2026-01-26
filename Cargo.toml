@@ -180,7 +180,7 @@ tera = { version = "1.20.1", features = [
 tokio = { version = "1.49.0", features = ["full"] }
 toml = { version = "0.9.11", features = ["preserve_order"] }
 tui-rain = "1.0.1"
-uuid = { version = "1.19.0", features = ["v1"] }
+uuid = { version = "1.20.0", features = ["v1"] }
 viuer = { version = "0.11.0", features = ["print-file"] }
 xattr = "1.6.1"
 zxcvbn = { version = "3.1.0", features = ["ser"] }
