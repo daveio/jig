@@ -40,23 +40,23 @@ name = "jig"
 path = "src/main.rs"
 
 [dependencies]
-# age = { version = "0.11.2", features = ["armor", "async", "ssh", "plugin"] } # temporarily disabled due to build
+age = { version = "0.11.2", features = ["armor", "async", "plugin", "ssh"] }
 # issues
-anthropic-ai-sdk = "0.2.26"
+anthropic-ai-sdk = "0.2.27"
 anyhow = "1.0.100"
 apple-codesign = "0.29.0"
 argon2 = { version = "0.5.3", features = ["simple", "std", "zeroize"] }
 base64ct = { version = "1.8.3", features = ["std"] }
 blake3 = { version = "1.8.3", features = ["rayon", "zeroize"] }
 bs58 = { version = "0.5.1", features = ["alloc", "cb58", "check", "std"] }
-catppuccin = { version = "2.6.0", features = [
-  "ansi-term",
-  "css-colors",
-  "ratatui",
-  "serde",
-] }
+# catppuccin = { version = "2.6.0", features = [
+#   "ansi-term",
+#   "css-colors",
+#   "ratatui",
+#   "serde",
+# ] } # disabled; ratatui conflict for unicode-width
 chbs = "0.1.1"
-clap = { version = "4.5.54", features = [
+clap = { version = "4.5.55", features = [
   "cargo",
   "derive",
   "env",
@@ -76,7 +76,7 @@ gix = { version = "0.78.0", features = [
   "extras",
   "serde",
 ] }
-# icann-rdap-client = "0.0.25" # temporarily disabled due to build issues
+# icann-rdap-client = "0.0.26" # disabled; mystery build issues
 image = { version = "0.25.9", default-features = false, features = [
   "color_quant",
   "gif",
@@ -90,20 +90,19 @@ image = { version = "0.25.9", default-features = false, features = [
   "webp",
 ] }
 image-webp = "0.2.4"
-indicatif = { version = "0.18.0", features = [
+indicatif = { version = "0.18.3", features = [
   "futures",
   "improved_unicode",
   "in_memory",
-  # pinned
   "rayon",
   "tokio",
 ] }
 inquire = { version = "0.9.2", features = ["date", "editor"] }
-iroh = { version = "0.95.1", features = [
-  "discovery-local-network",
-  "discovery-pkarr-dht",
-] }
-iroh-base = { version = "0.95.0", features = ["key"] }
+# iroh = { version = "0.95.1", features = [
+#   "discovery-local-network",
+#   "discovery-pkarr-dht",
+# ] } # disabled; jwt-simple conflicts
+iroh-base = { version = "0.95.1", features = ["key"] }
 jiff = { version = "0.2.18", features = [
   "js",
   "logging",
@@ -111,7 +110,7 @@ jiff = { version = "0.2.18", features = [
   "tzdb-bundle-always",
 ] }
 json = "0.12.4"
-jwt-simple = { version = "0.12.13", default-features = false, features = [
+jwt-simple = { version = "0.12.14", default-features = false, features = [
   "cwt",
   "pure-rust",
   "wasi-abi2",
@@ -119,8 +118,8 @@ jwt-simple = { version = "0.12.13", default-features = false, features = [
 lofty = "0.22.4"
 log = "0.4.29"
 names = { version = "0.14.0", default-features = false }
-nucleo-picker = { version = "0.10.1", features = ["serde"] }
-# octocrab = { version = "0.44.1", features = ["rustls", "stream"] }
+nucleo-picker = { version = "0.11.1", features = ["serde"] }
+octocrab = { version = "0.49.5", features = ["rustls", "stream"] }
 rascii_art = "0.4.5"
 ratatui = { version = "0.30.0", features = [
   "all-widgets",
@@ -132,7 +131,7 @@ ratatui = { version = "0.30.0", features = [
   "serde",
   "underline-color",
 ] }
-reqwest = { version = "0.12.28", default-features = false, features = [
+reqwest = { version = "0.13.1", default-features = false, features = [
   "blocking",
   "brotli",
   "cookies",
@@ -142,7 +141,7 @@ reqwest = { version = "0.12.28", default-features = false, features = [
   "http2",
   "json",
   "multipart",
-  "rustls-tls",
+  "rustls",
   "socks",
   "stream",
   "zstd",
@@ -166,7 +165,7 @@ serde_json = { version = "1.0.149", features = [
 serde_qs = { version = "0.15.0", features = ["indexmap"] }
 sha2 = { version = "0.10.9", features = ["oid"] }
 spinoff = { version = "0.8.0", features = ["aesthetic", "noise"] }
-tachyonfx = { version = "0.22.0", features = ["sendable", "web-time"] }
+tachyonfx = { version = "0.23.0", features = ["sendable", "web-time"] }
 tera = { version = "1.20.1", features = [
   "default",
   "builtins",
@@ -178,9 +177,9 @@ tera = { version = "1.20.1", features = [
   "urlencode",
 ] }
 tokio = { version = "1.49.0", features = ["full"] }
-toml = { version = "0.9.11", features = ["preserve_order"] }
-tui-rain = "1.0.1"
-uuid = { version = "1.19.0", features = ["v1"] }
+toml = { version = "0.9.11+spec-1.1.0", features = ["preserve_order"] }
+# tui-rain = "1.0.1" # disabled; ratatui conflict for unicode-width
+uuid = { version = "1.20.0", features = ["v1"] }
 viuer = { version = "0.11.0", features = ["print-file"] }
 xattr = "1.6.1"
 zxcvbn = { version = "3.1.0", features = ["ser"] }

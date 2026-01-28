@@ -3,11 +3,12 @@ JIG_MISE_ACTIVE = 'true'
 
 [settings]
 env_file = '.env'
-idiomatic_version_file = false
-idiomatic_version_file_enable_tools = []
 
 [tools]
-rust = { version = '1.91.0' }
+claude = { version = '2.1.22' }
+codex = { version = '0.92.0' }
+gemini = { version = '0.26.0' }
+rust = { version = '1.93.0' }
 
 [tasks]
 'claude' = { run = "bun x @anthropic-ai/claude-code", description = "Invoke the latest Claude Code" }
